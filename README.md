@@ -5,5 +5,5 @@ An Android Application made for generating NPCs to general RPG/TableTop games. I
 The Original Project can be found in [Reddit](https://www.reddit.com/r/DnDBehindTheScreen/comments/5ygekb/resourcenpc_generator_now_containing_statblocks), by /u/SanguineHaze
 It also has a [repository here in GitHub](https://github.com/SanguineHaze/CharacterCreator). Currently unlicensed
 
-# RPGRandom NPC Generator
+# RPG Random NPC Generator
 Currently under developmend with the contribution of SanguineHaze and Kerooker(myself). Planned release in about a month from now.
