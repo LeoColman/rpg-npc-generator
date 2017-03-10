@@ -7,3 +7,7 @@ It also has a [repository here in GitHub](https://github.com/SanguineHaze/Charac
 
 # RPG Random NPC Generator
 Currently under developmend with the contribution of SanguineHaze and Kerooker(myself). Planned release in about a month from now.
+
+
+# TO-DO LIST
+Check my [to-do list](TODO.md)! 
