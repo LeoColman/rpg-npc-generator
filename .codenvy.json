@@ -1,0 +1,123 @@
+{
+  "v": "4.0",
+  "name": "Android-Hello-World",
+  "workspace": {
+    "environments": [
+      {
+        "name": "ubuntu_android",
+        "machineConfigs": [
+          {
+            "limits": {
+              "ram": 2000
+            },
+            "name": "ws-machine",
+            "type": "docker",
+            "source": {
+              "location": "http://beta.codenvy.com/api/recipe/recipeeypjl2op7oozcp07/script",
+              "type": "recipe"
+            },
+            "dev": true,
+            "servers": [],
+            "envVariables": {},
+            "links": []
+          }
+        ]
+      }
+    ],
+    "defaultEnv": "ubuntu_android",
+    "projects": [
+      {
+        "links": [],
+        "name": "mobile-android-hello-world",
+        "attributes": {
+          "maven.artifactId": [
+            "mobile-android-java-basic"
+          ],
+          "maven.test.source.folder": [
+            "src/test/java"
+          ],
+          "maven.parent.version": [
+            ""
+          ],
+          "maven.parent.groupId": [
+            ""
+          ],
+          "maven.version": [
+            "1.0-SNAPSHOT"
+          ],
+          "languageVersion": [
+            "1.8.0_45"
+          ],
+          "language": [
+            "java"
+          ],
+          "maven.source.folder": [
+            "src/main/java"
+          ],
+          "git.repository.remotes": [
+            "https://github.com/che-samples/mobile-android-hello-world.git"
+          ],
+          "maven.groupId": [
+            "com.codenvy.examples"
+          ],
+          "containsJavaFiles": [
+            "true"
+          ],
+          "maven.packaging": [
+            "apk"
+          ],
+          "vcs.provider.name": [
+            "git"
+          ],
+          "git.current.branch.name": [
+            "master"
+          ],
+          "maven.parent.artifactId": [
+            ""
+          ]
+        },
+        "type": "maven",
+        "source": {
+          "location": "https://github.com/che-samples/mobile-android-hello-world.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/mobile-android-hello-world",
+        "problems": [],
+        "mixins": [
+          "git"
+        ]
+      }
+    ],
+    "name": "ubuntu_android",
+    "commands": [
+      {
+        "commandLine": "mvn -f ${current.project.path} clean install",
+        "name": "build-n-run",
+        "attributes": {
+          "previewUrl": "http://${server.port.6080}/"
+        },
+        "type": "mvn"
+      }
+    ],
+    "links": []
+  },
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "name": "build-n-run"
+          },
+          "id": "runCommand"
+        },
+        {
+          "properties": {
+            "file": "/mobile-android-hello-world/README.md"
+          },
+          "id": "openFile"
+        }
+      ]
+    }
+  }
+}
