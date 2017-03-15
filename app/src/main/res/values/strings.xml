@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RPG Character Generator</string>
+
+
+    <!-- ADVERTISER TAGS -->
+    <string name="advertisement_date_file">advertisement_date</string>
+    <string name="advertisement_shared_date_long">advertisement_long</string>
+    <string name="ad_unit_id">*RETRACTED*</string>
+    <!-- END OF ADVERTISER TAGS -->
 </resources>
