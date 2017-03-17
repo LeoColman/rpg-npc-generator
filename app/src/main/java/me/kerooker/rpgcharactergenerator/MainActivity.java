@@ -3,6 +3,7 @@ package me.kerooker.rpgcharactergenerator;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import me.kerooker.advertiser.Advertiser;
 
@@ -11,7 +12,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.loading_layout);
+        start();
     }
 
     private void start() {
@@ -19,7 +21,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO
     }
 
-    private void proccessAdvertisement(Activity activity) {
+    public void finishLoadingAd() {
+        setContentView(R.layout.activity_main);
+    }
+
+    private void proccessAdvertisement(MainActivity activity) {
         Advertiser.attemptAdvertisement(activity);
         //TODO
     }

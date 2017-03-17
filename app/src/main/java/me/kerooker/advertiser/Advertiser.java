@@ -1,13 +1,19 @@
 package me.kerooker.advertiser;
 
 import android.app.Activity;
+import android.util.Log;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import me.kerooker.rpgcharactergenerator.MainActivity;
+import me.kerooker.rpgcharactergenerator.R;
 
 /**
  * Created by Leonardo on 15/03/2017.
@@ -17,7 +23,7 @@ public class Advertiser {
 
     private static final int minutesToWaitForAd = 60;
 
-    private Activity parentActivity;
+    private MainActivity parentActivity;
 
     private boolean shouldAdvertise() {
 
@@ -25,7 +31,6 @@ public class Advertiser {
 
         Date lastAd = aif.getLastAdInfo();
         Date now = new Date();  //Current date
-
         return isTimeAfter(lastAd, minutesToWaitForAd, now);
     }
 
@@ -58,7 +63,47 @@ public class Advertiser {
     }
 
     private void openAdvertisement() {
-        //TODO
+        createAdAndLoad();
+
+        saveLastAdInfo();
+    }
+
+    private void createAdAndLoad() {
+        final InterstitialAd ad = new InterstitialAd(parentActivity.getApplicationContext());
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("E13C2E83535549B29E3A07FBE4059DAD").build();
+
+        String adUnitId = getParentActivity().getString(R.string.ad_unit_id);
+        ad.setAdUnitId(adUnitId);
+
+        ad.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                ad.show();
+            }
+
+            @Override
+            public void onAdClosed() {
+                finishLoadingAd();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                finishLoadingAd();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                finishLoadingAd();
+            }
+        });
+
+        ad.loadAd(adRequest);
+
+
+    }
+
+    private void finishLoadingAd() {
+        parentActivity.finishLoadingAd();
     }
 
     private void saveLastAdInfo() {
@@ -67,7 +112,7 @@ public class Advertiser {
         aif.setLastAdInfo(now);
     }
 
-    private void setParentActivity(Activity ac) {
+    private void setParentActivity(MainActivity ac) {
         this.parentActivity = ac;
     }
 
@@ -75,7 +120,7 @@ public class Advertiser {
         return parentActivity;
     }
 
-    public static void attemptAdvertisement(Activity activity) {
+    public static void attemptAdvertisement(MainActivity activity) {
         Advertiser a = new Advertiser();
         a.setParentActivity(activity);
 
