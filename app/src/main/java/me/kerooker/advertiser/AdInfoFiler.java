@@ -7,27 +7,24 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-import me.kerooker.rpgcharactergenerator.MainActivity;
 import me.kerooker.rpgcharactergenerator.R;
 
 /**
- * Created by Leonardo on 15/03/2017.
+ * Class that is used to check the system conditions
  */
-
-public class AdInfoFiler {
+    class AdInfoFiler {
 
     private Activity parentActivity;
 
-    public AdInfoFiler(Activity ac) {
+    AdInfoFiler(Activity ac) {
       this.parentActivity = ac;
     }
 
-    public Date getLastAdInfo() {
-        Date lastDate = getLastStoredDate();
-        return lastDate;
+    Date getLastAdInfo() {
+        return getLastStoredDate();
     }
 
-    public void setLastAdInfo(Date d) {
+    void setLastAdInfo(Date d) {
         long dateLong = d.getTime();
         storeDate(dateLong);
     }
@@ -38,9 +35,8 @@ public class AdInfoFiler {
      */
     private long getLastStoredDateLong() {
         SharedPreferences adPrefs = getSharedPreferences();
-        long lastDate = adPrefs.getLong(getAdvertiserPreferenceName(), 0);  //Defaults to 0
+        return adPrefs.getLong(getAdvertiserPreferenceName(), 0);  //Defaults to 0
 
-        return lastDate;
     }
 
     private SharedPreferences getSharedPreferences() {
@@ -48,7 +44,9 @@ public class AdInfoFiler {
     }
 
     private void storeDate(long l) {
-       getSharedPreferences().edit().putLong(getAdvertiserPreferenceName(), l);
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putLong(getAdvertiserPreferenceName(), l);
+        editor.apply();
     }
 
     private Date getLastStoredDate() {

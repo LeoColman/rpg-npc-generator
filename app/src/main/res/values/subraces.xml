@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="AracrookaSubs">
+
+    </string-array>
+    <string-array name="AasimarSubs">
+
+    </string-array>
+    <string-array name="GoliathSubs">
+
+    </string-array>
+    <string-array name="HalfOrcSubs">
+
+    </string-array>
+    
+    <string-array name="DragonbornSubs">
+        <item>Black Dragonborn</item>
+        <item>Blue Dragonborn</item>
+        <item>Red Dragonborn</item>
+        <item>Green Dragonborn</item>
+        <item>White Dragonborn</item>
+        <item>Brass Dragonborn</item>
+        <item>Bronze Dragonborn</item>
+        <item>Copper Dragonborn</item>
+        <item>Gold Dragonborn</item>
+        <item>Silver Dragonborn</item>
+    </string-array>
+
+    <string-array name="DwarfSubs">
+        <item>Hill Dwarf</item>
+        <item>Mountain Dwarf</item>
+        <item>Duergar</item>
+    </string-array>
+    
+    <string-array name="ElfSubs">
+        <item>Dark Elf</item>
+        <item>High Elf</item>
+        <item>Wood Elf</item>
+        <item>Eladrin</item>
+        <item>Aquatic Elf</item>
+    </string-array>
+
+    <string-array name="HumanSubs">
+        <item>Human Variant</item>
+    </string-array>
+
+    <string-array name="HalfElfSubs">
+        <item>Half Dark</item>
+        <item>Half Wood</item>
+        <item>Half Moon</item>
+        <item>Half Sun</item>
+        <item>Half Aquatic</item>
+    </string-array>
+    
+    <string-array name="HalflingSubs">
+        <item>Ghostwise Halfling</item>
+        <item>Lightfoot Halfling</item>
+        <item>Stout Halfling</item>
+    </string-array>
+    
+    <string-array name="GnomeSubs">
+        <item>Forest Gnome</item>
+        <item>Rock Gnome</item>
+        <item>Deep Gnome</item>
+    </string-array>
+    
+    <string-array name="GenasiSubs">
+        <item>Air Genasi</item>
+        <item>Earth Genasi</item>
+        <item>Fire Genasi</item>
+        <item>Water Genasi</item>
+    </string-array>
+    
+    <string-array name="TieflingSubs">
+        <item>Infernal Tiefling</item>
+        <item>Demonic Tiefling</item>
+    </string-array>
+
+
+
+
+</resources>

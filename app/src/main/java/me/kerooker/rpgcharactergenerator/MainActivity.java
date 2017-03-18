@@ -21,12 +21,14 @@ public class MainActivity extends AppCompatActivity {
         //TODO
     }
 
+    private void TESTE() {
+
+    }
     public void finishLoadingAd() {
         setContentView(R.layout.activity_main);
     }
 
     private void proccessAdvertisement(MainActivity activity) {
         Advertiser.attemptAdvertisement(activity);
-        //TODO
     }
 }
