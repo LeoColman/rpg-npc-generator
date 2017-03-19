@@ -1,0 +1,85 @@
+Arakroca:
+ name: "Arakroca"
+ subraces: []
+Aasimar:
+ name: "Aasimar"
+ subraces: []
+Dragonborn:
+ name: "Dragonborn"
+ subraces: [
+ "Black Dragonborn",
+ "Blue Dragonborn",
+ "Red Dragonborn",
+ "Green Dragonborn",
+ "White Dragonborn",
+ "Brass Dragonborn",
+ "Bronze Dragonborn",
+ "Copper Dragonborn",
+ "Gold Dragonborn",
+ "Silver Dragonborn"
+ ]
+Dwarf:
+ name: "Dwarf"
+ subraces: [
+ "Hill Dwarf",
+ "Mountain Dwarf",
+ "Duergar"
+ ]
+Elf:
+ name: "Elf"
+ subraces: [
+ "Dark Elf",
+ "High Elf",
+ "Wood Elf",
+ "Eladrin",
+ "Aquatic Elf"
+ ]
+Gnome:
+ name: "Gnome"
+ subraces: [
+ "Forest Gnome",
+ "Rock Gnome",
+ "Deep Gnome"
+ ]
+Genasi:
+ name: "Genasi"
+ subraces: [
+ "Air Genasi",
+ "Earth Genasi",
+ "Fire Genasi",
+ "Water Genasi"
+ ]
+Goliath:
+ name: "Goliath"
+ subraces: []
+HalfOrc:
+ name: "Half-Orc"
+ subraces: []
+Human:
+ name: "Human"
+ subraces: [
+ "",
+ "Human Variant"
+ ] 
+Halfling:
+ name: "Halfling"
+ subraces: [
+ "Ghostwise Halfling",
+ "Lightfoot Halfling",
+ "Stout Halfling"
+ ]
+HalfElf: 
+ name: "Half-Elf"
+ subraces: [
+ "Half Dark",
+ "Half Wood",
+ "Half Moon",
+ "Half Sun",
+ "Half Aquatic"
+ ]
+Tiefling:
+ name: "Tiefling"
+ subraces: [
+ "Infernal Tiefling",
+ "Demonic Tiefling"
+ ] 

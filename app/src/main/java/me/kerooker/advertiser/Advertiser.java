@@ -126,6 +126,8 @@ public class Advertiser {
 
         if (a.shouldAdvertise()) {
             a.openAdvertisement();
+        }else {
+            activity.finishLoadingAd();
         }
     }
 

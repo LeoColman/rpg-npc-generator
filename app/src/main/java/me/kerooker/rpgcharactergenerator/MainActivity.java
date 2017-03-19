@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import me.kerooker.advertiser.Advertiser;
+import me.kerooker.characterinformation.Race;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,11 +20,12 @@ public class MainActivity extends AppCompatActivity {
     private void start() {
         proccessAdvertisement(this);
         //TODO
+        TESTE();
     }
 
     private void TESTE() {
-
     }
+
     public void finishLoadingAd() {
         setContentView(R.layout.activity_main);
     }
