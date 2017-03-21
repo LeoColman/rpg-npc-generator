@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Gender {
-    MALE(49.3), FEMALE(49.3), AGENDER(0.7), BIGENDER(0.7);
+    MALE(49.30), FEMALE(49.30), AGENDER(0.70), BIGENDER(0.70);
 
     private double chanceToHappen;
 
