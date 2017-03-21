@@ -5,21 +5,26 @@ import me.kerooker.enums.Priority;
 public class Age implements Information {
 
     private me.kerooker.enums.Age age;
+    private static final Priority agePriority = Priority.NORMAL;
 
     public Age() {
-        age = me.kerooker.enums.Age.getRandomAge();
+        generateRandomAge();
     }
     public Age(me.kerooker.enums.Age age) {
         this.age = age;
     }
 
+    private void generateRandomAge() {
+        age = me.kerooker.enums.Age.getRandomAge();
+    }
+
     @Override
     public Priority getPriority() {
-        return null;
+        return agePriority;
     }
 
     @Override
     public String getInformation() {
-        return null;
+        return "Age: " + age.toString();
     }
 }
