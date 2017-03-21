@@ -1,0 +1,76 @@
+Cleric's apprentice
+Fighter's apprentice
+Paladin's apprentice
+Wizard's apprentice
+Warlock's apprentice
+Monk's apprentice
+Barbarian's apprentice
+Rogue's apprentice
+Sorcerer's apprentice
+Bard's apprentice
+Cobbler's apprentice
+Shoemaker's apprentice
+Tinker's apprentice
+Blacksmith's apprentice
+Baker's apprentice
+Innkeep's apprentice
+Shopkeep's apprentice
+Scribe's apprentice
+Librarian's apprentice
+Dairymaid's apprentice
+Goatherd's apprentice
+Horse Trainer's apprentice
+Ferryman's apprentice
+Woodcutter's apprentice
+Sheepshearer's apprentice
+Hawker's apprentice
+Falconer's apprentice
+Hunter's apprentice
+Master of Hounds' apprentice
+Master of Horse's apprentice
+Rat Catcher
+Trapper
+Artist's apprentice
+Painter's apprentice
+Sculpter's apprentice
+Composer's apprentice
+Playwright's apprentice
+Jeweler's apprentice
+Mason's apprentice
+Carpenter's apprentice
+Butcher's apprentice
+Leatherworker's apprentice
+Tanner's apprentice
+Saddle Maker's apprentice
+Locksmith's apprentice
+Weaponsmith's apprentice
+Apothecary's apprentice
+Minstrel's apprentice
+Musician's apprentice
+Singer in training
+Actor in training
+Dancer in training
+Jester in training
+Thatcher's apprentice
+Civic Engineer's apprentice
+Architect's apprentice
+Weaver's apprentice
+Peddler
+Merchant's apprentice
+Surveyor's apprentice
+Archeologist's apprentice
+Botanist's apprentice
+Miller's apprentice
+Brewer's apprentice
+Abbot's apprentice
+Beekeeper's apprentice
+Politician's apprentice
+Squire
+Stable-Master's apprentice
+Thief's apprentice
+Sailor's apprentice
+Shepherd
+Performer's apprentice
+Advisor's apprentice
+Mayor's apprentice
+Baron / Baroness in training

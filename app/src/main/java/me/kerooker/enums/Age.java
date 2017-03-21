@@ -20,6 +20,9 @@ public enum Age {
         return chooseOnWeight(ages);
     }
 
+    public boolean isChild() {
+        return this.equals(CHILD);
+    }
 
     private static Age chooseOnWeight(List<Age> ages) {
         double completeWeight = 0.0;
