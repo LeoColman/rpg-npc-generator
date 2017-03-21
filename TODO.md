@@ -11,3 +11,7 @@
 - - [ ] Profession Generation
 - - [ ] Other Details Generation (personality, abilities..)
 - - [ ] Stats Generation
+- [ ] Output via PDF
+- [ ] Output via other formats (?)
+- [ ] Multiple NPCs at once
+- [ ] Beautify Application (probably only with help)
