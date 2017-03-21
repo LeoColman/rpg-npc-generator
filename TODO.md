@@ -7,8 +7,8 @@
 - - [x] Race Generation
 - - [x] Gender Generation
 - - [x] Sexuality Generation
-- - [ ] Age Generation
-- - [ ] Profession Generation
+- - [x] Age Generation
+- - [x] Profession Generation
 - - [ ] Other Details Generation (personality, abilities..)
 - - [ ] Stats Generation
 - [ ] Output via PDF
