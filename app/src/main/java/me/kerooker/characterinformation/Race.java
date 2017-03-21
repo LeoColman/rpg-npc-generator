@@ -39,7 +39,7 @@ public class Race implements Information {
     @SuppressWarnings("unchecked")
     private void setYml() {
         try {
-            races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
+            if (races == null)races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
         } catch (IOException e) {
             //Shouldn't ever happen
             e.printStackTrace();

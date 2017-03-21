@@ -14,19 +14,21 @@ public class Name implements Information {
     private static final double CHANCE_TO_HAVE_A_NICKNAME = 0.15;
     private static Priority namePriority = Priority.HIGHEST;
     private static List<String> names;
+    private static List<String> nicknames;
     private static Random random = new Random();
     private String name;
     private Context context;
 
     public Name(Context context) {
         this.context = context;
-        loadNames();
+        loadNamesAndNicknames();
         generateRandomName();
     }
 
-    private void loadNames() {
+    private void loadNamesAndNicknames() {
         try {
-            names = TxtReader.readTextFile(context, "nameList");
+            if (names == null)names = TxtReader.readTextFile(context, "nameList");
+            if (nicknames == null)nicknames = TxtReader.readTextFile(context, "nicknames");
         } catch (IOException e) {
             //Shouldn't ever happen
             e.printStackTrace();
@@ -44,20 +46,24 @@ public class Name implements Information {
     private void generateRandomName() {
         String name1 = getRandomName();
         String name2 = getRandomName();
-        boolean shouldSurname = shouldSurname();
-        boolean shouldNickname = shouldNickname();
 
         setName(name1);
-        if (shouldSurname)setName(getName() + " " + name2);
-        if (shouldNickname) {
-            //TODO
+        if (shouldSurname()) setName(getName() + " " + name2);
+        if (shouldNickname()) {
+            setName(getName() + ", the " + getRandomNickname());
         }
+    }
+
+    private String getRandomNickname() {
+        int maxSize = nicknames.size();
+        int randomNickIndex = random.nextInt(maxSize);
+        return nicknames.get(randomNickIndex);
     }
 
     private String getRandomName() {
         int maxSize = names.size();
-        int randomNickIndex = random.nextInt(maxSize);
-        return names.get(randomNickIndex);
+        int randomNameIndex = random.nextInt(maxSize);
+        return names.get(randomNameIndex);
 
     }
 
