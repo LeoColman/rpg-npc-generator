@@ -1,7 +1,6 @@
 package me.kerooker.characterinformation;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,37 +10,45 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import me.kerooker.yaml.YamlReader;
+import me.kerooker.textmanagers.YamlReader;
 
 public class Race implements Information {
 
+    private static final Priority racePriority = Priority.NORMAL;
     private static Random random = new Random();
-
+    private static Map<String, Object> races;
     private String race;
     private String subrace;
     private Context c;
 
+
     public Race(Context c) {
         this.c = c;
+        setYml();
         generateRandomRaceAndSubrace();
+
     }
 
     public Race(Context c, String race, String subrace) {
         this.c = c;
         this.setRace(race);
         this.setSubrace(subrace);
+
     }
 
     @SuppressWarnings("unchecked")
-    private void generateRandomRaceAndSubrace() {
-        Map<String, Object> races;
+    private void setYml() {
         try {
             races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
         } catch (IOException e) {
             //Shouldn't ever happen
             e.printStackTrace();
-            return;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void generateRandomRaceAndSubrace() {
+
         Set<String> raceList = races.keySet();
         String randomRace = getRandomString(raceList);
 
@@ -53,23 +60,22 @@ public class Race implements Information {
         List<String> possibleSubraces = (List<String>) raceInfo.get("subraces");
 
         String randomSubraceName = getRandomString(possibleSubraces);
-        setSubrace(randomSubraceName);
+        setSubrace(randomSubraceName);                              //Setting subrace name
 
 
     }
 
     private String getRandomString(Collection<String> strings) {
-        if (strings.size() == 0)return "";
+        if (strings.size() == 0) return "";
         int randomico = random.nextInt(strings.size());
-        List<String> list = new ArrayList<>();
-        list.addAll(strings);
+        List<String> list = new ArrayList<>(strings);
         return list.get(randomico);
     }
 
 
     @Override
     public Priority getPriority() {
-        return Priority.NORMAL;
+        return racePriority;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class Race implements Information {
 
         if (subrace != null && !subrace.isEmpty()) {
             return race + "\n" + "Subrace: " + subrace;
-        }else {
+        } else {
             return race;
         }
 

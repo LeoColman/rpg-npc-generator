@@ -1,12 +1,11 @@
 package me.kerooker.rpgcharactergenerator;
 
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import me.kerooker.advertiser.Advertiser;
-import me.kerooker.characterinformation.Race;
+import me.kerooker.characterinformation.Name;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void TESTE() {
+        for (int i = 0; i < 500; i++) {
+            Name n = new Name(this);
+            Log.d("Name " + i, n.getInformation());
+        }
     }
 
     public void finishLoadingAd() {

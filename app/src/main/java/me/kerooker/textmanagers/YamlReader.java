@@ -1,8 +1,7 @@
-package me.kerooker.yaml;
+package me.kerooker.textmanagers;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 
 import org.yaml.snakeyaml.Yaml;
 
