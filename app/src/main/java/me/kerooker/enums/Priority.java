@@ -1,4 +1,4 @@
-package me.kerooker.characterinformation;
+package me.kerooker.enums;
 
 public enum Priority {
 

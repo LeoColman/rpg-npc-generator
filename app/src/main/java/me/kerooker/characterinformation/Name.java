@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
 
 public class Name implements Information {
@@ -27,8 +28,8 @@ public class Name implements Information {
 
     private void loadNamesAndNicknames() {
         try {
-            if (names == null)names = TxtReader.readTextFile(context, "nameList");
-            if (nicknames == null)nicknames = TxtReader.readTextFile(context, "nicknames");
+            if (names == null) names = TxtReader.readTextFile(context, "nameList");
+            if (nicknames == null) nicknames = TxtReader.readTextFile(context, "nicknames");
         } catch (IOException e) {
             //Shouldn't ever happen
             e.printStackTrace();
@@ -54,10 +55,14 @@ public class Name implements Information {
         }
     }
 
+    private String toUpperCase(String s) {
+        return (s.substring(0,1).toUpperCase() + s.substring(1));
+    }
+
     private String getRandomNickname() {
         int maxSize = nicknames.size();
         int randomNickIndex = random.nextInt(maxSize);
-        return nicknames.get(randomNickIndex);
+        return toUpperCase(nicknames.get(randomNickIndex));
     }
 
     private String getRandomName() {

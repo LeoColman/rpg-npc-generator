@@ -10,11 +10,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.YamlReader;
 
 public class Race implements Information {
 
-    private static final Priority racePriority = Priority.NORMAL;
+    private static final Priority racePriority = Priority.HIGH;
     private static Random random = new Random();
     private static Map<String, Object> races;
     private String race;
