@@ -1,5 +1,13 @@
 # Project-Specific
 - [x] Create Git Repo
-- [ ] Create Class Diagrams and Flowchart of functionalities
-- [ ] Create Application Project (Android Studios)
+- [x] Create Class Diagrams and Flowchart of functionalities
+- [x] Create Application Project (Android Studios)
 - [ ] Implement All the functions from Original Project
+- - [x] Name generation
+- - [x] Race Generation
+- - [x] Gender Generation
+- - [x] Sexuality Generation
+- - [ ] Age Generation
+- - [ ] Profession Generation
+- - [ ] Other Details Generation (personality, abilities..)
+- - [ ] Stats Generation
