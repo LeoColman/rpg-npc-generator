@@ -8,17 +8,17 @@ import java.util.List;
 
 import me.kerooker.enums.Priority;
 
-public class Character {
+public class Npc {
 
     List<Information> information = new ArrayList<Information>();
 
-    public Character (Information ... informations) {
+    public Npc(Information ... informations) {
         for (Information inf : informations) {
             information.add(inf);
         }
     }
 
-    public Character(List<Information> info) {
+    public Npc(List<Information> info) {
         this.information = info;
     }
 

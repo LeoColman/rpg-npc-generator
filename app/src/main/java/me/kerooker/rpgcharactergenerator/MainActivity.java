@@ -11,6 +11,7 @@ import me.kerooker.advertiser.Advertiser;
 import me.kerooker.characterinformation.Gender;
 import me.kerooker.characterinformation.Information;
 import me.kerooker.characterinformation.Name;
+import me.kerooker.characterinformation.Npc;
 import me.kerooker.characterinformation.Profession;
 import me.kerooker.characterinformation.Race;
 import me.kerooker.characterinformation.Sexuality;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             info.add(new Profession(a.getAge(), this));
             info.add(new Sexuality());
             info.add(new Race(this));
-            Log.d("Char " + i, new me.kerooker.characterinformation.Character(info).getCharacter());
+            Log.d("Char " + i, new Npc(info).getCharacter());
         }
     }
 

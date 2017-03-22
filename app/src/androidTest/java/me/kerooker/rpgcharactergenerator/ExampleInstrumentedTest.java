@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.kerooker.characterinformation.Motivation;
+import me.kerooker.characterinformation.PersonalityTraits;
 import me.kerooker.characterinformation.Race;
 
 import static org.junit.Assert.assertTrue;
@@ -26,12 +28,10 @@ public class ExampleInstrumentedTest {
     public void generateRaceOk() {
         Context c = InstrumentationRegistry.getContext();
 
-        List<String> racesAndSubraces = new ArrayList<>();
-        for (int i = 0; i<100; i++) {
-            racesAndSubraces.add(new Race(c).getInformation());
-            Log.d("Random Race " + i, racesAndSubraces.get(i));
+        for (int i = 0; i< 100; i++) {
+            PersonalityTraits pt = new PersonalityTraits(c);
+            Log.d("traits " + i, pt.getInformation());
         }
-        assertTrue(racesAndSubraces.size() == 100);
 
 
     }
