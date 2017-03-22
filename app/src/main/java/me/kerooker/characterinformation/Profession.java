@@ -1,6 +1,9 @@
 package me.kerooker.characterinformation;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +24,7 @@ public class Profession implements Information {
     private String profession;
     private Context context;
 
-    public Profession(Age age, Context context) {
+    public Profession(@Nullable Age age, Context context) {
         this.age = age;
         this.context = context;
         setupProfessions();
@@ -54,6 +57,7 @@ public class Profession implements Information {
 
 
     private void generateRandomProfession() {
+        if (age == null)age = Age.getRandomAge();
         if (age.isChild()) {
             profession = getRandomChildProfession();
         } else {
@@ -83,6 +87,6 @@ public class Profession implements Information {
 
     @Override
     public String getInformation() {
-        return "Profession: " + profession;
+        return "Profession: " + WordUtils.capitalizeFully(profession);
     }
 }

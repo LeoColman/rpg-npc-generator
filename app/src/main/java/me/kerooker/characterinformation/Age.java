@@ -1,11 +1,13 @@
 package me.kerooker.characterinformation;
 
+import android.support.annotation.Nullable;
+
 import me.kerooker.enums.Priority;
 
 public class Age implements Information {
 
+    private static final Priority agePriority = Priority.HIGH;
     private me.kerooker.enums.Age age;
-    private static final Priority agePriority = Priority.NORMAL;
 
     public Age() {
         generateRandomAge();
@@ -16,6 +18,15 @@ public class Age implements Information {
 
     private void generateRandomAge() {
         age = me.kerooker.enums.Age.getRandomAge();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Nullable
+    public me.kerooker.enums.Age getAge() {
+        return age;
     }
 
     @Override
