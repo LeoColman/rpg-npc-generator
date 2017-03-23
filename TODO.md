@@ -9,8 +9,8 @@
 - - [x] Sexuality Generation
 - - [x] Age Generation
 - - [x] Profession Generation
-- - [ ] Other Details Generation (personality, abilities..)
-- - [ ] Stats Generation
+- - [x] Details (personality, languages, motivation)
+- - [x] - REMOVED- I don't believe this is important. - Other Details Generation (abilities, racial..)
 - [ ] Output via PDF
 - [ ] Output via other formats (?)
 - [ ] Multiple NPCs at once
