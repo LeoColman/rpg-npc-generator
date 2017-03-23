@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import me.kerooker.enums.Language;
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.YamlReader;
 
@@ -35,6 +36,28 @@ public class Race implements Information {
         this.setRace(race);
         this.setSubrace(subrace);
 
+    }
+
+    public List<me.kerooker.enums.Language> getRacialLanguages() {
+        List<Language> languages = new ArrayList<>();
+
+        Map<String, Object> raceInfo = (Map<String, Object>) races.get(getLowerCaseRace());
+        List<String> racialLanguages = (List<String>) raceInfo.get("racialLanguages");
+
+        double currentChance = 0.95;
+        for (String language : racialLanguages) {
+            double generated = random.nextDouble();
+            if (generated < currentChance) {
+                languages.add(Language.valueOf(language.toUpperCase()));
+            }
+            currentChance = currentChance / 2;
+        }
+
+        return languages;
+    }
+
+    private String getLowerCaseRace() {
+        return race.toLowerCase().replaceAll("-","");
     }
 
     @SuppressWarnings("unchecked")

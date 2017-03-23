@@ -8,14 +8,16 @@ import android.util.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import me.kerooker.characterinformation.Age;
+import me.kerooker.characterinformation.Gender;
+import me.kerooker.characterinformation.Language;
 import me.kerooker.characterinformation.Motivation;
+import me.kerooker.characterinformation.Name;
+import me.kerooker.characterinformation.Npc;
 import me.kerooker.characterinformation.PersonalityTraits;
+import me.kerooker.characterinformation.Profession;
 import me.kerooker.characterinformation.Race;
-
-import static org.junit.Assert.assertTrue;
+import me.kerooker.characterinformation.Sexuality;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -25,12 +27,23 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     @Test
-    public void generateRaceOk() {
-        Context c = InstrumentationRegistry.getContext();
+    public void generate100Characters() throws Exception {
 
-        for (int i = 0; i< 100; i++) {
-            PersonalityTraits pt = new PersonalityTraits(c);
-            Log.d("traits " + i, pt.getInformation());
+        Context c = InstrumentationRegistry.getContext();
+        for (int i = 0; i < 100; i++) {
+            Race r = new Race(c);
+                Age a = new Age();
+                Gender g = new Gender();
+
+                Motivation m = new Motivation(c);
+                Name n = new Name(c);
+                PersonalityTraits traits = new PersonalityTraits(c);
+                Profession p = new Profession(a, c);
+                Language l = new Language(r);
+                Sexuality s = new Sexuality();
+
+                Npc npc = new Npc(a, g, l, m, n, traits, p, r, s);
+                Log.d("N: " + i, npc.getCharacter());
         }
 
 

@@ -2,16 +2,15 @@ package me.kerooker.rpgcharactergenerator;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.kerooker.advertiser.Advertiser;
+import me.kerooker.characterinformation.Age;
 import me.kerooker.characterinformation.Gender;
-import me.kerooker.characterinformation.Information;
+import me.kerooker.characterinformation.Language;
+import me.kerooker.characterinformation.Motivation;
 import me.kerooker.characterinformation.Name;
 import me.kerooker.characterinformation.Npc;
+import me.kerooker.characterinformation.PersonalityTraits;
 import me.kerooker.characterinformation.Profession;
 import me.kerooker.characterinformation.Race;
 import me.kerooker.characterinformation.Sexuality;
@@ -28,22 +27,24 @@ public class MainActivity extends AppCompatActivity {
     private void start() {
         proccessAdvertisement(this);
         //TODO
-        TESTE();
     }
 
-    private void TESTE() {
-        for (int i = 0; i < 100; i++) {
-            List<Information> info = new ArrayList<>();
-            info.add(new Name(this));
-            me.kerooker.characterinformation.Age a = new me.kerooker.characterinformation.Age();
-            info.add(a);
-            info.add(new Gender());
-            info.add(new Profession(a.getAge(), this));
-            info.add(new Sexuality());
-            info.add(new Race(this));
-            Log.d("Char " + i, new Npc(info).getCharacter());
-        }
+    private Npc generateRandomNpc() {
+        Age npcAge = new Age();
+        Gender npcGender = new Gender();
+        Race npcRace = new Race(this);
+        Language npcLanguage = new Language(npcRace);
+        Motivation npcMotivation = new Motivation(this);
+        Name npcName = new Name(this);
+        PersonalityTraits npcTraits = new PersonalityTraits(this);
+        Profession npcProfession = new Profession(npcAge, this);
+        Sexuality npcSexuality = new Sexuality();
+
+        return new Npc(npcAge, npcGender, npcRace, npcLanguage, npcMotivation, npcName, npcTraits, npcProfession, npcSexuality);
+
+
     }
+
 
     public void finishLoadingAd() {
         setContentView(R.layout.activity_main);

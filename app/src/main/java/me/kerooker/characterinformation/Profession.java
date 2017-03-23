@@ -44,6 +44,14 @@ public class Profession implements Information {
         generateRandomProfession();
     }
 
+    public Profession(@Nullable me.kerooker.characterinformation.Age age, Context context) {
+        this(age.getAge(), context);
+    }
+
+    public Profession() {
+
+    }
+
     private void setupProfessions() {
         try {
             if (professions == null) professions = TxtReader.readTextFile(context, "professions");
