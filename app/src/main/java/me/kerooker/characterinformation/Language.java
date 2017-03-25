@@ -1,6 +1,7 @@
 package me.kerooker.characterinformation;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Random;
 
 import me.kerooker.enums.Priority;
 
-public class Language implements Information {
+public class Language implements Information, Serializable {
     private static final Priority languagePriority = Priority.LOW;
     private static final Random random = new Random();
     private List<me.kerooker.enums.Language> spoken = new ArrayList<>();

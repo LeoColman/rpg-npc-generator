@@ -3,17 +3,18 @@ package me.kerooker.characterinformation;
 import android.content.Context;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
 
-public class Name implements Information {
+public class Name implements Information, Serializable {
 
     private static final double CHANCE_TO_HAVE_SURNAME = 0.97;
     private static final double CHANCE_TO_HAVE_A_NICKNAME = 0.15;
-    private static Priority namePriority = Priority.HIGHEST;
+    private static Priority namePriority = Priority.TOP;
     private static List<String> names;
     private static List<String> nicknames;
     private static Random random = new Random();

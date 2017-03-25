@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -14,9 +15,9 @@ import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
 
 
-public class Profession implements Information {
+public class Profession implements Information, Serializable {
 
-    private static final Priority professionPriority = Priority.NORMAL;
+    private static final Priority professionPriority = Priority.LOW;
     private static List<String> professions;
     private static List<String> childProfessions;
     private static Random random = new Random();

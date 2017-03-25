@@ -4,13 +4,14 @@ package me.kerooker.characterinformation;
 import android.content.Context;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
 
-public class Motivation implements Information {
+public class Motivation implements Information, Serializable {
 
     private static final Priority motivationPriority = Priority.LOW;
     private static final Random random = new Random();

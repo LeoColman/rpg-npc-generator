@@ -2,11 +2,13 @@ package me.kerooker.characterinformation;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
+
 import me.kerooker.enums.Priority;
 
-public class Age implements Information {
+public class Age implements Information, Serializable {
 
-    private static final Priority agePriority = Priority.HIGH;
+    private static final Priority agePriority = Priority.NORMAL;
     private me.kerooker.enums.Age age;
 
     public Age() {

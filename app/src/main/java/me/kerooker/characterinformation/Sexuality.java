@@ -1,11 +1,13 @@
 package me.kerooker.characterinformation;
 
 
+import java.io.Serializable;
+
 import me.kerooker.enums.Priority;
 
-public class Sexuality implements Information {
+public class Sexuality implements Information, Serializable {
 
-    private static final Priority sexualityPriority = Priority.NORMAL;
+    private static final Priority sexualityPriority = Priority.LOW;
     private me.kerooker.enums.Sexuality sexuality;
 
     public Sexuality() {

@@ -3,6 +3,7 @@ package me.kerooker.characterinformation;
 import android.content.Context;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +15,7 @@ import me.kerooker.enums.Language;
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.YamlReader;
 
-public class Race implements Information {
+public class Race implements Information, Serializable {
 
     private static final Priority racePriority = Priority.HIGH;
     private static Random random = new Random();

@@ -1,9 +1,11 @@
 package me.kerooker.characterinformation;
 
 
+import java.io.Serializable;
+
 import me.kerooker.enums.Priority;
 
-public class Gender implements Information {
+public class Gender implements Information, Serializable {
 
     private static final Priority genderPriority = Priority.NORMAL;
     private me.kerooker.enums.Gender gender;

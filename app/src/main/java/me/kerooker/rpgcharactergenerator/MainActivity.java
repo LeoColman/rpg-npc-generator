@@ -1,21 +1,23 @@
 package me.kerooker.rpgcharactergenerator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import me.kerooker.advertiser.Advertiser;
-import me.kerooker.characterinformation.Age;
-import me.kerooker.characterinformation.Gender;
-import me.kerooker.characterinformation.Language;
-import me.kerooker.characterinformation.Motivation;
-import me.kerooker.characterinformation.Name;
 import me.kerooker.characterinformation.Npc;
-import me.kerooker.characterinformation.PersonalityTraits;
-import me.kerooker.characterinformation.Profession;
-import me.kerooker.characterinformation.Race;
-import me.kerooker.characterinformation.Sexuality;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
+
+    public static final String NPCS_LIST_INTENT_NAME = "npcslist";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +27,78 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void start() {
-        proccessAdvertisement(this);
-        //TODO
+        proccessAdvertisement(this);    /* Calls finishLoadingAd later */
     }
 
-    private Npc generateRandomNpc() {
-        Age npcAge = new Age();
-        Gender npcGender = new Gender();
-        Race npcRace = new Race(this);
-        Language npcLanguage = new Language(npcRace);
-        Motivation npcMotivation = new Motivation(this);
-        Name npcName = new Name(this);
-        PersonalityTraits npcTraits = new PersonalityTraits(this);
-        Profession npcProfession = new Profession(npcAge, this);
-        Sexuality npcSexuality = new Sexuality();
+    private void setEventHandlers() {
+        setDiscreeteBarEvent();
+        setGenerateButtonHandler();
+    }
 
-        return new Npc(npcAge, npcGender, npcRace, npcLanguage, npcMotivation, npcName, npcTraits, npcProfession, npcSexuality);
+    private void setGenerateButtonHandler() {
+        final DiscreteSeekBar bar = (DiscreteSeekBar) findViewById(R.id.main_screen_random_selector_bar);
+        final Button generateButton = (Button) findViewById(R.id.main_screen_generate_button);
 
+        generateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int amountToGenerate = bar.getProgress();
+                ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
+                openNpcActivity(generatedNpcs);
+            }
+        });
+    }
+
+    private void openNpcActivity(ArrayList<Npc> npcsToShow) {
+        Intent i = new Intent(this, GeneratedNpcsActivity.class);
+        i.putExtra(MainActivity.NPCS_LIST_INTENT_NAME, npcsToShow);
+        startActivity(i);
 
     }
+
+    private ArrayList<Npc> generateNpcs(int amountToGenerate) {
+        ArrayList<Npc> npcList = new ArrayList<>();
+        for (int i = 0; i < amountToGenerate; i++) {
+            npcList.add(Npc.generateRandomNpc(this));
+        }
+        return npcList;
+    }
+
+    /**
+     * Sets the event for the discreetebar to change the textview on it's progerss
+     */
+    private void setDiscreeteBarEvent() {
+        final DiscreteSeekBar bar = (DiscreteSeekBar) findViewById(R.id.main_screen_random_selector_bar);
+        final TextView view = (TextView) findViewById(R.id.main_screen_textViewAmountOfNpcs);
+
+        /* Setting onProgressChange AKA when bar moves*/
+        bar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                String textNow = view.getText().toString();
+                textNow = textNow.replaceAll("\\d", "");
+                String newText = textNow + value;
+                view.setText(newText);
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+                //IGNORE
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+                //IGNORE
+            }
+        });
+    }
+
+
 
 
     public void finishLoadingAd() {
         setContentView(R.layout.activity_main);
+        setEventHandlers();
     }
 
     private void proccessAdvertisement(MainActivity activity) {

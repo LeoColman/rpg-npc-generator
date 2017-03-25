@@ -2,7 +2,7 @@ package me.kerooker.rpgcharactergenerator;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import me.kerooker.enums.Sexuality;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,7 +11,10 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void generatingRacesOk() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println(Sexuality.getRandomSexuality());
+
+        }
     }
 }

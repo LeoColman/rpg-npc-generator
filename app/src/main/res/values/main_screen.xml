@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_screen_npcs_to_generate">NPCs to Generate</string>
+    <string name="main_screen_npcs_to_generate">NPCs to Generate: 1</string>
+    <string name="main_screen_generate_button_text">Generate!</string>
 </resources>

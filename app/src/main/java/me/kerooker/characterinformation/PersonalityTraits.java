@@ -3,6 +3,7 @@ package me.kerooker.characterinformation;
 import android.content.Context;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Random;
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
 
-public class PersonalityTraits implements Information {
+public class PersonalityTraits implements Information, Serializable {
 
     private static final Priority personalityPriority = Priority.LOW;
     private static final int minTraits = 2;
