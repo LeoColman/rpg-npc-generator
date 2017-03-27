@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +22,8 @@ import me.kerooker.util.ViewIdGenerator;
 public class GeneratedNpcsActivity extends AppCompatActivity {
 
     private static final int normalPriorityTextSize = 14;
-    private static final int highPriorityTextSize = 20;
+    private static final int highPriorityTextSize = 18;
+    private static final int mainConstraintId = R.id.generated_main_constraint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +43,10 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
     }
 
     private void addNpc(Npc n) {
-        ConstraintLayout mainConstraint = (ConstraintLayout) findViewById(R.id.generated_main_constraint);
+        ConstraintLayout mainConstraint = (ConstraintLayout) findViewById(mainConstraintId);
         int lastChildPos = mainConstraint.getChildCount() - 1;
 
-
-        ConstraintLayout newBox = getNewBoxLayout();
+        ConstraintLayout newBox = getNewBoxLayout(mainConstraint);
 
         newBox.setId(ViewIdGenerator.generateViewId());
 
@@ -115,8 +116,8 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
 
     }
 
-    private ConstraintLayout getNewBoxLayout() {
-        return (ConstraintLayout) getLayoutInflater().inflate(R.layout.box_npcs, null);
+    private ConstraintLayout getNewBoxLayout(ViewGroup parent) {
+        return (ConstraintLayout) getLayoutInflater().inflate(R.layout.box_npcs, parent, false);
     }
 
 
