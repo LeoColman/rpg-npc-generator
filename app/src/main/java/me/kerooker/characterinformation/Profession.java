@@ -17,7 +17,7 @@ import me.kerooker.textmanagers.TxtReader;
 
 public class Profession implements Information, Serializable {
 
-    private static final Priority professionPriority = Priority.LOW;
+    private static final Priority professionPriority = Priority.NORMAL;
     private static List<String> professions;
     private static List<String> childProfessions;
     private static Random random = new Random();

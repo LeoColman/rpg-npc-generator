@@ -7,7 +7,7 @@ import me.kerooker.enums.Priority;
 
 public class Sexuality implements Information, Serializable {
 
-    private static final Priority sexualityPriority = Priority.LOW;
+    private static final Priority sexualityPriority = Priority.NORMAL;
     private me.kerooker.enums.Sexuality sexuality;
 
     public Sexuality() {

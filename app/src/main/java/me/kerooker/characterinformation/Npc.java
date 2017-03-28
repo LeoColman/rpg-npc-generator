@@ -45,7 +45,7 @@ public class Npc implements Serializable {
         PersonalityTraits traits = new PersonalityTraits(context);
         Profession profession = new Profession(age, context);
         Sexuality sexuality = new Sexuality();
-        return new Npc(name, race, gender, age, sexuality, profession, motivation, traits, language);
+        return new Npc(name, race, gender, age, profession, sexuality, motivation, traits, language);
     }
 
     public Information popTopInformation() {

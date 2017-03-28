@@ -21,9 +21,11 @@ import me.kerooker.util.ViewIdGenerator;
 
 public class GeneratedNpcsActivity extends AppCompatActivity {
 
-    private static final int normalPriorityTextSize = 14;
-    private static final int highPriorityTextSize = 18;
-    private static final int mainConstraintId = R.id.generated_main_constraint;
+    private static final int NORMAL_PRIORITY_TEXT_SIZE = 14;
+    private static final int HIGH_PRIORITY_TEXT_SIZE = 18;
+    private static final int LOW_PRIORITY_TEXT_SIZE = 12;
+    private static final int LOWEST_PRIORITY_TEXT_SIZE = 10;
+    private static final int MAIN_CONSTRAINT_ID = R.id.generated_main_constraint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
     }
 
     private void addNpc(Npc n) {
-        ConstraintLayout mainConstraint = (ConstraintLayout) findViewById(mainConstraintId);
+        ConstraintLayout mainConstraint = (ConstraintLayout) findViewById(MAIN_CONSTRAINT_ID);
         int lastChildPos = mainConstraint.getChildCount() - 1;
 
         ConstraintLayout newBox = getNewBoxLayout(mainConstraint);
@@ -56,19 +58,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
 
         List<Information> info = n.npcInformation();
         for (Information inf : info) {
-            Priority p = inf.getPriority();
-            switch (p) {
-                case LOWEST:
-                    // addLowInformation(newBox, inf);
-                    break;
-                case LOW:
-                    break;
-                case NORMAL:
-                case HIGH:
-                case HIGHEST:
-                    addHighInformation(newBox, inf);
-                    break;
-            }
+            addInformation(newBox, inf);
         }
 
         if (lastChildPos >= 0) {
@@ -78,7 +68,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         }
     }
 
-    private void addHighInformation(ConstraintLayout newBox, Information inf) {
+    private void addInformation(ConstraintLayout newBox, Information inf) {
         LinearLayout layout = (LinearLayout) newBox.findViewById(R.id.linearLayout_high_highest_normal);
         Priority p = inf.getPriority();
 
@@ -88,12 +78,23 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         //TODO setTextLayout
 
         toAdd.setText(inf.getInformation());
-        if (p.equals(Priority.NORMAL)) {
-            toAdd.setTextSize(normalPriorityTextSize);
-        } else {
-            // highest, high
-            toAdd.setTextSize(highPriorityTextSize);
+        int sizeToSet = 0;
+        switch (p) {
+            case LOWEST:
+                sizeToSet = LOWEST_PRIORITY_TEXT_SIZE;
+                break;
+            case LOW:
+                sizeToSet = LOW_PRIORITY_TEXT_SIZE;
+                break;
+            case NORMAL:
+                sizeToSet = NORMAL_PRIORITY_TEXT_SIZE;
+                break;
+            case HIGH:
+                sizeToSet = HIGH_PRIORITY_TEXT_SIZE;
+                break;
         }
+        if (sizeToSet == 0) throw new RuntimeException("Size not set");
+        toAdd.setTextSize(sizeToSet);
 
         layout.addView(toAdd);
 

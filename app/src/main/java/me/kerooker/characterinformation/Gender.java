@@ -7,7 +7,7 @@ import me.kerooker.enums.Priority;
 
 public class Gender implements Information, Serializable {
 
-    private static final Priority genderPriority = Priority.NORMAL;
+    private static final Priority genderPriority = Priority.HIGH;
     private me.kerooker.enums.Gender gender;
 
     public Gender() {

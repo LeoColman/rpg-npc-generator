@@ -2,7 +2,7 @@ package me.kerooker.enums;
 
 public enum Priority {
 
-    LOWEST, LOW, NORMAL, HIGH, HIGHEST, TOP
+    LOWEST, LOW, NORMAL, HIGH, TOP
 
 
 }
