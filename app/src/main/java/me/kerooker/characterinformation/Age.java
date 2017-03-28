@@ -22,10 +22,6 @@ public class Age implements Information, Serializable {
         age = me.kerooker.enums.Age.getRandomAge();
     }
 
-    /**
-     *
-     * @return
-     */
     @Nullable
     public me.kerooker.enums.Age getAge() {
         return age;

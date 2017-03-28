@@ -39,6 +39,7 @@ public class Race implements Information, Serializable {
 
     }
 
+    @SuppressWarnings("unchecked")
     public List<me.kerooker.enums.Language> getRacialLanguages() {
         List<Language> languages = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package me.kerooker.characterinformation;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -18,9 +19,9 @@ import me.kerooker.textmanagers.TxtReader;
 public class Profession implements Information, Serializable {
 
     private static final Priority professionPriority = Priority.NORMAL;
+    private static final Random random = new Random();
     private static List<String> professions;
     private static List<String> childProfessions;
-    private static Random random = new Random();
     private me.kerooker.enums.Age age;
     private String profession;
     private Context context;
@@ -45,7 +46,7 @@ public class Profession implements Information, Serializable {
         generateRandomProfession();
     }
 
-    public Profession(@Nullable me.kerooker.characterinformation.Age age, Context context) {
+    public Profession(@NonNull me.kerooker.characterinformation.Age age, Context context) {
         this(age.getAge(), context);
     }
 

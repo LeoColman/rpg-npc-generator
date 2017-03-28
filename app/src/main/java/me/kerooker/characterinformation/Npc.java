@@ -14,12 +14,10 @@ import me.kerooker.enums.Priority;
 public class Npc implements Serializable {
 
 
-    List<Information> information = new ArrayList<Information>();
+    List<Information> information = new ArrayList<>();
 
     public Npc(Information ... informations) {
-        for (Information inf : informations) {
-            information.add(inf);
-        }
+        Collections.addAll(information, informations);
 
         sortInformation();
     }
