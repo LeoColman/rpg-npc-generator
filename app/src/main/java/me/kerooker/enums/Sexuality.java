@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Sexuality {
-    HETEROSSEXUAL(80.0), HOMOSSEXUAL(10.0), BISSEXUAL(9.0), ASSEXUAL(1.0);
+    HETEROSEXUAL(80.0), HOMOSEXUAL(10.0), BISEXUAL(9.0), ASEXUAL(1.0);
 
     private double chanceToHappen;
 
