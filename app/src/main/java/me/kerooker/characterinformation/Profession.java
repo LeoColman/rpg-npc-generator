@@ -14,12 +14,13 @@ import java.util.Random;
 import me.kerooker.enums.Age;
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
+import me.kerooker.util.Randomizer;
 
 
 public class Profession implements Information, Serializable {
 
     private static final Priority professionPriority = Priority.NORMAL;
-    private static final Random random = new Random();
+    private static final Random random = Randomizer.getRandom();
     private static List<String> professions;
     private static List<String> childProfessions;
     private me.kerooker.enums.Age age;

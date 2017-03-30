@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -14,12 +15,13 @@ import java.util.Set;
 import me.kerooker.enums.Language;
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.YamlReader;
+import me.kerooker.util.Randomizer;
 
 public class Race implements Information, Serializable {
 
     private static final Priority racePriority = Priority.HIGH;
-    private static Random random = new Random();
-    private static Map<String, Object> races;
+    private static Random random = Randomizer.getRandom();
+    private static HashMap<String, Object> races;
     private String race;
     private String subrace;
     private Context c;

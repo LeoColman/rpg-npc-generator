@@ -32,6 +32,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

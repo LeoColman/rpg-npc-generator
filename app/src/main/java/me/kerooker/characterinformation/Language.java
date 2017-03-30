@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Random;
 
 import me.kerooker.enums.Priority;
+import me.kerooker.util.Randomizer;
 
 public class Language implements Information, Serializable {
-    private static final Priority languagePriority = Priority.LOW;
-    private static final Random random = new Random();
+    private static final Priority LANGUAGE_PRIORITY = Priority.LOW;
+    private static final Random RANDOM = Randomizer.getRandom();
     private List<me.kerooker.enums.Language> spoken = new ArrayList<>();
     private Race race;
 
@@ -28,16 +29,14 @@ public class Language implements Information, Serializable {
 
     private void addRaceAndCommonLanguages() {
         verifyAndAddCommon();
-        for (me.kerooker.enums.Language lang : race.getRacialLanguages()) {
-            spoken.add(lang);
-        }
+        spoken.addAll(race.getRacialLanguages());
     }
 
     private void generateRandomLanguages() {
         double currentChance = 0.7;
         List<me.kerooker.enums.Language> languages = me.kerooker.enums.Language.languagesWithoutCommon();
         for (int i = 0; i < me.kerooker.enums.Language.amountOfLanguages(); i++) {
-            double generated = random.nextDouble();
+            double generated = RANDOM.nextDouble();
             if (generated < currentChance) {
                 me.kerooker.enums.Language randomLanguage = getRandomFromList(languages);
                 if (!addLanguage(randomLanguage))continue;
@@ -59,19 +58,19 @@ public class Language implements Information, Serializable {
 
     private me.kerooker.enums.Language getRandomFromList(List<me.kerooker.enums.Language> list) {
         int max = list.size();
-        int randomico = random.nextInt(max);
+        int randomico = RANDOM.nextInt(max);
         return list.get(randomico);
     }
 
     private void verifyAndAddCommon() {
-        double randomDoubleForCommon = random.nextDouble();
+        double randomDoubleForCommon = RANDOM.nextDouble();
         if (randomDoubleForCommon < 0.95) spoken.add(me.kerooker.enums.Language.COMMON);
     }
 
 
     @Override
     public Priority getPriority() {
-        return languagePriority;
+        return LANGUAGE_PRIORITY;
     }
 
     @Override

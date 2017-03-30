@@ -23,7 +23,9 @@ public class Npc implements Serializable {
     }
 
     public Npc(List<Information> info) {
+
         this.information = info;
+        sortInformation();
     }
 
     /**
@@ -51,6 +53,7 @@ public class Npc implements Serializable {
         for (Information i : information) {
             if (i.getPriority().equals(Priority.TOP)) {
                 topInformation = i;
+                break;
             }
         }
         if (topInformation == null) throw new RuntimeException("No top Priority!");

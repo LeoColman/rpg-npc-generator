@@ -10,11 +10,12 @@ import java.util.Random;
 
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
+import me.kerooker.util.Randomizer;
 
 public class Motivation implements Information, Serializable {
 
     private static final Priority motivationPriority = Priority.LOW;
-    private static final Random random = new Random();
+    private static final Random random = Randomizer.getRandom();
     private static List<String> motivations;
     private Context context;
     private String motivation;

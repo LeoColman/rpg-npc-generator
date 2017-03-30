@@ -14,7 +14,7 @@ import me.kerooker.rpgcharactergenerator.R;
 
 /**
  * Class that handles an Advertisement together with AdInfoFiler.
- * It verifies all the stablished conditions for an advertisement to be played,
+ * It verifies all the established conditions for an advertisement to be played,
  * and does it if the conditions are met.
  * Created by Kerooker on 15/03/2017
  */
@@ -24,6 +24,15 @@ public class Advertiser {
     private static final int minutesToWaitForAd = 60;
 
     private MainActivity parentActivity;
+
+    public static void attemptAdvertisement(MainActivity activity) {
+        Advertiser a = new Advertiser();
+        a.setParentActivity(activity);
+
+        if (a.shouldAdvertise()) {
+            a.openAdvertisement();
+        }
+    }
 
     private boolean shouldAdvertise() {
 
@@ -81,29 +90,11 @@ public class Advertiser {
                 ad.show();
             }
 
-            @Override
-            public void onAdClosed() {
-                finishLoadingAd();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                finishLoadingAd();
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                finishLoadingAd();
-            }
         });
 
         ad.loadAd(adRequest);
 
 
-    }
-
-    private void finishLoadingAd() {
-        parentActivity.finishLoadingAd();
     }
 
     private void saveLastAdInfo() {
@@ -112,23 +103,12 @@ public class Advertiser {
         aif.setLastAdInfo(now);
     }
 
-    private void setParentActivity(MainActivity ac) {
-        this.parentActivity = ac;
-    }
-
     private Activity getParentActivity() {
         return parentActivity;
     }
 
-    public static void attemptAdvertisement(MainActivity activity) {
-        Advertiser a = new Advertiser();
-        a.setParentActivity(activity);
-
-        if (a.shouldAdvertise()) {
-            a.openAdvertisement();
-        }else {
-            activity.finishLoadingAd();
-        }
+    private void setParentActivity(MainActivity ac) {
+        this.parentActivity = ac;
     }
 
 }

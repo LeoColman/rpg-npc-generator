@@ -7,19 +7,20 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.HashMap;
 
 public class YamlReader {
 
 
-    public static Map loadYamlFromAssets(Context c, String fileName) throws IOException {
+    public static HashMap loadYamlFromAssets(Context c, String fileName) throws IOException {
         AssetManager assets = c.getAssets();
         String stripped = fileName.replaceAll("\\.yml", "");
         stripped = stripped.replaceAll("\\.yaml", "");
 
         InputStream file = assets.open("yaml/" + stripped + ".yaml");
         Yaml yaml = new Yaml();
-        return (Map) yaml.load(file);
+
+        return (HashMap) yaml.load(file);
     }
 
 

@@ -11,13 +11,14 @@ import java.util.Random;
 
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
+import me.kerooker.util.Randomizer;
 
 public class PersonalityTraits implements Information, Serializable {
 
     private static final Priority personalityPriority = Priority.LOW;
     private static final int minTraits = 2;
     private static final int maxTraits = 5;
-    private static final Random random = new Random();
+    private static final Random random = Randomizer.getRandom();
     private static List<String> traitsList;
     private Context context;
     private List<String> traits;

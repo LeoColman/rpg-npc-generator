@@ -9,6 +9,7 @@ import java.util.Random;
 
 import me.kerooker.enums.Priority;
 import me.kerooker.textmanagers.TxtReader;
+import me.kerooker.util.Randomizer;
 
 public class Name implements Information, Serializable {
 
@@ -17,7 +18,7 @@ public class Name implements Information, Serializable {
     private static Priority namePriority = Priority.TOP;
     private static List<String> names;
     private static List<String> nicknames;
-    private static Random random = new Random();
+    private static Random random = Randomizer.getRandom();
     private String name;
     private Context context;
 

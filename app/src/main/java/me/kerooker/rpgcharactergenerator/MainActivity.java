@@ -3,6 +3,7 @@ package me.kerooker.rpgcharactergenerator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,8 +23,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.loading_layout);
+        setContentView(R.layout.activity_main);
         start();
+        setEventHandlers();
     }
 
     private void start() {
@@ -43,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 int amountToGenerate = bar.getProgress();
+                Log.d("Start", "Start Generating");
                 ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
+                Log.d("Open", "Openning next activity");
                 openNpcActivity(generatedNpcs);
             }
         });
@@ -93,13 +97,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         });
     }
 
-
-
-
-    public void finishLoadingAd() {
-        setContentView(R.layout.activity_main);
-        setEventHandlers();
-    }
 
     private void proccessAdvertisement(MainActivity activity) {
         Advertiser.attemptAdvertisement(activity);
