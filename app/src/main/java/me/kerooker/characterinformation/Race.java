@@ -24,18 +24,15 @@ public class Race implements Information, Serializable {
     private static HashMap<String, Object> races;
     private String race;
     private String subrace;
-    private Context c;
 
 
     public Race(Context c) {
-        this.c = c;
-        setYml();
+        setYml(c);
         generateRandomRaceAndSubrace();
 
     }
 
-    public Race(Context c, String race, String subrace) {
-        this.c = c;
+    public Race(String race, String subrace) {
         this.setRace(race);
         this.setSubrace(subrace);
 
@@ -65,7 +62,7 @@ public class Race implements Information, Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private void setYml() {
+    private static void setYml(Context c) {
         try {
             if (races == null)races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
         } catch (IOException e) {
@@ -77,7 +74,7 @@ public class Race implements Information, Serializable {
     @SuppressWarnings("unchecked")
     private void generateRandomRaceAndSubrace() {
 
-        Set<String> raceList = races.keySet();
+        List<String> raceList = getRaceList();
         String randomRace = getRandomString(raceList);
 
         Map<String, Object> raceInfo = (Map<String, Object>) races.get(randomRace);
@@ -91,6 +88,27 @@ public class Race implements Information, Serializable {
         setSubrace(randomSubraceName);                              //Setting subrace name
 
 
+    }
+
+    private List<String> getRaceList() {
+        Set<String> racesSet = races.keySet();
+        List<String> racesList = new ArrayList<>(racesSet);
+        return racesList;
+    }
+
+    public static List<String> getRaceList(Context context) {
+        setYml(context);
+        Set<String> racesSet = races.keySet();
+
+        List<String> racesList = new ArrayList<>();
+
+        for (String race : racesSet) {
+            Map<String, Object> raceInfo = (Map<String, Object>) races.get(race);
+
+            String raceName = (String) raceInfo.get("name");
+            racesList.add(raceName);
+        }
+        return racesList;
     }
 
     private String getRandomString(Collection<String> strings) {
