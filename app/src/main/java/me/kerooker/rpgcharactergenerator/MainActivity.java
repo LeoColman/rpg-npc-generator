@@ -45,9 +45,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 int amountToGenerate = bar.getProgress();
-                Log.d("Start", "Start Generating");
                 ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
-                Log.d("Open", "Openning next activity");
                 openNpcActivity(generatedNpcs);
             }
         });

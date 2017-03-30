@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GeneratedNpcsActivity" />
+        <activity android:name=".GeneratedNpcsActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            />
     </application>
 
 </manifest>
