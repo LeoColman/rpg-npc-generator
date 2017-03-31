@@ -107,8 +107,7 @@ public class Npc implements Serializable {
         }
 
         public Builder random() {
-            Npc npc = generateRandomNpc(context);
-            npcInstance = npc;
+            npcInstance = generateRandomNpc(context);
             return this;
         }
 

@@ -46,6 +46,49 @@ public class Race implements Information, Serializable {
     }
 
     @SuppressWarnings("unchecked")
+    private static void setYml(Context c) {
+        try {
+            if (races == null) races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
+        } catch (IOException e) {
+            //Shouldn't ever happen
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> getSubraceList(String race, Context c) {
+        setYml(c);
+        String raceKey = "";
+        for (String s : races.keySet()) {
+            Map<String, Object> raceInfo = (Map<String, Object>) races.get(s);
+            String raceName = (String) raceInfo.get("name");
+            if (raceName.equalsIgnoreCase(race)) {
+                raceKey = s;
+            }
+        }
+
+
+        Map<String, Object> raceInfo = (Map<String, Object>) races.get(raceKey);
+        return (List<String>) raceInfo.get("subraces");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> getRaceList(Context context) {
+        setYml(context);
+        Set<String> racesSet = races.keySet();
+
+        List<String> racesList = new ArrayList<>();
+
+        for (String race : racesSet) {
+            Map<String, Object> raceInfo = (Map<String, Object>) races.get(race);
+
+            String raceName = (String) raceInfo.get("name");
+            racesList.add(raceName);
+        }
+        return racesList;
+    }
+
+    @SuppressWarnings("unchecked")
     public List<me.kerooker.enums.Language> getRacialLanguages() {
         List<Language> languages = new ArrayList<>();
 
@@ -66,16 +109,6 @@ public class Race implements Information, Serializable {
 
     private String getLowerCaseRace() {
         return race.toLowerCase().replaceAll("-","");
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void setYml(Context c) {
-        try {
-            if (races == null)races = YamlReader.loadYamlFromAssets(c, "racesAndSubraces");
-        } catch (IOException e) {
-            //Shouldn't ever happen
-            e.printStackTrace();
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -102,41 +135,7 @@ public class Race implements Information, Serializable {
 
     private List<String> getRaceList() {
         Set<String> racesSet = races.keySet();
-        List<String> racesList = new ArrayList<>(racesSet);
-        return racesList;
-    }
-
-    public static List<String> getSubraceList(String race, Context c) {
-        setYml(c);
-        String raceKey = "";
-        for (String s : races.keySet()) {
-            Map<String, Object> raceInfo = (Map<String, Object>) races.get(s);
-            String raceName = (String) raceInfo.get("name");
-            if (raceName.equalsIgnoreCase(race)){
-                raceKey = s;
-            }
-        }
-
-
-        Map<String, Object> raceInfo = (Map<String, Object>) races.get(raceKey);
-        List<String> possibleSubraces = (List<String>) raceInfo.get("subraces");
-        return possibleSubraces;
-    }
-
-
-    public static List<String> getRaceList(Context context) {
-        setYml(context);
-        Set<String> racesSet = races.keySet();
-
-        List<String> racesList = new ArrayList<>();
-
-        for (String race : racesSet) {
-            Map<String, Object> raceInfo = (Map<String, Object>) races.get(race);
-
-            String raceName = (String) raceInfo.get("name");
-            racesList.add(raceName);
-        }
-        return racesList;
+        return new ArrayList<>(racesSet);
     }
 
     private String getRandomString(Collection<String> strings) {
