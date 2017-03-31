@@ -66,10 +66,7 @@ halforc:
  racialLanguages: ["Orc"]
 human:
  name: "Human"
- subraces: [
- "",
- "Human Variant"
- ] 
+ subraces: []
  racialLanguages: []
 halfling:
  name: "Halfling"

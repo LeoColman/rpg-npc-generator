@@ -22,11 +22,13 @@ public class Race implements Information, Serializable {
     private static final Priority racePriority = Priority.HIGH;
     private static Random random = Randomizer.getRandom();
     private static HashMap<String, Object> races;
+    private Context context;
     private String race;
     private String subrace;
 
 
     public Race(Context c) {
+        this.context = c;
         setYml(c);
         generateRandomRaceAndSubrace();
 
@@ -36,6 +38,11 @@ public class Race implements Information, Serializable {
         this.setRace(race);
         this.setSubrace(subrace);
 
+    }
+
+    public Race(String race) {
+        this.setRace(race);
+        this.generateRandomSubrace(race);
     }
 
     @SuppressWarnings("unchecked")
@@ -87,7 +94,10 @@ public class Race implements Information, Serializable {
         String randomSubraceName = getRandomString(possibleSubraces);
         setSubrace(randomSubraceName);                              //Setting subrace name
 
+    }
 
+    private void generateRandomSubrace(String raceName) {
+        subrace = getRandomString(getSubraceList(raceName, context ));
     }
 
     private List<String> getRaceList() {
@@ -95,6 +105,24 @@ public class Race implements Information, Serializable {
         List<String> racesList = new ArrayList<>(racesSet);
         return racesList;
     }
+
+    public static List<String> getSubraceList(String race, Context c) {
+        setYml(c);
+        String raceKey = "";
+        for (String s : races.keySet()) {
+            Map<String, Object> raceInfo = (Map<String, Object>) races.get(s);
+            String raceName = (String) raceInfo.get("name");
+            if (raceName.equalsIgnoreCase(race)){
+                raceKey = s;
+            }
+        }
+
+
+        Map<String, Object> raceInfo = (Map<String, Object>) races.get(raceKey);
+        List<String> possibleSubraces = (List<String>) raceInfo.get("subraces");
+        return possibleSubraces;
+    }
+
 
     public static List<String> getRaceList(Context context) {
         setYml(context);

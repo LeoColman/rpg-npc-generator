@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -13,8 +14,8 @@ import android.widget.TextView;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import me.kerooker.advertiser.Advertiser;
 import me.kerooker.characterinformation.Npc;
@@ -71,11 +72,61 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         setDiscreeteBarEvent();
         setGenerateButtonHandler();
         setAdvancedTextHandler();
+        setOnSpinSelectForRace();
+    }
+
+    private void setOnSpinSelectForRace() {
+        Spinner race = (Spinner) findViewById(R.id.race_spinner);
+        race.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = (String) parent.getSelectedItem();
+                selected = selected.toLowerCase();
+                if (selected.contains("random")) {
+                    //Disable subrace
+                    disableSubraceSelector();
+                } else {
+                    //Enable subrace
+                    enableSubraceSelector(selected);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //DoNothing
+            }
+        });
+    }
+
+    private void disableSubraceSelector() {
+        View label = findViewById(R.id.sub_race_text_field);
+        View spinner = findViewById(R.id.subrace_spinner);
+        label.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
+    }
+
+    private void enableSubraceSelector(String selected) {
+        View label = findViewById(R.id.sub_race_text_field);
+        Spinner spinner = (Spinner) findViewById(R.id.subrace_spinner);
+        label.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.VISIBLE);
+
+        List<String> subraces = new ArrayList<>();
+        subraces.add("Random");
+        List<String> subracesFromClass = Race.getSubraceList(selected, this);
+        if (subracesFromClass.isEmpty()) {
+            disableSubraceSelector();
+            return;
+        }
+        subraces.addAll(subracesFromClass);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, subraces);
+        spinner.setAdapter(adapter);
     }
 
     private void setAdvancedTextHandler() {
-       final View constraint = findViewById(R.id.advancedContent);
-       final TextView text = (TextView) findViewById(R.id.showAdvanced);
+        final View constraint = findViewById(R.id.advancedContent);
+        final TextView text = (TextView) findViewById(R.id.showAdvanced);
 
         text.setOnClickListener(new View.OnClickListener() {
 
@@ -88,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     Log.d("Eita", "E");
                     constraint.setVisibility(View.VISIBLE);
                     text.setText(getHideText());
-                }else {
+                } else {
                     //Hide
                     Log.d("Eita2", "EE");
                     constraint.setVisibility(View.GONE);
@@ -138,9 +189,46 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private ArrayList<Npc> generateNpcs(int amountToGenerate) {
         ArrayList<Npc> npcList = new ArrayList<>();
         for (int i = 0; i < amountToGenerate; i++) {
-            npcList.add(Npc.generateRandomNpc(this));
+            npcList.add(
+                    new Npc.Builder(this)
+                            .random()
+                            .withInformation(getCurrentRace())
+                            .withInformation(getCurrentGender())
+                            .getNpcInstance());
         }
         return npcList;
+    }
+
+    private me.kerooker.characterinformation.Gender getCurrentGender() {
+        Spinner genderSpinner = (Spinner) findViewById(R.id.gender_spinner);
+        String selected = (String) genderSpinner.getSelectedItem();
+        me.kerooker.characterinformation.Gender gender;
+        if (selected.toLowerCase().contains("random")) {
+            gender = new me.kerooker.characterinformation.Gender();
+        } else {
+            Gender g = Gender.valueOf(selected.toUpperCase());
+            gender = new me.kerooker.characterinformation.Gender(g);
+        }
+        return gender;
+    }
+
+    private Race getCurrentRace() {
+        Spinner raceSpinner = (Spinner) findViewById(R.id.race_spinner);
+        String selected = (String) raceSpinner.getSelectedItem();
+        if (!selected.toLowerCase().contains("random")) {
+            Race r = new Race(selected);
+            String sub = getCurrentSubrace();
+            if (sub != null && !sub.toLowerCase().contains("random")) {
+                r.setSubrace(sub);
+            }
+            return r;
+        }
+        return new Race(this);
+    }
+
+    private String getCurrentSubrace() {
+        Spinner raceSpinner = (Spinner) findViewById(R.id.subrace_spinner);
+        return (String) raceSpinner.getSelectedItem();
     }
 
     /**

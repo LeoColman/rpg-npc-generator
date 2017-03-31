@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import me.kerooker.enums.Priority;
@@ -14,9 +15,9 @@ import me.kerooker.enums.Priority;
 public class Npc implements Serializable {
 
 
-    List<Information> information = new ArrayList<>();
+    private List<Information> information = new ArrayList<>();
 
-    public Npc(Information ... informations) {
+    public Npc(Information... informations) {
         Collections.addAll(information, informations);
 
         sortInformation();
@@ -48,6 +49,10 @@ public class Npc implements Serializable {
         return new Npc(name, race, gender, age, profession, sexuality, motivation, traits, language);
     }
 
+    public void addInformation(Information inf) {
+        information.add(inf);
+    }
+
     public Information popTopInformation() {
         Information topInformation = null;
         for (Information i : information) {
@@ -75,7 +80,7 @@ public class Npc implements Serializable {
         String informationBuilder = "";
 
         for (Information inf : information) {
-           informationBuilder += inf.getInformation() + "\n";
+            informationBuilder += inf.getInformation() + "\n";
         }
         return informationBuilder;
     }
@@ -86,9 +91,51 @@ public class Npc implements Serializable {
             public int compare(Information o1, Information o2) {
                 Priority o1P = o1.getPriority();
                 Priority o2P = o2.getPriority();
-                return - (o1P.compareTo(o2P));
+                return -(o1P.compareTo(o2P));
             }
         };
 
+    }
+
+    public static class Builder {
+        private Context context;
+        private Npc npcInstance;
+
+        public Builder(Context c) {
+            this.context = c;
+            npcInstance = new Npc();
+        }
+
+        public Builder random() {
+            Npc npc = generateRandomNpc(context);
+            npcInstance = npc;
+            return this;
+        }
+
+        public Builder withInformation(Information inf) {
+            Iterator<Information> infoIterator = npcInstance.npcInformation().iterator();
+            boolean shouldAdd = false;
+            while (infoIterator.hasNext()) {
+                Information next = infoIterator.next();
+                Class actualClass = next.getClass();
+                Class original = inf.getClass();
+                if (original.equals(actualClass)) {
+                    //Classes are the same, remove from iterator
+                    infoIterator.remove();
+                    //Add information to list
+                    shouldAdd = true;
+                }
+
+            }
+            if (shouldAdd) {
+                npcInstance.npcInformation().add(inf);
+            }
+            return this;
+        }
+
+        public Npc getNpcInstance() {
+            npcInstance.sortInformation();
+            return npcInstance;
+        }
     }
 }
