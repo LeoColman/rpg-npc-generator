@@ -21,6 +21,7 @@ import me.kerooker.advertiser.Advertiser;
 import me.kerooker.characterinformation.Npc;
 import me.kerooker.characterinformation.Race;
 import me.kerooker.enums.Gender;
+import me.kerooker.generatednpcs.GeneratedNpcsActivity;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 

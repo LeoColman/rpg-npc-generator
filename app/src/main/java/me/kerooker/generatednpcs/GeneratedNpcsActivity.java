@@ -1,6 +1,9 @@
-package me.kerooker.rpgcharactergenerator;
+package me.kerooker.generatednpcs;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -17,6 +20,8 @@ import java.util.List;
 import me.kerooker.characterinformation.Information;
 import me.kerooker.characterinformation.Npc;
 import me.kerooker.enums.Priority;
+import me.kerooker.rpgcharactergenerator.MainActivity;
+import me.kerooker.rpgcharactergenerator.R;
 import me.kerooker.util.ViewIdGenerator;
 
 public class GeneratedNpcsActivity extends AppCompatActivity {
@@ -51,7 +56,11 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         int lastChildPos = mainConstraint.getChildCount() - 1;
 
         ConstraintLayout newBox = getNewBoxLayout(mainConstraint);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            newBox.setBackground(getBoxBorder());
+        }else {
+            newBox.setBackgroundDrawable(getBoxBorder());
+        }
         newBox.setId(ViewIdGenerator.generateViewId());
 
         Information topInformation = n.popTopInformation();
@@ -60,7 +69,9 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
 
         List<Information> info = n.npcInformation();
         for (Information inf : info) {
-            addInformation(newBox, inf);
+            if (inf.getPriority() == Priority.HIGH) {
+                addInformation(newBox, inf);
+            }
         }
 
         if (lastChildPos >= 0) {
@@ -68,6 +79,13 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         } else {
             addChild(mainConstraint, newBox);
         }
+    }
+
+    private GradientDrawable getBoxBorder() {
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(0xFFFFFFFF); //white background
+        border.setStroke(1, 0xFF000000); //black border with full opacity
+        return border;
     }
 
     private void addInformation(ConstraintLayout newBox, Information inf) {
@@ -114,7 +132,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         ConstraintSet set = new ConstraintSet();
         set.clone(mainConstraint);
 
-        set.connect(newBox.getId(), ConstraintSet.TOP, lastChild.getId(), ConstraintSet.BOTTOM, 4);
+        set.connect(newBox.getId(), ConstraintSet.TOP, lastChild.getId(), ConstraintSet.BOTTOM, 0);
         set.applyTo(mainConstraint);
 
     }

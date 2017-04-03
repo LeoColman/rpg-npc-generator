@@ -13,6 +13,7 @@ import me.kerooker.util.Randomizer;
 
 public class Name implements Information, Serializable {
 
+
     private static final double CHANCE_TO_HAVE_SURNAME = 0.97;
     private static final double CHANCE_TO_HAVE_A_NICKNAME = 0.15;
     private static Priority namePriority = Priority.TOP;
@@ -21,6 +22,7 @@ public class Name implements Information, Serializable {
     private static Random random = Randomizer.getRandom();
     private String name;
     private Context context;
+
 
     public Name(Context context) {
         this.context = context;
@@ -58,7 +60,7 @@ public class Name implements Information, Serializable {
     }
 
     private String toUpperCase(String s) {
-        return (s.substring(0,1).toUpperCase() + s.substring(1));
+        return (s.substring(0, 1).toUpperCase() + s.substring(1));
     }
 
     private String getRandomNickname() {
