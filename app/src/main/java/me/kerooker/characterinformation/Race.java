@@ -151,6 +151,7 @@ public class Race implements Information, Serializable {
         return racePriority;
     }
 
+
     @Override
     public String getInformation() {
         String race = "Race: " + getRace();
