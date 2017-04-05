@@ -1,7 +1,6 @@
 package me.kerooker.generatednpcs;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,10 +25,7 @@ import me.kerooker.util.ViewIdGenerator;
 
 public class GeneratedNpcsActivity extends AppCompatActivity {
 
-    private static final int NORMAL_PRIORITY_TEXT_SIZE = 14;
     private static final int HIGH_PRIORITY_TEXT_SIZE = 18;
-    private static final int LOW_PRIORITY_TEXT_SIZE = 12;
-    private static final int LOWEST_PRIORITY_TEXT_SIZE = 10;
     private static final int MAIN_CONSTRAINT_ID = R.id.generated_main_constraint;
 
     @Override
@@ -51,7 +47,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         }
     }
 
-    private void addNpc(Npc n) {
+    private void addNpc(Npc npc) {
         ConstraintLayout mainConstraint = (ConstraintLayout) findViewById(MAIN_CONSTRAINT_ID);
         int lastChildPos = mainConstraint.getChildCount() - 1;
 
@@ -59,15 +55,16 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             newBox.setBackground(getBoxBorder());
         }else {
+            //noinspection deprecation
             newBox.setBackgroundDrawable(getBoxBorder());
         }
         newBox.setId(ViewIdGenerator.generateViewId());
 
-        Information topInformation = n.popTopInformation();
+        Information topInformation = npc.getTopInformation();
         TextView title = (TextView) newBox.findViewById(R.id.top_priority);
         title.setText(topInformation.getInformation());
 
-        List<Information> info = n.npcInformation();
+        List<Information> info = npc.npcInformation();
         for (Information inf : info) {
             if (inf.getPriority() == Priority.HIGH) {
                 addInformation(newBox, inf);
@@ -79,18 +76,39 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         } else {
             addChild(mainConstraint, newBox);
         }
+
+        setClickToOpenNpc(newBox, npc);
+
+    }
+
+    private void setClickToOpenNpc(ConstraintLayout box, final Npc toOpen) {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivityForNpc(toOpen);
+            }
+        };
+        box.setOnClickListener(listener);
+
+    }
+
+    private void openActivityForNpc(Npc toOpen) {
+        Intent i = new Intent(this, OpenNpcActivity.class);
+        i.putExtra(getResources().getString(R.string.npc_key_intent_open_npc_activity), toOpen);
+        startActivity(i);
     }
 
     private GradientDrawable getBoxBorder() {
         GradientDrawable border = new GradientDrawable();
-        border.setColor(0xFFFFFFFF); //white background
-        border.setStroke(1, 0xFF000000); //black border with full opacity
+        final int WHITE = 0xFFFFFFFF;
+        final int BLACK = 0xFF000000;
+        border.setColor(WHITE); //white background
+        border.setStroke(1, BLACK); //black border with full opacity
         return border;
     }
 
     private void addInformation(ConstraintLayout newBox, Information inf) {
         LinearLayout layout = (LinearLayout) newBox.findViewById(R.id.linearLayout_high_highest_normal);
-        Priority p = inf.getPriority();
 
         TextView toAdd = new TextView(this);
         toAdd.setEllipsize(TextUtils.TruncateAt.START);
@@ -98,23 +116,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         //TODO setTextLayout
 
         toAdd.setText(inf.getInformation());
-        int sizeToSet = 0;
-        switch (p) {
-            case LOWEST:
-                sizeToSet = LOWEST_PRIORITY_TEXT_SIZE;
-                break;
-            case LOW:
-                sizeToSet = LOW_PRIORITY_TEXT_SIZE;
-                break;
-            case NORMAL:
-                sizeToSet = NORMAL_PRIORITY_TEXT_SIZE;
-                break;
-            case HIGH:
-                sizeToSet = HIGH_PRIORITY_TEXT_SIZE;
-                break;
-        }
-        if (sizeToSet == 0) throw new RuntimeException("Size not set");
-        toAdd.setTextSize(sizeToSet);
+        toAdd.setTextSize(HIGH_PRIORITY_TEXT_SIZE);
 
         layout.addView(toAdd);
 

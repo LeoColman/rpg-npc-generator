@@ -53,7 +53,7 @@ public class Npc implements Serializable {
         information.add(inf);
     }
 
-    public Information popTopInformation() {
+    public Information getTopInformation() {
         Information topInformation = null;
         for (Information i : information) {
             if (i.getPriority().equals(Priority.TOP)) {
@@ -62,7 +62,6 @@ public class Npc implements Serializable {
             }
         }
         if (topInformation == null) throw new RuntimeException("No top Priority!");
-        information.remove(topInformation);
         return topInformation;
 
     }

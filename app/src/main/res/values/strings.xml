@@ -7,5 +7,6 @@
     <string name="advertisement_shared_date_long">advertisement_long</string>
     <string name="ad_unit_id">ca-app-pub-3225017918525788/8965392956</string>
     <string name="npc_image">Npc Image</string>
+    <string name="npc_key_intent_open_npc_activity">npc</string>
     <!-- END OF ADVERTISER TAGS -->
 </resources>
