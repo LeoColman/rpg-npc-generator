@@ -37,7 +37,6 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
     }
 
 
-
     @SuppressWarnings("unchecked")
     private void showLoadedNpcs() {
         Intent thisIntent = getIntent();
