@@ -66,7 +66,7 @@ public class Npc implements Serializable {
 
     }
 
-    public List<Information> npcInformation() {
+    public List<Information> getNpcInformation() {
         return information;
     }
 
@@ -93,7 +93,11 @@ public class Npc implements Serializable {
                 return -(o1P.compareTo(o2P));
             }
         };
+    }
 
+    public void setInformation(List<Information> information) {
+        this.information = information;
+        sortInformation();
     }
 
     public static class Builder {
@@ -110,8 +114,10 @@ public class Npc implements Serializable {
             return this;
         }
 
+
+
         public Builder withInformation(Information inf) {
-            Iterator<Information> infoIterator = npcInstance.npcInformation().iterator();
+            Iterator<Information> infoIterator = npcInstance.getNpcInformation().iterator();
             boolean shouldAdd = false;
             while (infoIterator.hasNext()) {
                 Information next = infoIterator.next();
@@ -126,7 +132,7 @@ public class Npc implements Serializable {
 
             }
             if (shouldAdd) {
-                npcInstance.npcInformation().add(inf);
+                npcInstance.getNpcInformation().add(inf);
             }
             return this;
         }

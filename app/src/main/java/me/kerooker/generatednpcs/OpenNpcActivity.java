@@ -7,7 +7,6 @@ import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.KeyListener;
 import android.text.style.AbsoluteSizeSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,10 +15,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.kerooker.characterinformation.Information;
 import me.kerooker.characterinformation.Npc;
+import me.kerooker.enums.Priority;
 import me.kerooker.rpgcharactergenerator.R;
 
 public class OpenNpcActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class OpenNpcActivity extends AppCompatActivity {
     private static final int HIGH_PRIORITY_TEXT_SIZE = 22;
     private static final int NORMAL_PRIORITY_TEXT_SIZE = 20;
     private static final int LOW_PRIORITY_TEXT_SIZE = 20;
-    private static final int LOWEST_PRIORITY_TEXT_SIZE = 20;
+    private static final int LOWEST_PRIORITY_TEXT_SIZE = LOW_PRIORITY_TEXT_SIZE;
     private static final int LAYOUT_BORDERS_TEXT_VIEWS = 8;
     List<Information> npcInformation;
     private Menu menu;
@@ -55,23 +56,134 @@ public class OpenNpcActivity extends AppCompatActivity {
 
                 break;
             case R.id.menu_cancel:
-
+                disallowEdditing();
+                recreate();
                 break;
             case R.id.menu_save:
+                disallowEdditing();
+                saveInformation();
                 break;
 
         }
         return true;
     }
 
+    @Override
+    public void recreate() {
+        Intent i = this.getIntent();
+        finish();
+        startActivity(i);
+    }
+
     private void allowEdditing() {
         EditText title = (EditText) findViewById(R.id.open_npc_title);
+
         setEditable(title);
 
     }
 
+    private void saveInformation() {
+        List<Information> listToSave = new ArrayList<>();
+
+
+        EditText title = (EditText) findViewById(R.id.open_npc_title);
+        final String titleString = title.getText().toString();
+        listToSave.add(new Information() {
+            @Override
+            public Priority getPriority() {
+                return Priority.TOP;
+            }
+
+            @Override
+            public String getInformation() {
+                return titleString;
+            }
+        });
+
+        LinearLayout highLinear = (LinearLayout) findViewById(R.id.open_npc_high_linear);
+
+        for(int i = 0; i < highLinear.getChildCount(); i++) {
+            TextView child = (TextView) highLinear.getChildAt(i);
+            final String childText = child.getText().toString();
+
+            listToSave.add(new Information() {
+                @Override
+                public Priority getPriority() {
+                    return Priority.HIGH;
+                }
+
+                @Override
+                public String getInformation() {
+                    return childText;
+                }
+            });
+        }
+
+        LinearLayout normalLinear = (LinearLayout) findViewById(R.id.open_npc_normal_linear);
+
+        for (int i = 0; i < normalLinear.getChildCount(); i++) {
+            TextView child = (TextView) normalLinear.getChildAt(i);
+            final String childText = child.getText().toString();
+
+            listToSave.add(new Information() {
+                @Override
+                public Priority getPriority() {
+                    return Priority.NORMAL;
+                }
+
+                @Override
+                public String getInformation() {
+                    return childText;
+                }
+            });
+        }
+
+
+        LinearLayout lowLinear = (LinearLayout) findViewById(R.id.open_npc_low_lowest_linear);
+
+        for (int i = 0; i < lowLinear.getChildCount(); i++) {
+            TextView child = (TextView) lowLinear.getChildAt(i);
+            final String childText = child.getText().toString();
+
+            listToSave.add(new Information() {
+                @Override
+                public Priority getPriority() {
+                    return Priority.LOW;
+                }
+
+                @Override
+                public String getInformation() {
+                    return childText;
+                }
+            });
+        }
+
+        npc.setInformation(listToSave);
+    }
+
+    private void disallowEdditing() {
+        EditText title = (EditText) findViewById(R.id.open_npc_title);
+
+
+        setUneditable(title);
+    }
+
     private void setUneditable(EditText t) {
+
         t.setEnabled(false);
+        t.setInputType(InputType.TYPE_NULL);
+    }
+
+    private void setEditable(EditText ... t) {
+        for (EditText text : t) {
+            setEditable(text);
+        }
+    }
+
+    private void setUneditable(EditText ... t) {
+        for (EditText text : t) {
+            setUneditable(text);
+        }
     }
 
     private void setEditable(EditText t) {
@@ -107,7 +219,7 @@ public class OpenNpcActivity extends AppCompatActivity {
     }
 
     private void loadNpc() {
-        npcInformation = npc.npcInformation();
+        npcInformation = npc.getNpcInformation();
 
         TextView title = (TextView) findViewById(R.id.open_npc_title);
         title.setText(npc.getTopInformation().getInformation());
@@ -208,7 +320,8 @@ public class OpenNpcActivity extends AppCompatActivity {
 
     private Npc getNpcFromIntent() {
         Intent i = getIntent();
-        return (Npc) i.getSerializableExtra(getResources().getString(R.string.npc_key_intent_open_npc_activity));
+        int index =  i.getIntExtra(getResources().getString(R.string.npc_key_intent_open_npc_activity), 0);
+        return GeneratedNpcsActivity.getNpc(index);
 
     }
 }
