@@ -3,6 +3,7 @@ package me.kerooker.generatednpcs;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,19 +65,18 @@ public class OpenNpcActivity extends AppCompatActivity {
     }
 
     private void allowEdditing() {
-        TextView title = (TextView) findViewById(R.id.open_npc_title);
+        EditText title = (EditText) findViewById(R.id.open_npc_title);
         setEditable(title);
 
     }
 
-    private void setUneditable(TextView t) {
-        t.setTag(t.getKeyListener());
-        t.setKeyListener(null);
+    private void setUneditable(EditText t) {
+        t.setEnabled(false);
     }
 
-    private void setEditable(TextView t) {
-        setUneditable(t);
-        t.setKeyListener((KeyListener) t.getTag());
+    private void setEditable(EditText t) {
+        t.setEnabled(true);
+        t.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
     }
 
     private void showCancelAndSave() {

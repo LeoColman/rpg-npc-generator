@@ -14,11 +14,12 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:isScrollContainer="true"
         android:scrollbars="vertical"
         tools:context="me.kerooker.rpgcharactergenerator.me.kerooker.generatednpcs.OpenNpcActivity">
 
-        <TextView
+        <EditText
             android:id="@+id/open_npc_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,10 +28,14 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
             android:foregroundGravity="center"
             android:gravity="center"
+            android:inputType="none"
             android:text="Title Dummy Text"
             android:textAlignment="center"
+            android:textColor="@android:style/Theme.Black"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
