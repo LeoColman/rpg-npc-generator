@@ -2,7 +2,7 @@
 - [x] Create Git Repo
 - [x] Create Class Diagrams and Flowchart of functionalities
 - [x] Create Application Project (Android Studios)
-- [ ] Implement All the functions from Original Project
+- [x] Implement All the functions from Original Project
 - - [x] Name generation
 - - [x] Race Generation
 - - [x] Gender Generation
@@ -11,7 +11,10 @@
 - - [x] Profession Generation
 - - [x] Details (personality, languages, motivation)
 - - [x] - REMOVED- I don't believe this is important. - Other Details Generation (abilities, racial..)
+- [ ] Edit Characters
+- [ ] Save characters to phone
+- [ ] Load characters from phone
 - [ ] Output via PDF
 - [ ] Output via other formats (?)
-- [ ] Multiple NPCs at once
+- [x] Multiple NPCs at once
 - [ ] Beautify Application (probably only with help)
