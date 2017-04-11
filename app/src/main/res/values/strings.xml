@@ -6,10 +6,15 @@
     <string name="advertisement_date_file">advertisement_date</string>
     <string name="advertisement_shared_date_long">advertisement_long</string>
     <string name="ad_unit_id">ca-app-pub-3225017918525788/8965392956</string>
+    <!-- END OF ADVERTISER TAGS -->
+
     <string name="npc_image">Npc Image</string>
     <string name="npc_key_intent_open_npc_activity">npc</string>
     <string name="edit">Edit</string>
     <string name="save_changes">Save Changes</string>
     <string name="cancel_changes">Cancel Changes</string>
-    <!-- END OF ADVERTISER TAGS -->
+    <string name="save_npc">Save NPC</string>
+    <string name="export">Export</string>
+    <string name="preferences_saved_npcs">saved_npcs</string>
+
 </resources>

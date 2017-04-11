@@ -20,7 +20,7 @@ public class PersonalityTraits implements Information, Serializable {
     private static final int maxTraits = 5;
     private static final Random random = Randomizer.getRandom();
     private static List<String> traitsList;
-    private Context context;
+    private transient Context context;
     private List<String> traits;
 
     public PersonalityTraits(Context context) {

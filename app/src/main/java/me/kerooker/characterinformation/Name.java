@@ -21,7 +21,7 @@ public class Name implements Information, Serializable {
     private static List<String> nicknames;
     private static Random random = Randomizer.getRandom();
     private String name;
-    private Context context;
+    private transient Context context;
 
 
     public Name(Context context) {

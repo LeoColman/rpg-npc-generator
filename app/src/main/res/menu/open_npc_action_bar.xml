@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <item
         android:id="@+id/menu_edit"
         android:icon="@drawable/edit_pencil"
@@ -19,4 +20,12 @@
         android:title="@string/cancel_changes"
         android:visible="false"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_save_to_file"
+        android:title="@string/save_npc"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_export"
+        android:title="@string/export"
+        app:showAsAction="never" />
 </menu>

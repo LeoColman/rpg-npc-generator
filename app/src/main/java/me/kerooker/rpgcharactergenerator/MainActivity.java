@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         Spinner spinner = (Spinner) findViewById(R.id.race_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, racesChoice);
         spinner.setAdapter(adapter);
+        disableSubraceSelector();
     }
 
     private void setGenderSpinner() {
@@ -102,9 +103,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     private void disableSubraceSelector() {
         View label = findViewById(R.id.sub_race_text_field);
-        View spinner = findViewById(R.id.subrace_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.subrace_spinner);
         label.setVisibility(View.GONE);
         spinner.setVisibility(View.GONE);
+        spinner.setSelection(0);
     }
 
     private void enableSubraceSelector(String selected) {

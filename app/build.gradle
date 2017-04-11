@@ -32,6 +32,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'junit:junit:4.12'
 }
 

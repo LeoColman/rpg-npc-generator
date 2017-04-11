@@ -17,7 +17,7 @@ public class Motivation implements Information, Serializable {
     private static final Priority motivationPriority = Priority.LOW;
     private static final Random random = Randomizer.getRandom();
     private static List<String> motivations;
-    private Context context;
+    private transient Context context;
     private String motivation;
 
     public Motivation(Context context) {

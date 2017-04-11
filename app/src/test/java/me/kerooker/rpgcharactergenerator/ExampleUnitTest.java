@@ -2,7 +2,10 @@ package me.kerooker.rpgcharactergenerator;
 
 import org.junit.Test;
 
-import me.kerooker.enums.Sexuality;
+import me.kerooker.characterinformation.Information;
+import me.kerooker.characterinformation.Npc;
+import me.kerooker.characterinformation.Sexuality;
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,9 +15,12 @@ import me.kerooker.enums.Sexuality;
 public class ExampleUnitTest {
     @Test
     public void generatingRacesOk() {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(Sexuality.getRandomSexuality());
+        Sexuality s = new Sexuality();
 
+        Npc n = new Npc(s);
+
+        for (Information inf : n.npcInformation()) {
+            System.out.println(inf.getClass().isInstance(inf.getClass()));
         }
     }
 }

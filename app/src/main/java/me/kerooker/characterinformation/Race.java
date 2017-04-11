@@ -22,7 +22,7 @@ public class Race implements Information, Serializable {
     private static final Priority racePriority = Priority.HIGH;
     private static Random random = Randomizer.getRandom();
     private static HashMap<String, Object> races;
-    private Context context;
+    private transient Context context;
     private String race;
     private String subrace;
 

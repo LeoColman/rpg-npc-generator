@@ -25,7 +25,7 @@ public class Profession implements Information, Serializable {
     private static List<String> childProfessions;
     private me.kerooker.enums.Age age;
     private String profession;
-    private Context context;
+    private transient Context context;
 
     public Profession(@Nullable Age age, Context context) {
         this.age = age;
