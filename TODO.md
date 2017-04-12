@@ -11,9 +11,9 @@
 - - [x] Profession Generation
 - - [x] Details (personality, languages, motivation)
 - - [x] - REMOVED- I don't believe this is important. - Other Details Generation (abilities, racial..)
-- [ ] Edit Characters
-- [ ] Save characters to phone
-- [ ] Load characters from phone
+- [x] Edit Characters
+- [x] Save characters to phone
+- [x] Load characters from phone
 - [ ] Output via PDF
 - [ ] Output via other formats (?)
 - [x] Multiple NPCs at once
