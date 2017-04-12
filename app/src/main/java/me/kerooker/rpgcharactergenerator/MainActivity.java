@@ -22,10 +22,12 @@ import me.kerooker.characterinformation.Npc;
 import me.kerooker.characterinformation.Race;
 import me.kerooker.enums.Gender;
 import me.kerooker.generatednpcs.GeneratedNpcsActivity;
+import me.kerooker.util.FileManager;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     public static final String NPCS_LIST_INTENT_NAME = "npcslist";
+    public static final String NPCS_LIST_INTENT_IS_SAVED_BOOLEAN_NAME = "saved";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +75,18 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private void setEventHandlers() {
         setDiscreeteBarEvent();
         setGenerateButtonHandler();
+        setMyNpcsButtonHandler();
         setAdvancedTextHandler();
         setOnSpinSelectForRace();
+    }
+
+    private void setMyNpcsButtonHandler() {
+        Button npcButton = (Button) findViewById(R.id.main_screen_my_npcs);
+        npcButton.setOnClickListener((View l) -> {
+            ArrayList<Npc> savedNpcList = FileManager.getSavedNpcList(this);
+            openNpcActivity(savedNpcList, true);
+        });
+
     }
 
     private void setOnSpinSelectForRace() {
@@ -177,15 +189,25 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
                 int amountToGenerate = bar.getProgress();
                 ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
-                openNpcActivity(generatedNpcs);
+                openNpcActivity(generatedNpcs, false);
             }
         });
     }
 
-    private void openNpcActivity(ArrayList<Npc> npcsToShow) {
+    private void openNpcActivity(ArrayList<Npc> npcsToShow, boolean saved) {
         Intent i = new Intent(this, GeneratedNpcsActivity.class);
-        i.putExtra(MainActivity.NPCS_LIST_INTENT_NAME, npcsToShow);
-        startActivity(i);
+        i.putExtra(MainActivity.NPCS_LIST_INTENT_IS_SAVED_BOOLEAN_NAME, saved);
+        if (!saved) {
+            i.putExtra(MainActivity.NPCS_LIST_INTENT_NAME, npcsToShow);
+            startActivity(i);
+        } else {
+            ArrayList<String> uuidList = new ArrayList<>();
+            for (Npc toShow : npcsToShow) {
+                uuidList.add(String.valueOf(toShow.getUUID()));
+            }
+            i.putExtra(MainActivity.NPCS_LIST_INTENT_NAME, uuidList);
+            startActivity(i);
+        }
 
     }
 

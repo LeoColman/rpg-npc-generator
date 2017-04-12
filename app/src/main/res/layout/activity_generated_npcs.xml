@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/generated_main_constraint"
+    <LinearLayout
+        android:id="@+id/generated_main_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </ScrollView>

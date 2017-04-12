@@ -16,5 +16,10 @@
     <string name="save_npc">Save NPC</string>
     <string name="export">Export</string>
     <string name="preferences_saved_npcs">saved_npcs</string>
+    <string name="toast_success_save">NPC Saved successfully!</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">No!</string>
+    <string name="confirm_delete">Are you sure you want to delete %d NPCs?</string>
+
 
 </resources>

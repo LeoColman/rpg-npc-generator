@@ -29,13 +29,13 @@ public class Npc implements Serializable {
 
     private List<Information> information = new ArrayList<>();
     private UUID uuid;
+    private String imageBits;
 
     public Npc(Information... informations) {
         Collections.addAll(information, informations);
 
         sortInformation();
     }
-
 
     public Npc(List<Information> info) {
 
@@ -66,6 +66,18 @@ public class Npc implements Serializable {
     public static Npc fromJson(String json) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Information.class, new InterfaceAdapter<Information>()).create();
         return gson.fromJson(json, Npc.class);
+    }
+
+    public boolean hasImage() {
+        return imageBits != null;
+    }
+
+    public String getImageBits() {
+        return imageBits;
+    }
+
+    public void setImageBits(String imageBits) {
+        this.imageBits = imageBits;
     }
 
     public boolean hasUUID() {
@@ -132,7 +144,8 @@ public class Npc implements Serializable {
     }
 
     public void setInformation(List<Information> information) {
-        this.information = information;
+        this.information.clear();
+        this.information.addAll(information);
         sortInformation();
     }
 

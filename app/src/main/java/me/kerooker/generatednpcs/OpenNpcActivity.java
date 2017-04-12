@@ -1,27 +1,35 @@
 package me.kerooker.generatednpcs;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mvc.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.kerooker.characterinformation.GenericInformation;
 import me.kerooker.characterinformation.Information;
 import me.kerooker.characterinformation.Npc;
 import me.kerooker.enums.Priority;
 import me.kerooker.rpgcharactergenerator.R;
 import me.kerooker.util.FileManager;
+import me.kerooker.util.ImageFormatter;
 
 public class OpenNpcActivity extends AppCompatActivity {
 
@@ -32,13 +40,14 @@ public class OpenNpcActivity extends AppCompatActivity {
     private static final int LAYOUT_BORDERS_TEXT_VIEWS = 8;
     private static final int EDITABLE_TEXT_COLOR = R.color.grey_editable_text;
     private static final int NON_EDITABLE_TEXT_COLOR = R.color.common_google_signin_btn_text_light_default;
-    List<Information> npcInformation;
     private Menu menu;
     private Npc npc;
+    private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImagePicker.setMinQuality(600, 600);
         setContentView(R.layout.activity_open_npc);
         npc = getNpcFromIntent();
 
@@ -72,9 +81,14 @@ public class OpenNpcActivity extends AppCompatActivity {
     }
 
     private void handleSaveToFile() {
+
+        ImageView npcImage = (ImageView) findViewById(R.id.open_npc_image);
+        Drawable drawable = npcImage.getDrawable();
+        Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
+        npc.setImageBits(ImageFormatter.convertToString(bmp));
+
         FileManager.saveNpcToFile(npc, this);
-        Npc n = FileManager.getNpcFromFile(npc.getUUID(), this);
-        Log.d("Aff", n.getCharacter());
+        Toast.makeText(this, R.string.toast_success_save, Toast.LENGTH_SHORT).show();
     }
 
     private void handleExport() {
@@ -92,38 +106,16 @@ public class OpenNpcActivity extends AppCompatActivity {
     private void saveInformation() {
         List<Information> listToSave = new ArrayList<>();
 
-
         EditText title = (EditText) findViewById(R.id.open_npc_title);
         final String titleString = title.getText().toString();
-        listToSave.add(new Information() {
-            @Override
-            public Priority getPriority() {
-                return Priority.TOP;
-            }
-
-            @Override
-            public String getInformation() {
-                return titleString;
-            }
-        });
+        listToSave.add(new GenericInformation(titleString, Priority.TOP));
 
         LinearLayout highLinear = (LinearLayout) findViewById(R.id.open_npc_high_linear);
 
         for (int i = 0; i < highLinear.getChildCount(); i++) {
             TextView child = (TextView) highLinear.getChildAt(i);
             final String childText = child.getText().toString();
-
-            listToSave.add(new Information() {
-                @Override
-                public Priority getPriority() {
-                    return Priority.HIGH;
-                }
-
-                @Override
-                public String getInformation() {
-                    return childText;
-                }
-            });
+            listToSave.add(new GenericInformation(childText, Priority.HIGH));
         }
 
         LinearLayout normalLinear = (LinearLayout) findViewById(R.id.open_npc_normal_linear);
@@ -132,17 +124,7 @@ public class OpenNpcActivity extends AppCompatActivity {
             TextView child = (TextView) normalLinear.getChildAt(i);
             final String childText = child.getText().toString();
 
-            listToSave.add(new Information() {
-                @Override
-                public Priority getPriority() {
-                    return Priority.NORMAL;
-                }
-
-                @Override
-                public String getInformation() {
-                    return childText;
-                }
-            });
+            listToSave.add(new GenericInformation(childText, Priority.NORMAL));
         }
 
 
@@ -151,21 +133,12 @@ public class OpenNpcActivity extends AppCompatActivity {
         for (int i = 0; i < lowLinear.getChildCount(); i++) {
             TextView child = (TextView) lowLinear.getChildAt(i);
             final String childText = child.getText().toString();
-
-            listToSave.add(new Information() {
-                @Override
-                public Priority getPriority() {
-                    return Priority.LOW;
-                }
-
-                @Override
-                public String getInformation() {
-                    return childText;
-                }
-            });
+            listToSave.add(new GenericInformation(childText, Priority.LOW));
         }
 
         npc.setInformation(listToSave);
+
+
     }
 
     private List<EditText> getEditTextList() {
@@ -273,8 +246,7 @@ public class OpenNpcActivity extends AppCompatActivity {
     }
 
     private void loadNpc() {
-        npcInformation = npc.getNpcInformation();
-
+        List<Information> npcInformation = npc.getNpcInformation();
         TextView title = (TextView) findViewById(R.id.open_npc_title);
         title.setText(npc.getTopInformation().getInformation());
 
@@ -282,6 +254,24 @@ public class OpenNpcActivity extends AppCompatActivity {
             addInformation(inf);
         }
 
+        image = (ImageView) findViewById(R.id.open_npc_image);
+        if (npc.hasImage()) {
+            String bits = npc.getImageBits();
+            Bitmap map = ImageFormatter.getBitmap(bits);
+            image.setImageDrawable(new BitmapDrawable(getResources(), map));
+        }
+        image.setOnClickListener((v) -> {
+            ImagePicker.pickImage(this);
+        });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
+        if (bitmap == null) return;
+        image.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
     }
 
     private void addInformation(Information inf) {

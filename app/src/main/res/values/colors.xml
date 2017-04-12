@@ -5,5 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlueishGreen">#058af0</color>
     <color name="grey_editable_text">#acacac</color>
+    <color name="red_color_selected_box">#ff7671</color>
 
 </resources>
