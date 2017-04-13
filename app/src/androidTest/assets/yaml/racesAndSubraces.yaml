@@ -1,0 +1,98 @@
+aarakocra :
+ name: "Aarakocra"
+ subraces: []
+ racialLanguages: ["Aarakocra", "Primordial"]
+aasimar:
+ name: "Aasimar"
+ subraces: []
+ racialLanguages: ["Celestial"]
+dragonborn:
+ name: "Dragonborn"
+ subraces: [
+ "Black Dragonborn",
+ "Blue Dragonborn",
+ "Red Dragonborn",
+ "Green Dragonborn",
+ "White Dragonborn",
+ "Brass Dragonborn",
+ "Bronze Dragonborn",
+ "Copper Dragonborn",
+ "Gold Dragonborn",
+ "Silver Dragonborn"
+ ]
+ racialLanguages: ["Draconic"]
+dwarf:
+ name: "Dwarf"
+ subraces: [
+ "Hill Dwarf",
+ "Mountain Dwarf",
+ "Duergar"
+ ]
+ racialLanguages: ["Dwarven"]
+elf:
+ name: "Elf"
+ subraces: [
+ "Dark Elf",
+ "High Elf",
+ "Wood Elf",
+ "Eladrin",
+ "Aquatic Elf"
+ ]
+ racialLanguages: ["Elven", "Sylvan"]
+gnome:
+ name: "Gnome"
+ subraces: [
+ "Forest Gnome",
+ "Rock Gnome",
+ "Deep Gnome"
+ ]
+ racialLanguages: ["Gnome"]
+genasi:
+ name: "Genasi"
+ subraces: [
+ "Air Genasi",
+ "Earth Genasi",
+ "Fire Genasi",
+ "Water Genasi"
+ ]
+ racialLanguages: ["Primordial"]
+goliath:
+ name: "Goliath"
+ subraces: []
+ racialLanguages: ["Giant"]
+halforc:
+ name: "Half-Orc"
+ subraces: []
+ racialLanguages: ["Orc"]
+human:
+ name: "Human"
+ subraces: [
+ "",
+ "Human Variant"
+ ] 
+ racialLanguages: []
+halfling:
+ name: "Halfling"
+ subraces: [
+ "Ghostwise Halfling",
+ "Lightfoot Halfling",
+ "Stout Halfling"
+ ]
+ racialLanguages: ["Halfling"]
+halfelf: 
+ name: "Half-Elf"
+ subraces: [
+ "Half Dark",
+ "Half Wood",
+ "Half Moon",
+ "Half Sun",
+ "Half Aquatic"
+ ]
+ racialLanguages: ["Elven"]
+tiefling:
+ name: "Tiefling"
+ subraces: [
+ "Infernal Tiefling",
+ "Demonic Tiefling"
+ ] 
+ racialLanguages: ["Infernal"]

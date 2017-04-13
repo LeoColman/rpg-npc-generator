@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_screen_npcs_to_generate">NPCs to Generate: 1</string>
+    <string name="main_screen_generate_button_text">Generate!</string>
+    <string name="show_advanced_filters">Show Advanced Filters</string>
+    <string name="hide_advanced_filters">Hide Advanced Filters</string>
+    <string name="gender">Gender:</string>
+    <string name="race">Race:</string>
+    <string name="subrace">Subrace:</string>
+    <string name="my_npcs">My NPCs</string>
+</resources>

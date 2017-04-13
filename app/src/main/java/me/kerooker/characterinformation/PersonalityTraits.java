@@ -1,0 +1,92 @@
+package me.kerooker.characterinformation;
+
+import android.content.Context;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import me.kerooker.enums.Priority;
+import me.kerooker.textmanagers.TxtReader;
+import me.kerooker.util.Randomizer;
+
+public class PersonalityTraits implements Information, Serializable {
+
+    private static final Priority personalityPriority = Priority.LOW;
+    private static final int minTraits = 2;
+    private static final int maxTraits = 5;
+    private static final Random random = Randomizer.getRandom();
+    private static List<String> traitsList;
+    private transient Context context;
+    private List<String> traits;
+
+    public PersonalityTraits(Context context) {
+        this.context = context;
+        loadTraits();
+        generateRandomTraits();
+    }
+
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public PersonalityTraits(String... traits) {
+//        this.traits = Arrays.asList(traits);
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
+
+    private void generateRandomTraits() {
+        this.traits = getRandomTraits();
+    }
+
+    private void loadTraits() {
+        if (traitsList == null) try {
+            traitsList = TxtReader.readTextFile(context, "traits");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<String> getRandomTraits() {
+        int randomAmount = randomIntFromRange(minTraits, maxTraits);
+        List<String> traits = new ArrayList<>();
+        for (int i = 0; i < randomAmount; i++) {
+            String trait = getRandomTrait();
+            if (traits.contains(trait)) {
+                i--;
+                continue;
+            }
+            traits.add(getRandomTrait());
+        }
+        return traits;
+    }
+
+    private String getRandomTrait() {
+        return getRandomFromList(traitsList);
+    }
+
+    private String getRandomFromList(List<String> list) {
+        int max = list.size();
+        int rand = random.nextInt(max);
+        return list.get(rand);
+    }
+
+    private int randomIntFromRange(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
+
+
+    @Override
+    public Priority getPriority() {
+        return personalityPriority;
+    }
+
+    @Override
+    public String getInformation() {
+        StringBuilder builder = new StringBuilder("Personality Traits: ");
+        for (String s : traits) {
+            builder.append(s).append(", ");
+        }
+        builder = new StringBuilder(builder.substring(0, builder.length() - 2));     //Removing the last two spaces
+        return builder.toString();
+    }
+}
