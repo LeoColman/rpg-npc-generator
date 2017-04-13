@@ -72,7 +72,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    private void setAboutEvent() {
+        TextView about = (TextView) findViewById(R.id.about_text_view);
+        about.setOnClickListener(v -> {
+            Intent i = new Intent(this, AboutActivity.class);
+            startActivity(i);
+        });
+    }
+
     private void setEventHandlers() {
+        setAboutEvent();
         setDiscreeteBarEvent();
         setGenerateButtonHandler();
         setMyNpcsButtonHandler();
@@ -143,25 +152,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         final View constraint = findViewById(R.id.advancedContent);
         final TextView text = (TextView) findViewById(R.id.showAdvanced);
 
-        text.setOnClickListener(new View.OnClickListener() {
+        text.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
-
-                String currentText = text.getText().toString().toLowerCase();
-                if (isShowText(currentText)) {
-                    //Show
-                    Log.d("Eita", "E");
-                    constraint.setVisibility(View.VISIBLE);
-                    text.setText(getHideText());
-                } else {
-                    //Hide
-                    Log.d("Eita2", "EE");
-                    constraint.setVisibility(View.GONE);
-                    text.setText(getShowText());
-                }
-
+            String currentText = text.getText().toString().toLowerCase();
+            if (isShowText(currentText)) {
+                //Show
+                Log.d("Eita", "E");
+                constraint.setVisibility(View.VISIBLE);
+                text.setText(getHideText());
+            } else {
+                //Hide
+                Log.d("Eita2", "EE");
+                constraint.setVisibility(View.GONE);
+                text.setText(getShowText());
             }
+
         });
 
     }
@@ -184,13 +189,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         final DiscreteSeekBar bar = (DiscreteSeekBar) findViewById(R.id.main_screen_random_selector_bar);
         final Button generateButton = (Button) findViewById(R.id.main_screen_generate_button);
 
-        generateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int amountToGenerate = bar.getProgress();
-                ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
-                openNpcActivity(generatedNpcs, false);
-            }
+        generateButton.setOnClickListener(v -> {
+            int amountToGenerate = bar.getProgress();
+            ArrayList<Npc> generatedNpcs = generateNpcs(amountToGenerate);
+            openNpcActivity(generatedNpcs, false);
         });
     }
 

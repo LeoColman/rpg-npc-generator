@@ -40,11 +40,11 @@ public class Name implements Information, Serializable {
         }
     }
 
-    public String getName() {
+    private String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 

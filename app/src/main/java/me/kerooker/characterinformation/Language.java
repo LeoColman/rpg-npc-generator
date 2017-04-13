@@ -3,7 +3,6 @@ package me.kerooker.characterinformation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -16,10 +15,12 @@ public class Language implements Information, Serializable {
     private List<me.kerooker.enums.Language> spoken = new ArrayList<>();
     private Race race;
 
-    public Language(me.kerooker.enums.Language... language) {
-        List<me.kerooker.enums.Language> languages = Arrays.asList(language);
-        spoken.addAll(languages);
-    }
+// --Commented out by Inspection START (12/04/2017 18:40):
+//    public Language(me.kerooker.enums.Language... language) {
+//        List<me.kerooker.enums.Language> languages = Arrays.asList(language);
+//        spoken.addAll(languages);
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:40)
 
     public Language(Race race) {
         this.race = race;
@@ -75,13 +76,13 @@ public class Language implements Information, Serializable {
 
     @Override
     public String getInformation() {
-        String builder = "Languages: ";
+        StringBuilder builder = new StringBuilder("Languages: ");
         if (spoken.isEmpty()) {
-            builder += "(none)";
-            return builder;
+            builder.append("(none)");
+            return builder.toString();
         }
         for (me.kerooker.enums.Language lang : spoken) {
-            builder += lang.toString() + ", ";
+            builder.append(lang.toString()).append(", ");
         }
         return builder.substring(0, builder.length() - 2);    //Removing last ", "
     }

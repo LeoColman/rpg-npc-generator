@@ -2,6 +2,7 @@ package me.kerooker.characterinformation;
 
 
 import android.content.Context;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,7 +38,7 @@ public class Npc implements Serializable {
         sortInformation();
     }
 
-    public Npc(List<Information> info) {
+    private Npc(List<Information> info) {
 
         this.information = info;
         sortInformation();
@@ -50,7 +51,7 @@ public class Npc implements Serializable {
      * @param context The context to get information from
      * @return A new random npc
      */
-    public static Npc generateRandomNpc(Context context) {
+    private static Npc generateRandomNpc(Context context) {
         Age age = new Age();
         Gender gender = new Gender();
         Race race = new Race(context);
@@ -80,8 +81,9 @@ public class Npc implements Serializable {
         this.imageBits = imageBits;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasUUID() {
-        return (uuid != null);
+        return uuid != null;
     }
 
     public UUID getUUID() {
@@ -92,9 +94,11 @@ public class Npc implements Serializable {
         uuid = UUID.randomUUID();
     }
 
-    public void addInformation(Information inf) {
-        information.add(inf);
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public void addInformation(Information inf) {
+//        information.add(inf);
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     public Information getTopInformation() {
         Information topInformation = null;
@@ -119,27 +123,29 @@ public class Npc implements Serializable {
     }
 
     private void sortInformation() {
-        Collections.sort(information, getInformationComparator());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            information.sort(getInformationComparator());
+        } else {
+            //noinspection Java8ListSort
+            Collections.sort(information, getInformationComparator());
+        }
     }
 
     public String getCharacter() {
 
-        String informationBuilder = "";
+        StringBuilder informationBuilder = new StringBuilder();
 
         for (Information inf : information) {
-            informationBuilder += inf.getInformation() + "\n";
+            informationBuilder.append(inf.getInformation()).append("\n");
         }
-        return informationBuilder;
+        return informationBuilder.toString();
     }
 
     private Comparator<Information> getInformationComparator() {
-        return new Comparator<Information>() {
-            @Override
-            public int compare(Information o1, Information o2) {
-                Priority o1P = o1.getPriority();
-                Priority o2P = o2.getPriority();
-                return -(o1P.compareTo(o2P));
-            }
+        return (o1, o2) -> {
+            Priority o1P = o1.getPriority();
+            Priority o2P = o2.getPriority();
+            return -(o1P.compareTo(o2P));
         };
     }
 

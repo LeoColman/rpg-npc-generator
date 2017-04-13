@@ -14,9 +14,11 @@ public class Sexuality implements Information, Serializable {
         this.sexuality = me.kerooker.enums.Sexuality.getRandomSexuality();
     }
 
-    public Sexuality(me.kerooker.enums.Sexuality sexuality) {
-        this.sexuality = sexuality;
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Sexuality(me.kerooker.enums.Sexuality sexuality) {
+//        this.sexuality = sexuality;
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     @Override
     public Priority getPriority() {

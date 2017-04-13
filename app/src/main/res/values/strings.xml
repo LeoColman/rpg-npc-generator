@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">RPG NPC Generator</string>
 
 
@@ -14,12 +14,18 @@
     <string name="save_changes">Save Changes</string>
     <string name="cancel_changes">Cancel Changes</string>
     <string name="save_npc">Save NPC</string>
-    <string name="export">Export</string>
     <string name="preferences_saved_npcs">saved_npcs</string>
     <string name="toast_success_save">NPC Saved successfully!</string>
     <string name="delete">Delete</string>
     <string name="cancel">No!</string>
     <string name="confirm_delete">Are you sure you want to delete %d NPCs?</string>
+    <string name="remember_save">Remember to save your changes with Save NPC!</string>
+    <string name="about">About</string>
+    <string name="if_you_like_our_work_and_want_to_support_us_feel_free_to_donate">If you like our work and want to support us, feel free to donate!</string>
+    <string name="description" tools:ignore="PluralsCandidate">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RPG NPC Generator is a free application for those who want to create NPCs without much struggle, adding the Random factor to the formula. This application is able to generate 1.6 * 10^21 DIFFERENT npcs. That\'s a very big number: \n\n&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1600000000000000000000\n\n&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Besides free, this application is 100% open source, and can be seen in github:\n&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;https://github.com/Kerooker/rpg-npc-generator</string>
+    <string name="about_the_application">About the Application</string>
+    <string name="about_the_author">About the Author</string>
+    <string name="author_description">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Leonardo \"Kerooker\" Lopes is a Brazilian Student at the University of São Paulo. With a passion for TableTop RPGs and a constant need of learning, Leonardo started developing this application as a hobby, and it came to a conclusion.\n\n &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Contact Information: \n &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Email: leonardo.colman.lopes@usp.br</string>
 
 
 </resources>

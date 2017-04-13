@@ -34,11 +34,13 @@ public class Race implements Information, Serializable {
 
     }
 
-    public Race(String race, String subrace) {
-        this.setRace(race);
-        this.setSubrace(subrace);
-
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Race(String race, String subrace) {
+//        this.setRace(race);
+//        this.setSubrace(subrace);
+//
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     public Race(String race) {
         this.setRace(race);
@@ -165,15 +167,15 @@ public class Race implements Information, Serializable {
 
     }
 
-    public String getRace() {
+    private String getRace() {
         return race;
     }
 
-    public void setRace(String race) {
+    private void setRace(String race) {
         this.race = race;
     }
 
-    public String getSubrace() {
+    private String getSubrace() {
         return subrace;
     }
 

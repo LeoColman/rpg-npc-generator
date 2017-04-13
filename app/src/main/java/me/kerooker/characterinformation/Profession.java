@@ -27,33 +27,39 @@ public class Profession implements Information, Serializable {
     private String profession;
     private transient Context context;
 
-    public Profession(@Nullable Age age, Context context) {
+    private Profession(@Nullable Age age, Context context) {
         this.age = age;
         this.context = context;
         setupProfessions();
         generateRandomProfession();
     }
 
-    public Profession(String profession, Context context) {
-        this.profession = profession;
-        this.context = context;
-        setupProfessions();
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Profession(String profession, Context context) {
+//        this.profession = profession;
+//        this.context = context;
+//        setupProfessions();
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
-    public Profession(Context context) {
-        this.age = Age.getRandomAge();
-        this.context = context;
-        setupProfessions();
-        generateRandomProfession();
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Profession(Context context) {
+//        this.age = Age.getRandomAge();
+//        this.context = context;
+//        setupProfessions();
+//        generateRandomProfession();
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     public Profession(@NonNull me.kerooker.characterinformation.Age age, Context context) {
         this(age.getAge(), context);
     }
 
-    public Profession() {
-
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Profession() {
+//
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     private void setupProfessions() {
         try {

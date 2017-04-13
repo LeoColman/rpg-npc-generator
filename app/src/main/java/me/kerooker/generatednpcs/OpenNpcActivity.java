@@ -2,9 +2,12 @@ package me.kerooker.generatednpcs;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
@@ -19,7 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mvc.imagepicker.ImagePicker;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +60,7 @@ public class OpenNpcActivity extends AppCompatActivity {
         npc = getNpcFromIntent();
 
         loadNpc();
+
     }
 
     @Override
@@ -72,9 +81,6 @@ public class OpenNpcActivity extends AppCompatActivity {
             case R.id.menu_save_to_file:
                 handleSaveToFile();
                 break;
-            case R.id.menu_export:
-                handleExport();
-                break;
 
         }
         return true;
@@ -91,9 +97,6 @@ public class OpenNpcActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.toast_success_save, Toast.LENGTH_SHORT).show();
     }
 
-    private void handleExport() {
-
-    }
 
     private void allowEdditing() {
         showCancelAndSave();
@@ -137,6 +140,7 @@ public class OpenNpcActivity extends AppCompatActivity {
         }
 
         npc.setInformation(listToSave);
+        toastSaveChanges();
 
 
     }
@@ -259,19 +263,78 @@ public class OpenNpcActivity extends AppCompatActivity {
             String bits = npc.getImageBits();
             Bitmap map = ImageFormatter.getBitmap(bits);
             image.setImageDrawable(new BitmapDrawable(getResources(), map));
+        } else {
+            Bitmap camera = ImageFormatter.getBitmapFromVectorDrawable(this, R.drawable.camera);
+            image.setImageDrawable(new BitmapDrawable(camera));
         }
-        image.setOnClickListener((v) -> {
-            ImagePicker.pickImage(this);
-        });
+        image.setOnClickListener((v) -> ImagePicker.pickImage(this));
 
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != RESULT_OK) return;
+        if (requestCode == UCrop.REQUEST_CROP) {
+            final Uri result = UCrop.getOutput(data);
+            assert result != null;
+            Bitmap bmp = BitmapFactory.decodeFile(result.getPath());
+            image.setImageDrawable(new BitmapDrawable(bmp));
+            toastSaveChanges();
+            return;
+        }
+
         Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
         if (bitmap == null) return;
-        image.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tmp";
+        File dir = new File(file_path);
+        if (!dir.exists()) {
+            boolean b = dir.mkdirs();
+            if (!b) throw new RuntimeException("Couldn't create directory");
+        }
+        File file = new File(dir, "tmp");
+
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.flush();
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        UCrop.of(Uri.fromFile(file), Uri.fromFile(file))
+                .withOptions(getUcropOptions())
+                .withAspectRatio(1, 1)
+                .start(this);
+
+        file.deleteOnExit();
+
+    }
+
+    private UCrop.Options getUcropOptions() {
+        UCrop.Options opt = new UCrop.Options();
+        opt.setCompressionFormat(Bitmap.CompressFormat.PNG);
+        opt.setCompressionQuality(100);
+        opt.setHideBottomControls(true);
+        opt.setCropGridColumnCount(0);
+        opt.setCropGridRowCount(0);
+        return opt;
+    }
+
+    private void toastSaveChanges() {
+        Toast.makeText(this, R.string.remember_save, Toast.LENGTH_SHORT).show();
     }
 
     private void addInformation(Information inf) {

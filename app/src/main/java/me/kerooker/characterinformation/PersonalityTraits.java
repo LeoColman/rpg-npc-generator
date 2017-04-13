@@ -5,7 +5,6 @@ import android.content.Context;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -29,9 +28,11 @@ public class PersonalityTraits implements Information, Serializable {
         generateRandomTraits();
     }
 
-    public PersonalityTraits(String... traits) {
-        this.traits = Arrays.asList(traits);
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public PersonalityTraits(String... traits) {
+//        this.traits = Arrays.asList(traits);
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
     private void generateRandomTraits() {
         this.traits = getRandomTraits();
@@ -81,11 +82,11 @@ public class PersonalityTraits implements Information, Serializable {
 
     @Override
     public String getInformation() {
-        String builder = "Personality Traits: ";
+        StringBuilder builder = new StringBuilder("Personality Traits: ");
         for (String s : traits) {
-            builder = builder + s + ", ";
+            builder.append(s).append(", ");
         }
-        builder = builder.substring(0, builder.length()-2);     //Removing the last two spaces
-        return builder;
+        builder = new StringBuilder(builder.substring(0, builder.length() - 2));     //Removing the last two spaces
+        return builder.toString();
     }
 }

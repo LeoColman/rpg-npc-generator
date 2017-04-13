@@ -26,7 +26,7 @@ public class FileManager {
         SharedPreferences prefs = context.getSharedPreferences(saveKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(String.valueOf(uuid), npc.toJson());
-        editor.commit();
+        editor.apply();
 
     }
 
@@ -54,10 +54,12 @@ public class FileManager {
 
     }
 
-    public static Npc getNpcFromFile(UUID uuidKey, Context context) {
-        return getNpcFromFile(String.valueOf(uuidKey), context);
-
-    }
+// --Commented out by Inspection START (12/04/2017 18:40):
+//    public static Npc getNpcFromFile(UUID uuidKey, Context context) {
+//        return getNpcFromFile(String.valueOf(uuidKey), context);
+//
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:40)
 
     private static void deleteNpc(Context c, Npc n) {
         if (!n.hasUUID()) return;
@@ -66,7 +68,7 @@ public class FileManager {
         SharedPreferences prefs = c.getSharedPreferences(saveKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(String.valueOf(n.getUUID()));
-        editor.commit();
+        editor.apply();
 
     }
 

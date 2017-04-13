@@ -24,8 +24,4 @@
         android:id="@+id/menu_save_to_file"
         android:title="@string/save_npc"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_export"
-        android:title="@string/export"
-        app:showAsAction="never" />
 </menu>

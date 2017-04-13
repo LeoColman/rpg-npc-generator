@@ -26,9 +26,11 @@ public class Motivation implements Information, Serializable {
         this.motivation = getRandomMotivation();
     }
 
-    public Motivation(String motivation) {
-        this.motivation = motivation;
-    }
+// --Commented out by Inspection START (12/04/2017 18:41):
+//    public Motivation(String motivation) {
+//        this.motivation = motivation;
+//    }
+// --Commented out by Inspection STOP (12/04/2017 18:41)
 
 
     private void loadMotivations() {

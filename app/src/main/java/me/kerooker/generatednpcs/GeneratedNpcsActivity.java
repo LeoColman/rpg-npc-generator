@@ -139,6 +139,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         for (int i = 0; i < childCount; i++) {
             View view = mainLinear.getChildAt(i);
             Npc npc = generatedNpcList.get(i);
+            //noinspection deprecation
             setClickToOpenNpc((ConstraintLayout) view, npc);
         }
     }
@@ -174,8 +175,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
         Intent thisIntent = getIntent();
         boolean isSaved = thisIntent.getBooleanExtra(MainActivity.NPCS_LIST_INTENT_IS_SAVED_BOOLEAN_NAME, false);
         if (!isSaved) {
-            ArrayList<Npc> npcs = (ArrayList<Npc>) thisIntent.getSerializableExtra(MainActivity.NPCS_LIST_INTENT_NAME);
-            generatedNpcList = npcs;
+            generatedNpcList = (ArrayList<Npc>) thisIntent.getSerializableExtra(MainActivity.NPCS_LIST_INTENT_NAME);
         } else {
             ArrayList<String> npcsUuids = (ArrayList<String>) thisIntent.getSerializableExtra(MainActivity.NPCS_LIST_INTENT_NAME);
             generatedNpcList = new ArrayList<>();
@@ -232,6 +232,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
             addChild(mainLinear, newBox);
         }
 
+        //noinspection deprecation
         setClickToOpenNpc(newBox, npc);
 
     }
@@ -243,6 +244,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
      *
      * @deprecated ANDROID SHOULD FIX THIS SHIT
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     private void setClickToOpenNpc(ConstraintLayout box, Npc toOpen) {
         final int toOpenIndex = generatedNpcList.indexOf(toOpen);
 
@@ -270,8 +272,7 @@ public class GeneratedNpcsActivity extends AppCompatActivity {
     private boolean isSelected(ConstraintLayout box) {
         Object tag = box.getTag();
         if (tag == null) return false;
-        Boolean b = (Boolean) tag;
-        return b.booleanValue();
+        return (Boolean) tag;
     }
 
     private void openActivityForNpc(int toOpen) {

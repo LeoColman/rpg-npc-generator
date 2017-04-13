@@ -1,5 +1,6 @@
 package me.kerooker.advertiser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import com.google.android.gms.ads.AdListener;
@@ -58,6 +59,7 @@ public class Advertiser {
      * @param afterDate The date to check if beforeDate happened minuteDifference minutes before this
      * @return true if the afterDate is at at least minuteDifference after beforeDate, false otherwise
      */
+    @SuppressLint("WrongConstant")
     private boolean isTimeAfter(Date beforeDate, int minuteDifference, Date afterDate) {
         Calendar lastCal = Calendar.getInstance();
         lastCal.setTime(beforeDate);
