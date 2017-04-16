@@ -1,13 +1,18 @@
 package me.kerooker.generatednpcs;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
@@ -48,9 +53,12 @@ public class OpenNpcActivity extends AppCompatActivity {
     private static final int LAYOUT_BORDERS_TEXT_VIEWS = 8;
     private static final int EDITABLE_TEXT_COLOR = R.color.grey_editable_text;
     private static final int NON_EDITABLE_TEXT_COLOR = R.color.common_google_signin_btn_text_light_default;
+    private static final int IMAGE_REQUEST_CODE = 1;
     private Menu menu;
     private Npc npc;
     private ImageView image;
+    private File dir;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +104,6 @@ public class OpenNpcActivity extends AppCompatActivity {
         FileManager.saveNpcToFile(npc, this);
         Toast.makeText(this, R.string.toast_success_save, Toast.LENGTH_SHORT).show();
     }
-
 
     private void allowEdditing() {
         showCancelAndSave();
@@ -272,24 +279,38 @@ public class OpenNpcActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    private void askPermission(File dir, Bitmap bitmap) {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, IMAGE_REQUEST_CODE);
+        this.dir = dir;
+        this.bitmap = bitmap;
+    }
 
-        if (resultCode != RESULT_OK) return;
-        if (requestCode == UCrop.REQUEST_CROP) {
-            final Uri result = UCrop.getOutput(data);
-            assert result != null;
-            Bitmap bmp = BitmapFactory.decodeFile(result.getPath());
-            image.setImageDrawable(new BitmapDrawable(bmp));
-            toastSaveChanges();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode != IMAGE_REQUEST_CODE) return;
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            doImageWriting(dir, bitmap);
+            dir = null;
+            bitmap = null;
             return;
         }
+    }
 
-        Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
-        if (bitmap == null) return;
+    private void checkForPermission(File dir, Bitmap bitmap) {
 
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tmp";
-        File dir = new File(file_path);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                doImageWriting(dir, bitmap);
+            } else {
+                askPermission(dir, bitmap);
+            }
+        } else {
+            doImageWriting(dir, bitmap);
+        }
+
+    }
+
+    private void doImageWriting(File dir, Bitmap bitmap) {
         if (!dir.exists()) {
             boolean b = dir.mkdirs();
             if (!b) throw new RuntimeException("Couldn't create directory");
@@ -313,13 +334,35 @@ public class OpenNpcActivity extends AppCompatActivity {
             }
         }
 
-
         UCrop.of(Uri.fromFile(file), Uri.fromFile(file))
                 .withOptions(getUcropOptions())
                 .withAspectRatio(1, 1)
                 .start(this);
 
         file.deleteOnExit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != RESULT_OK) return;
+        if (requestCode == UCrop.REQUEST_CROP) {
+            final Uri result = UCrop.getOutput(data);
+            assert result != null;
+            Bitmap bmp = BitmapFactory.decodeFile(result.getPath());
+            image.setImageDrawable(new BitmapDrawable(bmp));
+            toastSaveChanges();
+            return;
+        }
+
+        Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
+        if (bitmap == null) return;
+
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tmp";
+        File dir = new File(file_path);
+
+        checkForPermission(dir, bitmap);
+
 
     }
 
