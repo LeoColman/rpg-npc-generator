@@ -31,11 +31,14 @@ import me.kerooker.rpgcharactergenerator.R;
 
     /**
      * Retrieves the last stored long for the date of the advertisement
-     * @return A long value of the last date of ads or 0
+     * @return A long value of the last date of ads or now
      */
     private long getLastStoredDateLong() {
         SharedPreferences adPrefs = getSharedPreferences();
-        return adPrefs.getLong(getAdvertiserPreferenceName(), 0);  //Defaults to 0
+        if (!adPrefs.contains(getAdvertiserPreferenceName())) {
+            setLastAdInfo(new Date());
+        }
+        return adPrefs.getLong(getAdvertiserPreferenceName(), 0);  //Defaults to now
 
     }
 

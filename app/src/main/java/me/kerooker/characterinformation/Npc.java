@@ -174,12 +174,18 @@ public class Npc implements Serializable {
         public Builder withInformation(Information inf) {
             Iterator<Information> infoIterator = npcInstance.getNpcInformation().iterator();
             boolean shouldAdd = false;
+            boolean isRace = false;
             while (infoIterator.hasNext()) {
                 Information next = infoIterator.next();
                 Class actualClass = next.getClass();
                 Class original = inf.getClass();
                 if (original.equals(actualClass)) {
                     //Classes are the same, remove from iterator
+                    if (original.equals(Race.class)) {
+                        //Adding a Race.
+                        Race r = (Race) inf;
+                        isRace = true;
+                    }
                     infoIterator.remove();
                     //Add information to list
                     shouldAdd = true;
@@ -188,6 +194,11 @@ public class Npc implements Serializable {
             }
             if (shouldAdd) {
                 npcInstance.getNpcInformation().add(inf);
+                if (isRace) {
+                    Race r = (Race) inf;
+                    this.withInformation(new Language(r));
+                }
+
             }
             return this;
         }

@@ -34,8 +34,9 @@ public class Language implements Information, Serializable {
     }
 
     private void generateRandomLanguages() {
-        double currentChance = 0.7;
+        double currentChance = 0.4;
         List<me.kerooker.enums.Language> languages = me.kerooker.enums.Language.languagesWithoutCommon();
+
         for (int i = 0; i < me.kerooker.enums.Language.amountOfLanguages(); i++) {
             double generated = RANDOM.nextDouble();
             if (generated < currentChance) {
@@ -65,7 +66,7 @@ public class Language implements Information, Serializable {
 
     private void verifyAndAddCommon() {
         double randomDoubleForCommon = RANDOM.nextDouble();
-        if (randomDoubleForCommon < 0.95) spoken.add(me.kerooker.enums.Language.COMMON);
+        if (randomDoubleForCommon < 0.995) spoken.add(me.kerooker.enums.Language.COMMON);
     }
 
 
