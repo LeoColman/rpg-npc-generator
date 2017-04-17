@@ -10,3 +10,4 @@
 - [ ]  Export PDF
 - [ ]  "Slim" Character (fitting the screen)
 - [ ] Save multiple npcs at once 
+- [ ] Custom maximum amount of generation
