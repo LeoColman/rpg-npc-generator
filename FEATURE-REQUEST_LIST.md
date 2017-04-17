@@ -1,0 +1,12 @@
+- [ ]  Improve RACE denominations to Race, Subrace
+- [ ]  Introduction of Alignement
+- [ ]  Fears of NPCS
+- [ ]  Physical Characteristics
+- [ ]  IOS VERSION
+- [ ]  Check Spelling
+- [ ]  Races sub-groups for generation (Standard - ALL)
+    - [ ] Save the wanted races
+- [ ]  Attributes
+- [ ]  Export PDF
+- [ ]  "Slim" Character (fitting the screen)
+- [ ] Save multiple npcs at once 
