@@ -1,9 +1,9 @@
-- [ ]  Improve RACE denominations to Race, Subrace
-- [ ]  Introduction of Alignement
-- [ ]  Fears of NPCS
-- [ ]  Physical Characteristics
+- [X]  Improve RACE denominations to Race, Subrace
+- [X]  Introduction of Alignement
+- [X]  Fears of NPCS
+- [X]  Physical Characteristics
 - [ ]  IOS VERSION
-- [ ]  Check Spelling
+- [X]  Check Spelling
 - [ ]  Races sub-groups for generation (Standard - ALL)
     - [ ] Save the wanted races
 - [ ]  Attributes
