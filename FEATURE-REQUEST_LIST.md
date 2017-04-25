@@ -4,7 +4,7 @@
 - [X]  Physical Characteristics
 - [ ]  IOS VERSION
 - [X]  Check Spelling
-- [ ]  Races sub-groups for generation (Standard - ALL)
+- [X]  Races sub-groups for generation (Standard - ALL)
     - [ ] Save the wanted races
 - [ ]  Attributes
 - [ ]  Export PDF
