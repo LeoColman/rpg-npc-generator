@@ -4,6 +4,8 @@
 - [X]  Physical Characteristics
 - [ ]  IOS VERSION
 - [X]  Check Spelling
+- [ ] Age selection for generation
+- [X] Bring age to imporant priority
 - [X]  Races sub-groups for generation (Standard - ALL)
     - [ ] Save the wanted races
 - [ ]  Attributes
