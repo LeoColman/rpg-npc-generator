@@ -7,6 +7,7 @@ android:
     - extra-google-m2repository
     - tools
     - platform-tools
+    - sys-img-armeabi-v7a-google_apis-25
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -24,7 +25,7 @@ env:
 # Emulator Management: Create, Start and Wait
 before_script:
   - android list target
-  - echo no | android create avd --force -n test -t android-29 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
