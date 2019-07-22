@@ -8,7 +8,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "com.example.rpgnpcgenerator"
+        applicationId "me.kerooker.rpgcharactergenerator"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

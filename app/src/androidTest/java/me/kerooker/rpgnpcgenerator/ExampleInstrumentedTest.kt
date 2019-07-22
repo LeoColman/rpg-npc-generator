@@ -1,4 +1,4 @@
-package com.example.rpgnpcgenerator
+package me.kerooker.rpgnpcgenerator
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

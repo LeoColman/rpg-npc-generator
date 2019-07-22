@@ -1,4 +1,4 @@
-package com.example.rpgnpcgenerator
+package me.kerooker.rpgnpcgenerator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
