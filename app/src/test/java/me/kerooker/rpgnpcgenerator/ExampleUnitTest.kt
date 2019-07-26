@@ -7,7 +7,7 @@ class ExampleUnitTest : FunSpec() {
     init {
 
         test("Foo") {
-            1 shouldBe 2
+            1 shouldBe 1
         }
     }
 }
