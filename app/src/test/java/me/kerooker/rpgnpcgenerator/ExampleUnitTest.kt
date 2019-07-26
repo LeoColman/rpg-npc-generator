@@ -1,17 +1,13 @@
 package me.kerooker.rpgnpcgenerator
 
-import org.junit.Test
+import io.kotlintest.shouldBe
+import io.kotlintest.specs.FunSpec
 
-import org.junit.Assert.*
+class ExampleUnitTest : FunSpec() {
+    init {
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        test("Foo") {
+            1 shouldBe 1
+        }
     }
 }
