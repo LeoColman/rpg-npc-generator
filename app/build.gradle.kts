@@ -12,6 +12,7 @@ plugins {
     kotlin("android.extensions")
     id("com.github.triplet.play") version "2.3.0"
     id("net.thauvin.erik.gradle.semver") version "1.0.3-beta"
+    id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
 }
 
 android {

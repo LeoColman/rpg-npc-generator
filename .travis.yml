@@ -18,4 +18,4 @@ cache:
     - $HOME/.android/build-cache
 
 script:
-  - ./gradlew test
+  - ./gradlew detekt test
