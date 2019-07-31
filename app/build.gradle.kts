@@ -3,6 +3,7 @@ import com.android.build.gradle.internal.dsl.DefaultConfig
 import com.github.triplet.gradle.play.PlayPublisherExtension
 import groovy.lang.Closure
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import java.util.*
 
 plugins {
@@ -14,12 +15,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(28)
     buildToolsVersion("29.0.0")
+    setupKotlinCompiler()
 
     defaultConfig {
         minSdkVersion(21)
-        targetSdkVersion(29)
+        targetSdkVersion(28)
 
         setupVersion()
     }
@@ -28,6 +30,18 @@ android {
     setupBuildTypes()
     setupFlavors()
     setupTests()
+}
+
+fun BaseAppModuleExtension.setupKotlinCompiler() {
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        val opts = this as KotlinJvmOptions
+        opts.jvmTarget = "1.8"
+    }
 }
 
 fun DefaultConfig.setupVersion() {
@@ -81,6 +95,15 @@ fun BaseAppModuleExtension.setupFlavors() {
     }
 }
 
+fun BaseAppModuleExtension.setupTests() {
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all(closureOf<Test> {
+            useJUnitPlatform()
+        } as Closure<Test>)
+    }
+}
+
 configure<PlayPublisherExtension> {
     track = "beta"
     serviceAccountCredentials = file("../local/play-store-key.json")
@@ -96,13 +119,13 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
 
     // Testing
-    implementation("io.kotlintest:kotlintest-runner-junit5:3.4.0")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.0")
+    testImplementation("org.robolectric:robolectric:4.3")
+    testImplementation("androidx.test:core:1.2.0")
+    testImplementation("androidx.test:core-ktx:1.2.0")
+    testImplementation("junit:junit:4.12")
+
+    testImplementation("androidx.test:runner:1.2.0")
+    testImplementation("androidx.test:rules:1.2.0")
 }
 
-fun BaseAppModuleExtension.setupTests() {
-    testOptions {
-        unitTests.all(closureOf<Test> {
-            useJUnitPlatform()
-        } as Closure<Test>)
-    }
-}
