@@ -2,6 +2,7 @@ import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.gradle.internal.dsl.DefaultConfig
 import com.github.triplet.gradle.play.PlayPublisherExtension
 import groovy.lang.Closure
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import java.util.*
@@ -110,6 +111,10 @@ configure<PlayPublisherExtension> {
     serviceAccountCredentials = file("../local/play-store-key.json")
 }
 
+configure<DetektExtension> {
+    config = files("detekt-config.yml")
+}
+
 dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
@@ -119,14 +124,19 @@ dependencies {
     implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
 
+    // Koin
+    implementation("org.koin:koin-android:2.0.1")
+    testImplementation("io.kotlintest:kotlintest-extensions-koin:$kotlinTestVersion")
+
+    // JSON
+    implementation("com.beust:klaxon:5.0.1")
+
     // Testing
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.0")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
     testImplementation("org.robolectric:robolectric:4.3")
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test:core-ktx:1.2.0")
     testImplementation("junit:junit:4.12")
 
-    testImplementation("androidx.test:runner:1.2.0")
-    testImplementation("androidx.test:rules:1.2.0")
 }
 
