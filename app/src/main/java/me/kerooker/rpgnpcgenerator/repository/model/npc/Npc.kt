@@ -10,6 +10,7 @@ const val CHANCE_OF_SPEAKING_COMMON = 0.995
 const val CHANCE_OF_SPEAKING_RACIAL = 0.995
 const val CHANCE_OF_EXTRA_COMMON_LANGUAGE = 0.25
 const val CHANCE_OF_EXTRA_EXOTIC_LANGUAGE = 0.05
+const val MAX_AMOUNT_OF_EXTRA_PERSONALITY_TRAITS = 3
 const val CHANCE_OF_EXTRA_PERSONALITY_TRAITS = 0.25
 
 class NpcGenerator : KoinComponent {
@@ -35,7 +36,20 @@ class NpcGenerator : KoinComponent {
         val personalityTraits = generatePersonalityTraits()
         val languages = generateLanguages(race)
 
-        return Npc(name, surname, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages)
+        return Npc(
+            name,
+            surname,
+            nickname,
+            gender,
+            sexuality,
+            race,
+            age,
+            profession,
+            motivation,
+            alignment,
+            personalityTraits,
+            languages
+        )
     }
 
     private fun generateName() = nameGenerator.random()
@@ -65,7 +79,7 @@ class NpcGenerator : KoinComponent {
 
     private fun generatePersonalityTraits(): List<String> {
         val list = mutableListOf(personalityTraitGenerator.random(), personalityTraitGenerator.random())
-        repeat(3) {
+        repeat(MAX_AMOUNT_OF_EXTRA_PERSONALITY_TRAITS) {
             if(hitsChance(CHANCE_OF_EXTRA_PERSONALITY_TRAITS))
                 list += personalityTraitGenerator.random()
         }
