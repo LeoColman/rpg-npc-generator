@@ -1,0 +1,70 @@
+Actor
+Animal Trainer
+Armorsmith's Assistant
+Arrowsmith's Assistant
+Attendent
+Bagger
+Baker's Assistant
+Bandit's Assistant
+Bard's Assistant
+Basketmaker's Assistant
+Beggar
+Bellringer
+Blacksmith's Assistant
+Book seller
+Chicken Farmer's Assistant
+Clown
+Cook's Assistant
+Crop farmer
+Currier
+Dog trainer
+Drummer
+Dung carter
+Dung collector
+Farmer's Assistant
+Fisherman's Assistant
+Fisherman's Assistant (freshwater)
+Fisherman's Assistant (saltwater)
+Fruit farmer
+Gardener's Assistant
+Glasspainter
+Hat maker's Assistant
+Herb farmer's Assistant
+Herbalist's Assistant
+Jester
+Juggler
+Librarian's Assistant
+Lutemaker's Assistant
+Meat butcher's Assistant
+Miner
+Monk's Assistant
+Musician
+Netmaker's Assistant
+Nobleman's son
+Orphan
+Pickpocket
+Pie maker's Assistant
+Pig Farmer
+Prostitute
+Rat catcher
+Ropemaker's Assistant
+Rugmaker's Assistant
+Saltboiler
+Servant
+Shaman's Apprentice
+Sheepshearer's Assistant
+Shepherd's Assistant
+Shoe shiner
+Slave
+Street magician
+Street sweeper
+Swordsmith's Assistant
+Tailor's Assistant
+Tanner's Assistant
+Vagabond
+Vegetable Farmer
+Village idiot
+Water carrier
+Waterseller
+Weaponsmith's Assistant
+Worm farmer

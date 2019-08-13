@@ -11,10 +11,12 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
+    kotlin("kapt")
     id("com.github.triplet.play") version "2.3.0"
     id("net.thauvin.erik.gradle.semver") version "1.0.3-beta"
     id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
 }
+
 
 android {
     compileSdkVersion(28)
@@ -26,12 +28,19 @@ android {
         targetSdkVersion(28)
 
         setupVersion()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     setupSigningConfigs()
     setupBuildTypes()
     setupFlavors()
     setupTests()
+
+    packagingOptions {
+        exclude("META-INF/LICENSE.md")
+        exclude("META-INF/LICENSE-notice.md")
+    }
 }
 
 fun BaseAppModuleExtension.setupKotlinCompiler() {
@@ -118,18 +127,32 @@ configure<DetektExtension> {
 dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.41")
 
     // Android
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("com.android.support:design:28.0.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0")
+
+    // Android Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
 
     // Koin
-    implementation("org.koin:koin-android:2.0.1")
+    implementation("org.koin:koin-android:$koinVersion")
+    implementation("org.koin:koin-android-viewmodel:$koinVersion")
     testImplementation("io.kotlintest:kotlintest-extensions-koin:$kotlinTestVersion")
 
     // JSON
     implementation("com.beust:klaxon:5.0.1")
+
+    // Object Box
+    releaseImplementation("io.objectbox:objectbox-android:$objectBoxVersion")
+    implementation("io.objectbox:objectbox-kotlin:$objectBoxVersion")
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectBoxVersion")
+    kapt("io.objectbox:objectbox-processor:$objectBoxVersion")
 
     // Testing
     testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
@@ -138,5 +161,16 @@ dependencies {
     testImplementation("androidx.test:core-ktx:1.2.0")
     testImplementation("junit:junit:4.12")
 
-}
+    // UI Testing
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("io.kotlintest:kotlintest-runner-junit4:$kotlinTestVersion")
+    androidTestImplementation("androidx.test:core:1.2.0")
+    androidTestImplementation("androidx.test:core-ktx:1.2.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.1.0-rc04")
 
+    }
+
+// Must necesseraly be after the dependencies block as per documentation
+apply {
+    plugin("io.objectbox")
+}

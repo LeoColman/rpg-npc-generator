@@ -1,2 +1,8 @@
 <resources>
+    <string name="title_activity_main">MainActivity</string>
+
+
+    <!-- NavBar -->
+    <string name="nav_bar_random_npc">Randomize</string>
+    <string name="nav_bar_my_npcs">NPCs</string>
 </resources>
