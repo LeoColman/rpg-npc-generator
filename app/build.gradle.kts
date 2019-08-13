@@ -111,6 +111,7 @@ fun BaseAppModuleExtension.setupTests() {
         unitTests.isIncludeAndroidResources = true
         unitTests.all(closureOf<Test> {
             useJUnitPlatform()
+            testLogging.showStackTraces = true
         } as Closure<Test>)
     }
 }
