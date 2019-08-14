@@ -3,6 +3,7 @@ import com.android.build.gradle.internal.dsl.DefaultConfig
 import com.github.triplet.gradle.play.PlayPublisherExtension
 import groovy.lang.Closure
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import java.util.*
@@ -112,6 +113,7 @@ fun BaseAppModuleExtension.setupTests() {
         unitTests.all(closureOf<Test> {
             useJUnitPlatform()
             testLogging.showStackTraces = true
+            testLogging.exceptionFormat = FULL
         } as Closure<Test>)
     }
 }
