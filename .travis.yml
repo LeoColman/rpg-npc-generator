@@ -1,5 +1,5 @@
 language: android
-dist: xenial
+dist: trusty
 android:
   components:
     - build-tools-29.0.0
