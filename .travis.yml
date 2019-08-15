@@ -17,5 +17,9 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
+
+before_install:
+  - sudo apt-get install -y libstdc++6
+
 script:
   - ./gradlew detekt test
