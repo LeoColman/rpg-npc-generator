@@ -19,7 +19,9 @@ cache:
 
 
 before_install:
-  - sudo apt-get install -y libstdc++6
+  # Required to avoid unsatisfied link exceptions from ObjectBox
+  - wget -q -O libstdc++6 http://security.ubuntu.com/ubuntu/pool/main/g/gcc-5/libstdc++6_5.4.0-6ubuntu1~16.04.10_amd64.deb
+  - sudo dpkg --force-all -i libstdc++6
 
 script:
   - ./gradlew detekt test
