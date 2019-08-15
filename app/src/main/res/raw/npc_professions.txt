@@ -1,0 +1,396 @@
+Academic
+Accountant
+Actor
+Alchemist
+Animal Trainer
+Apothecary
+Archbishop
+Archer
+Architect
+Aristocrat
+Armorer
+Armorsmith
+Arrowsmith
+Artisan
+Artist
+Assassin
+Astrologer
+Atilliator
+Attendent
+Bagger
+Bailiff
+Baker
+Bandit
+Banker
+Barbier
+Bard
+Bartender
+Basketmaker
+Beachcomber
+Beekeeper
+Beer seller
+Beerbrewer
+Beggar
+Beguine
+Bellfounder
+Bellmaker
+Bellringer
+Besom maker
+Bishop
+Blacksmith
+Bloodletter
+Boatman
+Bodger
+Bodyguard
+Bonecarver
+Book seller
+Bouncer
+Bowman
+Bowyer
+Brewer
+Bricklayer
+Buffoon
+Builder
+Burglar
+Busker
+Butcher
+Butler
+Buttonmaker
+Cabinetmaker
+Calligrapher
+Camp cook
+Camp follower
+Candlestick maker
+Captain
+Captain of the guard
+Caravan guard
+Carpenter
+Cartographer
+Carver
+Chainmaker
+Chalk cutter
+Chapman
+Charcoal burner
+Charlatan
+Cheesemaker
+Cheesemonger
+Chicken butcher
+Chicken Farmer
+Chimney sweep
+City guardsman
+Clark
+Clerk
+Clockmaker
+Clothier
+Clown
+Cobbler
+Coiner
+Colporteur
+Composer
+Cook
+Cooper
+Coppersmith
+Copyist
+Cordwainer
+Courtesan
+Crop farmer
+Crossbowman
+Crystal carver
+Cultist
+Cupbearer
+Curate
+Currier
+Cutpurse
+Dairy farmer
+Dancer
+Dentist
+Detective
+Diplomat
+Ditch digger
+Doctor
+Dog breeder
+Dog trainer
+Dresser
+Drug dealer
+Drug farmer
+Drummer
+Dung carter
+Dung collector
+Dyer
+Engraver
+Executioner
+Faith healer
+Falconer
+False prophet
+Farmer
+Farrier
+Feltmaker
+Fence
+Fewtrer
+Fiddler
+Fireman
+Fisherman
+Fisherman (freshwater)
+Fisherman (saltwater)
+Flagellant
+Fletcher
+Flower farmer
+Food critic
+Forester
+Fortune teller
+Fowler
+Fruit farmer
+Fruiterer
+Fuller
+Fungus Farmer
+Furniture maker
+Furrier
+Gambler
+Gamekeeper
+Gardener
+Gardner
+Gemcutter
+Glass seller
+Glassblower
+Glasspainter
+Gluemaker
+Gong farmer
+Gossip
+Grave digger
+Grave robber
+Gravedigger
+Greengrocer
+Grifter
+Guardsman
+Guide
+Guild master
+Gutter cleaner
+Haberdasher
+Handyman
+Hat maker
+Hatmaker
+Hatter
+Hawker
+Hay merchant
+Hayward
+Herald
+Herb farmer
+Herbalist
+Herder
+Hermit
+Hetheleder
+Horse trainer
+Horse whisperer
+Horseleech
+Hunter
+Huntsman
+Icecutter
+Illuminator
+Illustrator
+Incense bearer
+Innkeeper
+Jailer
+Jester
+Jeweler
+Joiner
+Juggler
+Knacker
+Knapper
+Knifeman
+Knifesmith
+Knight
+Lamp lighter
+Lampwright
+Lancier
+Landlord
+Lanternmaker
+Lapidary
+Lawyer
+Leatherworker
+Leech
+Librarian
+Lighterman
+Linkboy
+Locksmith
+Lookout
+Lutemaker
+Lutenist
+Mailmaker
+Mapmaker
+Mariner
+Mason
+Master of hounds
+Mathematician
+Meat butcher
+Mercenary
+Messenger
+Metropolitan bishop
+Midwife
+Militia
+Milkmaid
+Miller
+Miner
+Minstrel
+Mirrorer
+Moneylender
+Monk
+Mucker
+Musician
+Nailmaker
+Navigator
+Netmaker
+Night watchman
+Noble
+Nobleman's son
+Nurse
+Oil merchant
+Oilmaker
+Old-clothes dealer
+Opium merchant
+Organ thief
+Orphan
+Ostler
+Outlaw
+Oyster raker
+Painter
+Papermaker
+Parchment maker
+Parchmenter
+Pardoner
+Pawnbroker
+Peasant
+Peat cutter
+Philosopher
+Physician
+Pickler
+Pickpocket
+Pie maker
+Pie seller
+Pig Farmer
+Pikeman
+Pilgrim
+Pimp
+Pirate
+Plague doctor
+Plumber
+Plumer
+Poacher
+Poet
+Postman
+Potter
+Priest
+Prison warden
+Professional musician
+Professor
+Prostitute
+Puppeteer
+Purse maker
+Quarryman
+Quill cutter
+Rat catcher
+Ropemaker
+Royal food taster
+Rugmaker
+Rugweaver
+Saddler
+Sail maker
+Sailmaker
+Sailor
+Saltboiler
+Salter
+Scholar
+Schoolmaster
+Scout
+Scribe
+Scribe
+Scrimshaw
+Scullion
+Sculptor
+Sea captain
+Seamstress
+Seaweed harvester
+Servant
+Sewerhand
+Shaman
+Sheepshearer
+Shepherd
+Shingler
+Ship provisioner
+Shipwright
+Shoe shiner
+Shoemaker
+Shrimper
+Shrubber
+Siege engineer
+Siever
+Silversmith
+Sinecure
+Singer
+Skinner
+Slave
+Slaver
+Smelter
+Smith
+Smuggler
+Soaper
+Soldier
+Solicitor
+Spearman
+Spice merchant
+Spy
+Squire
+Stablehand
+Stevedore
+Steward
+Stonecarver
+Stonecutter
+Stonemason
+Stoner
+Storyteller
+Street magician
+Street sweeper
+Stringer
+Summoner (law)
+Surgeon
+Swineherd
+Swordsmith
+Tailor
+Tanner
+Tapestrymaker
+Taverner
+Tax collector
+Taxidermist
+Teacher
+Thatcher
+Theologian
+Thief
+Thug
+Tinker
+Torturer
+Town crier
+Trader
+Trapper
+Troubadour
+Urchin
+Vagabond
+Vaginarius
+Vagrant
+Vegetable Farmer
+Veterinarian
+Village idiot
+Vintner
+Wagoner
+Wainwright
+Water carrier
+Waterman
+Waterseller
+Weaponsmith
+Weaver
+Window tapper
+Wine seller
+Wood seller
+Woodcarver
+Woodcutter
+Worm farmer
+Writer
+Zealot

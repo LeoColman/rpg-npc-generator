@@ -1,0 +1,78 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:965012069954660192",
+      "lastPropertyId": "13:6023405270920972356",
+      "name": "NpcEntity",
+      "properties": [
+        {
+          "id": "1:5505077283636440623",
+          "name": "id"
+        },
+        {
+          "id": "2:8142384949617207154",
+          "name": "age"
+        },
+        {
+          "id": "3:5589089258033801881",
+          "name": "name"
+        },
+        {
+          "id": "4:2272150580062402924",
+          "name": "surname"
+        },
+        {
+          "id": "5:4753897017570320626",
+          "name": "nickname"
+        },
+        {
+          "id": "6:777274660507681508",
+          "name": "gender"
+        },
+        {
+          "id": "7:2894282806420349046",
+          "name": "sexuality"
+        },
+        {
+          "id": "8:4107047496141214768",
+          "name": "race"
+        },
+        {
+          "id": "9:6625730653070537440",
+          "name": "profession"
+        },
+        {
+          "id": "10:636510404345708822",
+          "name": "motivation"
+        },
+        {
+          "id": "11:8995285898410800121",
+          "name": "alignment"
+        },
+        {
+          "id": "12:3792645898268560037",
+          "name": "personalityTraits"
+        },
+        {
+          "id": "13:6023405270920972356",
+          "name": "languages"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:965012069954660192",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
