@@ -1,4 +1,4 @@
-package me.kerooker.rpgnpcgenerator.repository.model.npc
+package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import io.kotlintest.matchers.collections.shouldNotContainDuplicates
 import io.kotlintest.matchers.shouldBeInRange
@@ -9,7 +9,8 @@ import io.kotlintest.specs.FunSpec
 @SkipRobolectric
 class RandomDistributedTest : FunSpec() {
 
-    enum class Randomized(override val distribution: Double): RandomDistributed {
+    enum class Randomized(override val distribution: Double):
+        RandomDistributed {
         A(19.0),
         B(80.0),
         C(1.0)
@@ -24,7 +25,7 @@ class RandomDistributedTest : FunSpec() {
             var b = 0
             var c = 0
             repeat(100_000) {
-                when(values.random()) {
+                when(values.distributedRandom()) {
                     Randomized.A -> a++
                     Randomized.B -> b++
                     Randomized.C -> c++

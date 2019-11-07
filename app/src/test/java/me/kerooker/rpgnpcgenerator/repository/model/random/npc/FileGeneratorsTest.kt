@@ -1,4 +1,4 @@
-package me.kerooker.rpgnpcgenerator.repository.model.npc
+package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
 import io.kotlintest.IsolationMode
@@ -6,8 +6,12 @@ import io.kotlintest.TestCase
 import io.kotlintest.TestResult
 import io.kotlintest.extensions.TestListener
 import io.kotlintest.robolectric.RobolectricExtension
+import io.kotlintest.robolectric.SkipRobolectric
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
+import io.kotlintest.specs.FunSpec
+import io.mockk.every
+import io.mockk.mockk
 import me.kerooker.rpgnpcgenerator.R
 import org.koin.core.KoinComponent
 import org.koin.core.context.stopKoin
@@ -39,4 +43,34 @@ class FileGeneratorsTest : FreeSpec(), KoinComponent {
             stopKoin()
         }
     })
+}
+
+@SkipRobolectric
+class ProfessionGeneratorTest : FunSpec() {
+
+    private val commonProfessionGenerator = mockk<CommonProfessionGenerator> {
+        every { random() } returns "Common"
+    }
+    private val childProfessionGenerator = mockk<ChildProfessionGenerator> {
+        every { random() } returns "Child"
+    }
+
+    private val target = ProfessionGenerator(
+        childProfessionGenerator,
+        commonProfessionGenerator
+    )
+
+    init {
+        test("When age is Child, should generate from ChildProfessionGenerator") {
+            target.random(Age.Child) shouldBe "Child"
+        }
+
+        test("When age is not Child, should generate from CommonProfessionGenerator") {
+            Age.values().filterNot { it == Age.Child }.forEach {
+                target.random(it) shouldBe "Common"
+            }
+        }
+    }
+
+    override fun isolationMode() = IsolationMode.InstancePerTest
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/randomize_all"
+        android:icon="@drawable/dice_192_192"
+        android:title="@string/randomize_all"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_save_24dp"
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/randomNpcFragment"
+        android:title="@string/nav_bar_random_npc"
+        android:icon="@drawable/ic_twenty_sided_dice"
+        />
+    <item
+        android:id="@+id/myNpcsFragment"
+        app:actionViewClass="android.widget.ImageView"
+        android:title="@string/nav_bar_my_npcs"
+        android:icon="@drawable/ic_library_book"
+        />
+</menu>

@@ -1,25 +1,20 @@
-package me.kerooker.rpgnpcgenerator.repository.model.npc
+package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
 import androidx.annotation.RawRes
 import me.kerooker.rpgnpcgenerator.R
-import org.koin.dsl.module
-
-val fileGeneratorModule = module {
-    single { NameGenerator(get()) }
-    single { NicknameGenerator(get()) }
-    single { ProfessionGenerator(get()) }
-    single { ChildProfessionGenerator(get()) }
-    single { MotivationGenerator(get()) }
-    single { PersonalityTraitGenerator(get()) }
-}
 
 abstract class FileGenerator(
-    @RawRes val fileResource: Int,
+    @RawRes fileResource: Int,
     context: Context
 )  {
 
-    private val fileLines by lazy { linesFromRaw(fileResource, context) }
+    private val fileLines by lazy {
+        linesFromRaw(
+            fileResource,
+            context
+        )
+    }
 
     fun random(): String = fileLines.random()
 }
@@ -28,7 +23,7 @@ class NameGenerator(context: Context) : FileGenerator(R.raw.npc_names, context)
 
 class NicknameGenerator(context: Context) : FileGenerator(R.raw.npc_nicknames, context)
 
-class ProfessionGenerator(context: Context) : FileGenerator(R.raw.npc_professions, context)
+class CommonProfessionGenerator(context: Context) : FileGenerator(R.raw.npc_professions, context)
 
 class ChildProfessionGenerator(context: Context) : FileGenerator(R.raw.npc_child_professions, context)
 
@@ -39,3 +34,16 @@ class PersonalityTraitGenerator(context: Context) : FileGenerator(R.raw.npc_pers
 
 fun linesFromRaw(@RawRes rawResource: Int, context: Context) =
     context.resources.openRawResource(rawResource).bufferedReader().readLines()
+
+
+class ProfessionGenerator(
+    private val childProfessionGenerator: ChildProfessionGenerator,
+    private val commonProfessionGenerator: CommonProfessionGenerator
+) {
+    fun random(age: Age): String {
+        return when (age) {
+            Age.Child -> childProfessionGenerator.random()
+            else  -> commonProfessionGenerator.random()
+        }
+    }
+}
