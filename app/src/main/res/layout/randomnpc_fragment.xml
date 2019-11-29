@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout">
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context="me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcFragment">
+
+
+            <ImageView
+                android:id="@+id/screenshot_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0" />
+
+            <ImageView
+                android:id="@+id/random_npc_portrait"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/simple_black_border"
+                android:padding="2dp"
+                android:src="@drawable/portrait_placeholder"
+                app:layout_constraintBottom_toBottomOf="@id/random_npc_nickname"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_fullname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                app:hint="@string/random_npc_full_name_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/random_npc_portrait"
+                app:layout_constraintTop_toTopOf="@+id/random_npc_portrait"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setName(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeName}"
+                app:text="@{npc.name}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hint="@string/random_npc_nickname_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_fullname"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_fullname"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_fullname"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setNickname(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeNickname}"
+                app:text="@{npc.nickname}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_race_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_portrait"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_nickname"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setRace(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeRace}"
+                app:text="@{npc.race}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_age"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_age_hint"
+                app:layout_constraintEnd_toStartOf="@+id/random_npc_gender"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_race"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_race"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setAge(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeAge}"
+                app:text="@{npc.age}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:hint="@string/random_npc_gender_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_race"
+                app:layout_constraintStart_toEndOf="@+id/random_npc_age"
+                app:layout_constraintTop_toTopOf="@+id/random_npc_age"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setGender(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeGender}"
+                app:text="@{npc.gender}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_profession"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_profession_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_gender"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_age"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_age"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setProfession(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeProfession}"
+                app:text="@{npc.profession}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_sexuality"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_sexuality_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_profession"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_profession"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_profession"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setSexuality(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeSexuality}"
+                app:text="@{npc.sexuality}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_alignment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_alignment_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_sexuality"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_sexuality"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_sexuality"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setAlignment(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeAlignment}"
+                app:text="@{npc.alignment}" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
+                android:id="@+id/random_npc_motivation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:hint="@string/random_npc_motivation_hint"
+                app:layout_constraintEnd_toEndOf="@+id/random_npc_alignment"
+                app:layout_constraintStart_toStartOf="@+id/random_npc_alignment"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_alignment"
+                app:onManualInput="@{(text) -> randomNpcViewModel.setMotivation(text)}"
+                app:onRandomClick="@{randomNpcViewModel::randomizeMotivation}"
+                app:text="@{npc.motivation}" />
+
+            <TextView
+                android:id="@+id/random_npc_languages_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/languages_label"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/random_npc_motivation"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/random_npc_motivation"
+                app:layout_constraintTop_toBottomOf="@id/random_npc_motivation" />
+
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcListView
+                android:id="@+id/random_npc_languages"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:elements="@{npc.languages}"
+                app:onPositionedRandomizeClick="@{(index) -> randomNpcViewModel.randomizeLanguage(index)}"
+                app:onPositionedDeleteClick="@{(index) -> randomNpcViewModel.removeLanguage(index)}"
+                app:onIndexedManualInputListener="@{(index, text) -> randomNpcViewModel.setLanguage(index, text)}"
+                app:layout_constraintEnd_toEndOf="@id/random_npc_languages_label"
+                app:layout_constraintStart_toStartOf="@id/random_npc_languages_label"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_languages_label"
+                app:list_hint="@string/random_npc_language_hint" />
+
+
+            <TextView
+                android:id="@+id/random_npc_personality_traits_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/personality_traits_label"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/random_npc_motivation"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/random_npc_languages"
+                app:layout_constraintTop_toBottomOf="@id/random_npc_languages" />
+
+            <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcListView
+                android:id="@+id/random_npc_personality_traits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                app:elements="@{npc.personalityTraits}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/random_npc_personality_traits_label"
+                app:layout_constraintStart_toStartOf="@id/random_npc_personality_traits_label"
+                app:layout_constraintTop_toBottomOf="@+id/random_npc_personality_traits_label"
+                app:list_hint="@string/random_npc_personality_hint"
+                app:onIndexedManualInputListener="@{(index, text) -> randomNpcViewModel.setPersonality(index, text)}"
+                app:onPositionedDeleteClick="@{(index) -> randomNpcViewModel.removePersonality(index)}"
+                app:onPositionedRandomizeClick="@{(index) -> randomNpcViewModel.randomizePersonality(index)}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <data>
+
+        <import type="androidx.lifecycle.LiveData" />
+
+        <import type="me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpcData" />
+
+        <import type="me.kerooker.rpgnpcgenerator.viewmodel.random.npc.RandomNpcViewModel" />
+
+        <variable
+            name="npc"
+            type="LiveData&lt;GeneratedNpcData>" />
+
+        <variable
+            name="randomNpcViewModel"
+            type="RandomNpcViewModel" />
+    </data>
+</layout>

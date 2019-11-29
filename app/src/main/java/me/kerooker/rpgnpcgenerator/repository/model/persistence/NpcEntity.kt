@@ -7,11 +7,9 @@ import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
 
 @Entity data class NpcEntity(
-    val name: String,
-
-    val surname: String?,
-
-    val nickname: String?,
+    val fullName: String,
+    
+    val nickname: String,
 
     val gender: String,
 

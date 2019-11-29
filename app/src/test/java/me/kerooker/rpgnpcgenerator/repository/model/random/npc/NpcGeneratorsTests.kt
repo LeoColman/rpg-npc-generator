@@ -1,4 +1,4 @@
-package me.kerooker.rpgnpcgenerator.repository.model.npc
+package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
 import io.kotlintest.IsolationMode
@@ -17,10 +17,10 @@ import org.koin.core.KoinComponent
 import org.koin.core.context.stopKoin
 import org.koin.core.get
 
-class NpcGeneratorTest : FunSpec(), KoinComponent {
+class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
 
     private val target
-        get() = get<NpcGenerator>()
+        get() = get<CompleteNpcGenerator>()
 
     private val childrenProfessions by lazy {
         get<Context>().resources.openRawResource(R.raw.npc_child_professions).bufferedReader().readLines()
@@ -32,11 +32,7 @@ class NpcGeneratorTest : FunSpec(), KoinComponent {
 
     init {
         test("Should generate a npc") {
-            generateOne().first().shouldBeInstanceOf<Npc>()
-        }
-
-        test("Should generate a null surname with 3% of chance") {
-            generateMany().map { it.surname }.count { it == null } shouldBeInRange (2700..3300)
+            generateOne().first().shouldBeInstanceOf<GeneratedNpc>()
         }
 
         test("Should have a .5% chance of not speaking common") {
@@ -95,10 +91,6 @@ class NpcGeneratorTest : FunSpec(), KoinComponent {
             fourTraits shouldNotBe 0
             fiveTraits shouldNotBe 0
 
-        }
-
-        test("Should generate a nickname in 10% of cases") {
-            generateMany().map { it.nickname }.count { it != null } shouldBeInRange (9700..10300)
         }
 
     }

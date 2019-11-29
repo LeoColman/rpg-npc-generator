@@ -4,6 +4,8 @@ import io.objectbox.Box
 
 interface NpcRepository {
 
+    fun all(): List<NpcEntity>
+    
     fun put(npcEntity: NpcEntity): Long
 
     fun get(id: Long): NpcEntity
@@ -12,7 +14,11 @@ interface NpcRepository {
 class NpcBoxRepository(
     private val box: Box<NpcEntity>
 ) : NpcRepository {
-
+    
+    override fun all(): List<NpcEntity> {
+        return box.all
+    }
+    
     override fun put(npcEntity: NpcEntity): Long {
         return box.put(npcEntity)
     }
