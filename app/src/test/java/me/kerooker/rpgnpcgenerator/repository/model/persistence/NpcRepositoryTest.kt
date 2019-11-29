@@ -14,7 +14,7 @@ class NpcRepositoryTest : FunSpec(), KoinComponent {
         get() = get<NpcRepository>()
 
     private val npcEntity = NpcEntity(
-        "NpcName", "Surname", null, "Gender", "Sexuality", "Race", "Age",
+        "NpcName", "Nickname", "Gender", "Sexuality", "Race", "Age",
         "Profession", "Motivation", "Alignment", listOf("Personality", "Traits"), emptyList()
     )
 

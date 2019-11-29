@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/randomNpcFragment">
+
+    <fragment
+        android:id="@+id/randomNpcFragment"
+        android:name="me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcFragment"
+        android:label="fragment_random_npc"
+        tools:layout="@layout/random-npc_fragment" >
+        <action
+            android:id="@+id/action_randomNpcFragment_to_myNpcsFragment"
+            app:destination="@id/myNpcsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myNpcsFragment"
+        android:name="me.kerooker.rpgnpcgenerator.view.MyNpcsFragment"
+        android:label="MyNpcsFragment" />
+</navigation>

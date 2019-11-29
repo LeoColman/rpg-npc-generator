@@ -42,6 +42,8 @@ android {
         exclude("META-INF/LICENSE.md")
         exclude("META-INF/LICENSE-notice.md")
     }
+    
+    dataBinding { isEnabled = true }
 }
 
 fun BaseAppModuleExtension.setupKotlinCompiler() {
@@ -130,18 +132,21 @@ configure<DetektExtension> {
 dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.41")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.50")
 
     // Android
-    implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("androidx.core:core-ktx:1.0.2")
+    implementation("androidx.core:core-ktx:1.2.0-alpha03")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("com.android.support:design:28.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0")
+    implementation("com.google.android.material:material:1.1.0-alpha09")
+    implementation("androidx.recyclerview:recyclerview:1.1.0-beta03")
 
     // Android Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    
+    // Memory leak detection
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.0-beta-3")
 
     // Koin
     implementation("org.koin:koin-android:$koinVersion")
@@ -157,21 +162,27 @@ dependencies {
     debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectBoxVersion")
     kapt("io.objectbox:objectbox-processor:$objectBoxVersion")
 
+    // Keyboard manipulation
+    implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.3.0")
+    
     // Testing
     testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
     testImplementation("org.robolectric:robolectric:4.3")
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test:core-ktx:1.2.0")
     testImplementation("junit:junit:4.12")
+    testImplementation("io.mockk:mockk:1.9.3")
 
     // UI Testing
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
     androidTestImplementation("io.kotlintest:kotlintest-runner-junit4:$kotlinTestVersion")
     androidTestImplementation("androidx.test:core:1.2.0")
     androidTestImplementation("androidx.test:core-ktx:1.2.0")
-    debugImplementation("androidx.fragment:fragment-testing:1.1.0-rc04")
-
+    debugImplementation("androidx.fragment:fragment-testing:1.2.0-alpha02") {
+        exclude("androidx.test", "core")
     }
+
+}
 
 // Must necesseraly be after the dependencies block as per documentation
 apply {
