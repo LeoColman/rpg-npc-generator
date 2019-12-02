@@ -5,30 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView
             android:id="@+id/random_npc_list_item_element"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/random_npc_minus"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1">
+
+        </me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementView>
 
         <ImageButton
             android:id="@+id/random_npc_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/random_npc_list_item_element"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/random_npc_list_item_element"
-            app:layout_constraintTop_toTopOf="@+id/random_npc_list_item_element"
-            app:srcCompat="@drawable/ic_remove_circle_red_24dp" />
+            app:srcCompat="@drawable/ic_remove_circle_red_24dp"
+            android:background="@null" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcElementListview>
