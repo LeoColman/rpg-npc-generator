@@ -102,11 +102,11 @@ fun BaseAppModuleExtension.setupFlavors() {
 
     productFlavors {
         create("free") {
-            applicationId = "me.kerooker.rpgnpcgenerator"
+            applicationId = "me.kerooker.rpgcharactergenerator"
             resValue("string", "app_name", "RPG NPC Generator")
         }
         create("pro") {
-            applicationId = "me.kerooker.rpgnpcgeneratorpro"
+            applicationId = "me.kerooker.rpgcharactergeneratorpro"
             resValue("string", "app_name", "RPG NPC Generator PRO")
 
         }
