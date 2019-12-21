@@ -6,7 +6,7 @@ import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -16,7 +16,11 @@ plugins {
     id("com.github.triplet.play") version "2.3.0"
     id("net.thauvin.erik.gradle.semver") version "1.0.3-beta"
     id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
+    idea
 }
+
+apply(plugin = "androidx.navigation.safeargs.kotlin")
 
 
 android {
@@ -132,14 +136,30 @@ configure<DetektExtension> {
 dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.50")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.61")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
 
     // Android
-    implementation("androidx.core:core-ktx:1.2.0-alpha03")
+    implementation("androidx.core:core-ktx:1.2.0-rc01")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0")
-    implementation("com.google.android.material:material:1.1.0-alpha09")
-    implementation("androidx.recyclerview:recyclerview:1.1.0-beta03")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
+    implementation("com.google.android.material:material:1.2.0-alpha02")
+    
+    // Splitties
+    implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-alpha06")
+    
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("jp.wasabeef:recyclerview-animators:3.0.0")
+    
+    // List Item View
+    implementation("com.lucasurbas:listitemview:1.1.1")
+    
+    // Image loading
+    implementation("com.github.dhaval2404:imagepicker:1.5")
+    implementation("com.github.florent37:inline-activity-result-kotlin:1.0.1")
+    implementation("io.coil-kt:coil:0.8.0")
 
     // Android Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
@@ -151,33 +171,29 @@ dependencies {
     // Koin
     implementation("org.koin:koin-android:$koinVersion")
     implementation("org.koin:koin-android-viewmodel:$koinVersion")
-    testImplementation("io.kotlintest:kotlintest-extensions-koin:$kotlinTestVersion")
-
-    // JSON
-    implementation("com.beust:klaxon:5.0.1")
-
+    testImplementation("io.kotest:kotest-extensions-koin:$kotestVersion")
+    
     // Object Box
     releaseImplementation("io.objectbox:objectbox-android:$objectBoxVersion")
     implementation("io.objectbox:objectbox-kotlin:$objectBoxVersion")
     debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectBoxVersion")
     kapt("io.objectbox:objectbox-processor:$objectBoxVersion")
-
-    // Keyboard manipulation
-    implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.3.0")
     
     // Testing
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:$kotlinTestVersion")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("org.robolectric:robolectric:4.3")
+    testImplementation("io.kotest:kotest-extensions-robolectric:$kotestVersion")
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test:core-ktx:1.2.0")
-    testImplementation("junit:junit:4.12")
     testImplementation("io.mockk:mockk:1.9.3")
 
     // UI Testing
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
-    androidTestImplementation("io.kotlintest:kotlintest-runner-junit4:$kotlinTestVersion")
+    androidTestImplementation("io.kotlintest:kotlintest-runner-junit4:3.4.2") { exclude(module = "objenesis") }
     androidTestImplementation("androidx.test:core:1.2.0")
     androidTestImplementation("androidx.test:core-ktx:1.2.0")
+    androidTestImplementation("io.mockk:mockk-android:1.9.3") { exclude(module = "objenesis") }
+    androidTestImplementation("org.objenesis:objenesis:2.6")
     debugImplementation("androidx.fragment:fragment-testing:1.2.0-alpha02") {
         exclude("androidx.test", "core")
     }

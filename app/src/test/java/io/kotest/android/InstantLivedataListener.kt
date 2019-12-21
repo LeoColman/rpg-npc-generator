@@ -1,10 +1,10 @@
-package io.kotlintest.android
+package io.kotest.android
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
-import io.kotlintest.TestCase
-import io.kotlintest.TestResult
-import io.kotlintest.extensions.TestListener
+import io.kotest.TestCase
+import io.kotest.TestResult
+import io.kotest.extensions.TestListener
 
 class InstantLivedataListener : TestListener {
     

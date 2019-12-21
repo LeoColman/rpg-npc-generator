@@ -1,22 +1,23 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
-import io.kotlintest.IsolationMode
-import io.kotlintest.TestCase
-import io.kotlintest.TestResult
-import io.kotlintest.extensions.TestListener
-import io.kotlintest.inspectors.forAll
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.shouldBeInRange
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.robolectric.RobolectricExtension
-import io.kotlintest.shouldNotBe
-import io.kotlintest.specs.FunSpec
+import io.kotest.IsolationMode
+import io.kotest.TestCase
+import io.kotest.TestResult
+import io.kotest.experimental.robolectric.RobolectricTest
+import io.kotest.extensions.TestListener
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.ints.shouldBeInRange
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.shouldNotBe
+import io.kotest.specs.FunSpec
 import me.kerooker.rpgnpcgenerator.R
 import org.koin.core.KoinComponent
 import org.koin.core.context.stopKoin
 import org.koin.core.get
 
+@RobolectricTest
 class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
 
     private val target
@@ -102,9 +103,7 @@ class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
     private fun generate(amount: Int) = List(amount) { target.generate() }
 
     override fun isolationMode() = IsolationMode.InstancePerTest
-
-    override fun extensions() = listOf(RobolectricExtension())
-
+    
     override fun listeners() = listOf<TestListener>(object: TestListener {
         override fun afterTest(testCase: TestCase, result: TestResult) {
             stopKoin()

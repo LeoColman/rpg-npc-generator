@@ -1,9 +1,10 @@
 package me.kerooker.rpgnpcgenerator.legacy.repository
 
 import android.content.Context
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.json.JsonObject
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -12,6 +13,7 @@ const val SAVED_NPCS_SHARED_PREFERENCES_NAME = "saved_npcs"
 @Suppress("UNCHECKED_CAST")
 class LegacyNpcRepository : KoinComponent {
 
+    private val json = Json(JsonConfiguration.Stable)
     private val context by inject<Context>()
 
     fun loadLegacyNpcs(): List<LegacyNpc> {
@@ -40,7 +42,7 @@ class LegacyNpcRepository : KoinComponent {
         val jsonString = (getSavedNpcsSharedPreferences().all.values as Collection<String>)
 
         return jsonString.map {
-            Parser.default().parse(StringBuilder(it.replaceQuote())) as JsonObject
+            json.parseJson(it.replaceQuote()) as JsonObject
         }
     }
 
@@ -49,52 +51,52 @@ class LegacyNpcRepository : KoinComponent {
 
     private fun String.replaceQuote(): String = replace("&quot;", "\"")
 
-    private fun JsonObject.getInformationArray() = array<JsonObject>("information")!!
+    private fun JsonObject.getInformationArray() = getArray("information")
 
-    private val JsonArray<JsonObject>.name: String
-        get() = stringOfType("Name", "name")!!
+    private val JsonArray.name: String
+        get() = stringOfType("Name", "name")
 
-    private val JsonArray<JsonObject>.age: String
-        get() = stringOfType("Age", "age")!!.withUnderscoresReplaced().toLowerCase().capitalizeWords()
+    private val JsonArray.age: String
+        get() = stringOfType("Age", "age").withUnderscoresReplaced().toLowerCase().capitalizeWords()
 
-    private val JsonArray<JsonObject>.race: String
-        get() = stringOfType("Race", "race")!!
+    private val JsonArray.race: String
+        get() = stringOfType("Race", "race")
 
-    private val JsonArray<JsonObject>.subRace: String?
+    private val JsonArray.subRace: String?
         get() = stringOfType("Race", "subrace")
 
-    private val JsonArray<JsonObject>.gender: String
-        get() = stringOfType("Gender", "gender")!!.toLowerCase().capitalizeWords()
+    private val JsonArray.gender: String
+        get() = stringOfType("Gender", "gender").toLowerCase().capitalizeWords()
 
-    private val JsonArray<JsonObject>.alignment: String
-        get() = stringOfType("Alignment", "align")!!.withUnderscoresReplaced().toLowerCase().capitalizeWords()
+    private val JsonArray.alignment: String
+        get() = stringOfType("Alignment", "align").withUnderscoresReplaced().toLowerCase().capitalizeWords()
 
-    private val JsonArray<JsonObject>.sexuality: String
-        get() = stringOfType("Sexuality", "sexuality")!!.toLowerCase().capitalizeWords()
+    private val JsonArray.sexuality: String
+        get() = stringOfType("Sexuality", "sexuality").toLowerCase().capitalizeWords()
 
-    private val JsonArray<JsonObject>.profession: String
-        get() = stringOfType("Profession", "profession")!!
+    private val JsonArray.profession: String
+        get() = stringOfType("Profession", "profession")
 
-    private val JsonArray<JsonObject>.motivation: String
-        get() = stringOfType("Motivation", "motivation")!!
+    private val JsonArray.motivation: String
+        get() = stringOfType("Motivation", "motivation")
 
-    private val JsonArray<JsonObject>.personalityTraits: List<String>
-        get() = stringListOfType("PersonalityTraits", "traits")!!.value
+    private val JsonArray.personalityTraits: List<String>
+        get() = stringListOfType("PersonalityTraits", "traits")
 
-    private val JsonArray<JsonObject>.fear: String
-        get() = stringOfType("Phobia", "phobia")!!
+    private val JsonArray.fear: String
+        get() = stringOfType("Phobia", "phobia")
 
-    private val JsonArray<JsonObject>.languages: List<String>
-        get() = stringListOfType("Language", "spoken")!!.map { it.toLowerCase().capitalizeWords() }
+    private val JsonArray.languages: List<String>
+        get() = stringListOfType("Language", "spoken").map { it.toLowerCase().capitalizeWords() }
 
-    private fun JsonArray<JsonObject>.stringListOfType(type: String, string: String) =
-        firstOfType(type).node("data").array<String>(string)
+    private fun JsonArray.stringListOfType(type: String, string: String) =
+        firstOfType(type).jsonObject.node("data")[string]!!.jsonArray.map { it.primitive.content }
 
-    private fun JsonArray<JsonObject>.stringOfType(type: String, string: String) =
-        firstOfType(type).node("data").string(string)
+    private fun JsonArray.stringOfType(type: String, string: String) =
+        firstOfType(type).jsonObject.node("data")[string]!!.primitive.content
 
-    private fun JsonArray<JsonObject>.firstOfType(type: String) =
-        first { it["type"] == "me.kerooker.characterinformation.$type" }
+    private fun JsonArray.firstOfType(type: String) =
+        first { it.jsonObject.getPrimitive("type").content == "me.kerooker.characterinformation.$type" }
 
     private fun JsonObject.node(key: String) = get(key) as JsonObject
 

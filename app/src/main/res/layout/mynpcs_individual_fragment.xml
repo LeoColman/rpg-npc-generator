@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                android:id="@+id/mynpcs_individual_npc_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@null"
+                android:enabled="@{editState.equals(EditState.EDIT)}"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@{npc.fullName}"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textColor="@color/mynpcs_individual_edit_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Very Big NPC Complete Name Lorem Ipsum" />
+
+            <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                android:id="@+id/mynpcs_individual_npc_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@null"
+                android:enabled="@{editState.equals(EditState.EDIT)}"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="@{npc.nickname}"
+                android:textSize="24sp"
+                android:textColor="@color/mynpcs_individual_edit_text_color"
+                app:layout_constraintEnd_toEndOf="@+id/mynpcs_individual_npc_name"
+                app:layout_constraintStart_toStartOf="@+id/mynpcs_individual_npc_name"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_name"
+                tools:text="Relatively Big NPC Nickname" />
+
+            <ImageView
+                android:id="@+id/mynpcs_individual_npc_avatar"
+                android:layout_width="300dp"
+                android:layout_height="400dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="400dp"
+                android:maxWidth="300dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/portrait_placeholder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_nickname" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_profession"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:hint="@string/individual_npc_profession_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_avatar">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.profession}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/individual_npc_race_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mynpcs_individual_npc_gender"
+                app:layout_constraintTop_toBottomOf="@id/mynpcs_individual_npc_profession">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.race}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="4dp"
+                android:hint="@string/individual_npc_gender_hint"
+                app:layout_constraintStart_toEndOf="@id/mynpcs_individual_npc_race"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/mynpcs_individual_npc_race"
+                app:layout_constraintBottom_toBottomOf="@id/mynpcs_individual_npc_race">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.gender}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_age"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/individual_npc_age_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mynpcs_individual_npc_sexuality"
+                app:layout_constraintTop_toBottomOf="@id/mynpcs_individual_npc_race">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.age}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_sexuality"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="4dp"
+                android:hint="@string/individual_npc_sexuality_hint"
+                app:layout_constraintStart_toEndOf="@id/mynpcs_individual_npc_age"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/mynpcs_individual_npc_age"
+                app:layout_constraintBottom_toBottomOf="@id/mynpcs_individual_npc_age">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.sexuality}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_alignment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/individual_npc_alignment_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_sexuality">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.alignment}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_motivation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/individual_npc_motivation_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_alignment">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/mynpcs_individual_edit_text_color"
+                    android:text="@{npc.motivation}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/mynpcs_individual_npc_languages_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/individual_npc_languages_label"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/mynpcs_individual_npc_motivation"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_motivation" />
+
+            <include
+                android:id="@+id/mynpcs_individual_npc_languages_list"
+                layout="@layout/mynpcs_individual_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/mynpcs_individual_npc_languages_label"
+                app:layout_constraintTop_toBottomOf="@id/mynpcs_individual_npc_languages_label"
+                bind:editState="@{editState}"/>
+
+            <TextView
+                android:id="@+id/mynpcs_individual_npc_personality_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/individual_npc_personality_label"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/mynpcs_individual_npc_languages_label"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_languages_list" />
+
+            <include
+                android:id="@+id/mynpcs_individual_npc_personality_list"
+                layout="@layout/mynpcs_individual_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/mynpcs_individual_npc_personality_label"
+                app:layout_constraintTop_toBottomOf="@id/mynpcs_individual_npc_personality_label"
+                bind:editState="@{editState}" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mynpcs_individual_npc_notes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/individual_npc_notes_hint"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mynpcs_individual_npc_personality_list">
+
+                <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{editState.equals(EditState.EDIT)}"
+                    android:fontFamily="sans-serif-condensed"
+                    android:inputType="textMultiLine"
+                    android:selectAllOnFocus="true"
+                    android:text="@{npc.notes}"
+                    android:textColor="@color/mynpcs_individual_edit_text_color" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <data>
+
+        <import type="androidx.lifecycle.LiveData" />
+
+        <import type="me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity" />
+
+        <import type="me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState" />
+
+        <variable
+            name="npc"
+            type="LiveData&lt;NpcEntity>" />
+
+        <variable
+            name="editState"
+            type="LiveData&lt;EditState>" />
+    </data>
+</layout>

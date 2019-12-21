@@ -1,4 +1,4 @@
-package io.kotlintest.android
+package io.kotest.android
 
 import android.content.Context
 import android.content.SharedPreferences

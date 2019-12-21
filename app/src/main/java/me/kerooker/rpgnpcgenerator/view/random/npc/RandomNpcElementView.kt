@@ -5,15 +5,14 @@ import android.text.Editable
 import android.text.InputType.TYPE_CLASS_TEXT
 import android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
 import android.util.AttributeSet
-import android.view.KeyEvent
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.LinearLayout
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.randomnpc_element_view.view.*
+import kotlinx.android.synthetic.main.randomnpc_element_view.view.random_field_dice
+import kotlinx.android.synthetic.main.randomnpc_element_view.view.random_field_text
+import kotlinx.android.synthetic.main.randomnpc_element_view.view.random_field_text_layout
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.view.util.animateRotation
 
@@ -22,7 +21,7 @@ interface ManualInputListener {
     fun onManualInput(text: String)
 }
 
-class RandomNpcElementView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class RandomNpcElementView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
     
     var onRandomClick: () -> Unit = { }
     
@@ -79,18 +78,4 @@ class RandomNpcElementView(context: Context, attrs: AttributeSet) : ConstraintLa
         random_field_text_layout.hint = hint
     }
     
-}
-
-class ClearFocusEditText: TextInputEditText {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    
-    override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            clearFocus()
-        }
-        
-        return super.onKeyPreIme(keyCode, event)
-    }
 }

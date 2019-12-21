@@ -1,12 +1,10 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
-import io.kotlintest.matchers.collections.shouldNotContainDuplicates
-import io.kotlintest.matchers.shouldBeInRange
-import io.kotlintest.robolectric.SkipRobolectric
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.FunSpec
+import io.kotest.matchers.collections.shouldNotContainDuplicates
+import io.kotest.matchers.ints.shouldBeInRange
+import io.kotest.shouldBe
+import io.kotest.specs.FunSpec
 
-@SkipRobolectric
 class RandomDistributedTest : FunSpec() {
 
     enum class Randomized(override val distribution: Double):
@@ -40,7 +38,6 @@ class RandomDistributedTest : FunSpec() {
     }
 }
 
-@SkipRobolectric
 class EnumDistributionTests : FunSpec() {
 
     private val randomDistributed: Array<Array<out RandomDistributed>> = arrayOf(

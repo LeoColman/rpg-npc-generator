@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/individual_npc_field_text_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:hint="@{hint}"
+            android:layout_weight="1">
+
+            <me.kerooker.rpgnpcgenerator.view.text.ClearFocusEditText
+                android:id="@+id/individual_npc_field_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@{text}"
+                android:selectAllOnFocus="true"
+                android:textColor="@color/mynpcs_individual_edit_text_color"
+                android:enabled="@{editState.equals(EditState.EDIT)}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageButton
+            android:id="@+id/individual_npc_field_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{editState.equals(EditState.EDIT) ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/ic_remove_circle_red_24dp"
+            android:background="@null" />
+    </LinearLayout>
+
+    <data>
+        <import type="android.view.View" />
+        <import type="androidx.lifecycle.LiveData" />
+        <import type="me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState" />
+        
+        <variable
+            name="editState"
+            type="LiveData&lt;EditState>" />
+        
+        <variable
+            name="hint"
+            type="String" />
+        
+        <variable
+            name="text"
+            type="String" />
+        
+    </data>
+</layout>

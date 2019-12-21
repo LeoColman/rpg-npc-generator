@@ -1,15 +1,14 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
-import io.kotlintest.IsolationMode
-import io.kotlintest.TestCase
-import io.kotlintest.TestResult
-import io.kotlintest.extensions.TestListener
-import io.kotlintest.robolectric.RobolectricExtension
-import io.kotlintest.robolectric.SkipRobolectric
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.FreeSpec
-import io.kotlintest.specs.FunSpec
+import io.kotest.IsolationMode
+import io.kotest.TestCase
+import io.kotest.TestResult
+import io.kotest.experimental.robolectric.RobolectricTest
+import io.kotest.extensions.TestListener
+import io.kotest.shouldBe
+import io.kotest.specs.FreeSpec
+import io.kotest.specs.FunSpec
 import io.mockk.every
 import io.mockk.mockk
 import me.kerooker.rpgnpcgenerator.R
@@ -17,7 +16,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.context.stopKoin
 import org.koin.core.get
 
-
+@RobolectricTest
 class FileGeneratorsTest : FreeSpec(), KoinComponent {
 
     init {
@@ -35,9 +34,7 @@ class FileGeneratorsTest : FreeSpec(), KoinComponent {
         get<Context>().resources.openRawResource(R.raw.npc_child_professions).bufferedReader().readLines().toSet()
 
     override fun isolationMode() = IsolationMode.InstancePerTest
-
-    override fun extensions() = listOf(RobolectricExtension())
-
+    
     override fun listeners() = listOf<TestListener>(object: TestListener {
         override fun afterTest(testCase: TestCase, result: TestResult) {
             stopKoin()
@@ -45,7 +42,6 @@ class FileGeneratorsTest : FreeSpec(), KoinComponent {
     })
 }
 
-@SkipRobolectric
 class ProfessionGeneratorTest : FunSpec() {
 
     private val commonProfessionGenerator = mockk<CommonProfessionGenerator> {
