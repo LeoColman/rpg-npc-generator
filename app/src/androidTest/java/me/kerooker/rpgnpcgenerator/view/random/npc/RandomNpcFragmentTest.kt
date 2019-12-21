@@ -1,15 +1,12 @@
-package me.kerooker.rpgnpcgenerator.view
+package me.kerooker.rpgnpcgenerator.view.random.npc
 
-import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.launchActivity
 import io.kotlintest.IsolationMode
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.FunSpec
 import kotlinx.android.synthetic.main.randomnpc_fragment.random_npc_fullname
-import kotlinx.android.synthetic.main.randomnpc_fragment.view.*
-import me.kerooker.rpgnpcgenerator.R
-import me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcFragment
+import me.kerooker.rpgnpcgenerator.view.MainActivity
 
 class RandomNpcFragmentTest : FunSpec() {
     

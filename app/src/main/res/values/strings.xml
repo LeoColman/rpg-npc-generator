@@ -1,13 +1,6 @@
 <resources>
     <string name="title_activity_main">MainActivity</string>
 
-
-    <!-- NavBar -->
     <string name="nav_bar_random_npc">Randomize</string>
     <string name="nav_bar_my_npcs">NPCs</string>
-    <string name="random_npc_language_hint">Language</string>
-    <string name="personality_traits_label">Personality Traits</string>
-    <string name="random_npc_personality_hint">Personality Trait</string>
-    <string name="randomize_all">Randomize All</string>
-    <string name="save">Save</string>
 </resources>

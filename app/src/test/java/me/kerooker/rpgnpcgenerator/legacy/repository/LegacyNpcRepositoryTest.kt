@@ -1,21 +1,20 @@
 package me.kerooker.rpgnpcgenerator.legacy.repository
 
-import io.kotlintest.IsolationMode
-import io.kotlintest.TestCase
-import io.kotlintest.TestResult
-import io.kotlintest.android.withSharedPreferences
-import io.kotlintest.extensions.TestListener
-import io.kotlintest.robolectric.RobolectricExtension
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.FunSpec
+import io.kotest.IsolationMode
+import io.kotest.TestCase
+import io.kotest.TestResult
+import io.kotest.android.withSharedPreferences
+import io.kotest.experimental.robolectric.RobolectricTest
+import io.kotest.extensions.TestListener
+import io.kotest.shouldBe
+import io.kotest.specs.FunSpec
 import org.koin.core.KoinComponent
 import org.koin.core.context.stopKoin
-import java.util.*
+import java.util.UUID
 
+@RobolectricTest
 class LegacyNpcRepositoryTest : FunSpec(), KoinComponent {
-
-    override fun extensions() = listOf(RobolectricExtension())
-
+    
     private val target
     get() = LegacyNpcRepository()
 

@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class me.kerooker.rpgnpcgenerator.**$$serializer { *; } # <-- change package name to your app's
+-keepclassmembers class me.kerooker.rpgnpcgenerator.** { # <-- change package name to your app's
+    *** Companion;
+}
+-keepclasseswithmembers class me.kerooker.rpgnpcgenerator.** { # <-- change package name to your app's
+    kotlinx.serialization.KSerializer serializer(...);
+}

@@ -178,6 +178,7 @@ class RandomNpcViewModel(
         this.motivation,
         this.alignment,
         this.personalityTraits,
-        this.languages
+        this.languages,
+        imagePath = null
     )
 }

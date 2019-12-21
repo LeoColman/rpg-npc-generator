@@ -5,60 +5,74 @@
   "entities": [
     {
       "id": "1:965012069954660192",
-      "lastPropertyId": "13:6023405270920972356",
+      "lastPropertyId": "15:3627157795465900228",
       "name": "NpcEntity",
       "properties": [
         {
           "id": "1:5505077283636440623",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:8142384949617207154",
-          "name": "age"
-        },
-        {
-          "id": "3:5589089258033801881",
-          "name": "name"
-        },
-        {
-          "id": "4:2272150580062402924",
-          "name": "surname"
+          "name": "age",
+          "type": 9
         },
         {
           "id": "5:4753897017570320626",
-          "name": "nickname"
+          "name": "nickname",
+          "type": 9
         },
         {
           "id": "6:777274660507681508",
-          "name": "gender"
+          "name": "gender",
+          "type": 9
         },
         {
           "id": "7:2894282806420349046",
-          "name": "sexuality"
+          "name": "sexuality",
+          "type": 9
         },
         {
           "id": "8:4107047496141214768",
-          "name": "race"
+          "name": "race",
+          "type": 9
         },
         {
           "id": "9:6625730653070537440",
-          "name": "profession"
+          "name": "profession",
+          "type": 9
         },
         {
           "id": "10:636510404345708822",
-          "name": "motivation"
+          "name": "motivation",
+          "type": 9
         },
         {
           "id": "11:8995285898410800121",
-          "name": "alignment"
+          "name": "alignment",
+          "type": 9
         },
         {
           "id": "12:3792645898268560037",
-          "name": "personalityTraits"
+          "name": "personalityTraits",
+          "type": 9
         },
         {
           "id": "13:6023405270920972356",
-          "name": "languages"
+          "name": "languages",
+          "type": 9
+        },
+        {
+          "id": "14:4260823185367431858",
+          "name": "fullName",
+          "type": 9
+        },
+        {
+          "id": "15:3627157795465900228",
+          "name": "imagePath",
+          "type": 9
         }
       ],
       "relations": []
@@ -68,11 +82,14 @@
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
-  "modelVersion": 4,
-  "modelVersionParserMinimum": 4,
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    5589089258033801881,
+    2272150580062402924
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
