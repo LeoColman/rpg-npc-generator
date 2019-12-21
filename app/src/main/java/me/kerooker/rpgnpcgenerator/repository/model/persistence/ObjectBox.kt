@@ -1,7 +1,6 @@
 package me.kerooker.rpgnpcgenerator.repository.model.persistence
 
 import android.content.Context
-import android.util.Log
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
 import me.kerooker.rpgnpcgenerator.BuildConfig
@@ -17,8 +16,7 @@ private fun Scope.createObjectBox(): BoxStore {
     val store = MyObjectBox.builder().androidContext(get<Context>()).build()
 
     if(BuildConfig.DEBUG) {
-        val started = AndroidObjectBrowser(store).start(get())
-        Log.i("ObjectBrowser", "Started: $started")
+        AndroidObjectBrowser(store).start(get())
     }
     return store
 }

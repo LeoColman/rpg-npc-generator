@@ -18,11 +18,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import kotlinx.android.synthetic.main.activity_main.bottom_navigation_view
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.randomnpc_fragment.screenshot_view
+import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.databinding.RandomnpcFragmentBinding
+import me.kerooker.rpgnpcgenerator.view.util.animateRotation
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.RandomNpcViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import me.kerooker.rpgnpcgenerator.R
-import me.kerooker.rpgnpcgenerator.view.util.animateRotation
 
 class RandomNpcFragment : Fragment() {
 
@@ -76,7 +76,7 @@ class RandomNpcFragment : Fragment() {
     }
     
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_random_npc_fragment, menu)
+        inflater.inflate(R.menu.randomnpc_fragment_menu, menu)
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

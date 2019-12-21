@@ -9,13 +9,29 @@
         android:id="@+id/randomNpcFragment"
         android:name="me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcFragment"
         android:label="fragment_random_npc"
-        tools:layout="@layout/random-npc_fragment" >
+        tools:layout="@layout/randomnpc_fragment" >
         <action
             android:id="@+id/action_randomNpcFragment_to_myNpcsFragment"
             app:destination="@id/myNpcsFragment" />
     </fragment>
     <fragment
         android:id="@+id/myNpcsFragment"
-        android:name="me.kerooker.rpgnpcgenerator.view.MyNpcsFragment"
-        android:label="MyNpcsFragment" />
+        android:name="me.kerooker.rpgnpcgenerator.view.my.npc.MyNpcsFragment"
+        android:label="MyNpcsFragment" >
+        <action
+            android:id="@+id/action_myNpcsFragment_to_individualNpcFragment"
+            app:destination="@id/individualNpcFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/individualNpcFragment"
+        android:name="me.kerooker.rpgnpcgenerator.view.my.npc.individual.IndividualNpcFragment"
+        android:label="IndividualNpcFragment" >
+        <argument
+            android:name="npc_id"
+            app:argType="long" />
+    </fragment>
 </navigation>
