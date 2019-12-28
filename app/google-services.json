@@ -1,0 +1,128 @@
+{
+  "project_info": {
+    "project_number": "913246948127",
+    "firebase_url": "https://rpg-npc-generator-53a2d.firebaseio.com",
+    "project_id": "rpg-npc-generator-53a2d",
+    "storage_bucket": "rpg-npc-generator-53a2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913246948127:android:6c82fa5d0df401978d3e2a",
+        "android_client_info": {
+          "package_name": "me.kerooker.rpgcharactergenerator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDjoQQqNnzfFodTQe1aNlYm8ucp2jsT5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-3225017918525788~7747841753"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913246948127:android:d54780527c872b278d3e2a",
+        "android_client_info": {
+          "package_name": "me.kerooker.rpgcharactergenerator.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDjoQQqNnzfFodTQe1aNlYm8ucp2jsT5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913246948127:android:81f8e60bc85ec34d8d3e2a",
+        "android_client_info": {
+          "package_name": "me.kerooker.rpgcharactergeneratorpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDjoQQqNnzfFodTQe1aNlYm8ucp2jsT5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913246948127:android:9d46242e8a8644718d3e2a",
+        "android_client_info": {
+          "package_name": "me.kerooker.rpgcharactergeneratorpro.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDjoQQqNnzfFodTQe1aNlYm8ucp2jsT5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913246948127-rtggc8lj0c6ih28n3c0609pvvvg03i0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.mynpcs_individual_list_element.view.indivi
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.databinding.MynpcsIndividualFragmentBinding
 import me.kerooker.rpgnpcgenerator.databinding.MynpcsIndividualListElementBinding
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState.EDIT
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState.VIEW

@@ -1,9 +1,10 @@
 package me.kerooker.rpgnpcgenerator
 
 import android.app.Application
+import com.google.android.gms.ads.MobileAds
 import me.kerooker.rpgnpcgenerator.legacy.repository.LegacyNpcImporter
 import me.kerooker.rpgnpcgenerator.legacy.repository.LegacyNpcRepository
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.objectBoxModule
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.persistenceModule
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.npcGeneratorsModule
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.randomNpcModule
 import me.kerooker.rpgnpcgenerator.viewmodel.viewModelsModule
@@ -21,14 +22,19 @@ class RpgNpcGeneratorApplication : Application() {
 
         startKoinModules()
         legacyNpcImporter.importAll()
+        initializeAds()
     }
 
     private fun startKoinModules() {
         startKoin {
             androidContext(this@RpgNpcGeneratorApplication)
             modules(listOf(mainModule,
-                randomNpcModule, objectBoxModule, viewModelsModule, npcGeneratorsModule))
+                           randomNpcModule, persistenceModule, viewModelsModule, npcGeneratorsModule))
         }
+    }
+    
+    private fun initializeAds() {
+        MobileAds.initialize(this)
     }
 }
 

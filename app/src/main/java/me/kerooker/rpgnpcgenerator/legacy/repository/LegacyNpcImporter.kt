@@ -1,8 +1,8 @@
 package me.kerooker.rpgnpcgenerator.legacy.repository
 
 import android.content.Context
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 
 class LegacyNpcImporter(
     private val legacyNpcRepository: LegacyNpcRepository,
@@ -23,19 +23,20 @@ class LegacyNpcImporter(
         context.getSharedPreferences(SAVED_NPCS_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().apply()
     }
     
-    private fun LegacyNpc.toNpcEntity() = NpcEntity(
-        this.name,
-        "Nickname",
-        this.gender,
-        this.sexuality,
-        this.race,
-        this.age,
-        this.profession,
-        this.motivation,
-        this.alignment,
-        this.personalityTraits,
-        this.languages,
-        null
-    )
+    private fun LegacyNpc.toNpcEntity() =
+        NpcEntity(
+            this.name,
+            "Nickname",
+            this.gender,
+            this.sexuality,
+            this.race,
+            this.age,
+            this.profession,
+            this.motivation,
+            this.alignment,
+            this.personalityTraits,
+            this.languages,
+            null
+        )
     
 }

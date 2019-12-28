@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    tools:context=".view.MainActivity">
+<layout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="@color/titleTextColor" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        tools:context=".view.MainActivity">
 
-    <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/titleTextColor" />
 
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/main_bottom_nav"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/main_bottom_nav" />
+
+        <FrameLayout
+            android:id="@+id/bottom_ad_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{shouldShowAd ? View.VISIBLE : View.GONE}">
+        </FrameLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="androidx.lifecycle.LiveData" />
+        
+        <variable
+            name="shouldShowAd"
+            type="LiveData&lt;Boolean>" />
+    </data>
+    
+</layout>
