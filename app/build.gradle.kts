@@ -13,14 +13,15 @@ plugins {
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
-    id("com.github.triplet.play") version "2.3.0"
-    id("net.thauvin.erik.gradle.semver") version "1.0.3-beta"
+    id("com.github.triplet.play") version "2.6.1"
+    id("net.thauvin.erik.gradle.semver") version "1.0.4"
     id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
     idea
 }
 
 apply(plugin = "androidx.navigation.safeargs.kotlin")
+apply(plugin = "com.google.gms.google-services")
 
 
 android {
@@ -62,9 +63,13 @@ fun BaseAppModuleExtension.setupKotlinCompiler() {
     }
 }
 
+@Suppress("UNCHECKED_CAST", "MapGetWithNotNullAssertionOperator")
 fun DefaultConfig.setupVersion() {
-    versionName = semver.semver
-    versionCode = semver.major * 10_000 + semver.minor * 100 + semver.patch
+    val versionProps = Properties().apply {
+        load(file("version.properties").inputStream())
+    }.toMap() as Map<String, String>
+    versionName = versionProps["version.semver"].toString()
+    versionCode = (versionProps["version.major"]!!.toInt() * 10_000) + (versionProps["version.minor"]!!.toInt() * 100) + versionProps["version.patch"]!!.toInt()
 }
 
 fun BaseAppModuleExtension.setupSigningConfigs() {
@@ -126,6 +131,7 @@ fun BaseAppModuleExtension.setupTests() {
 
 configure<PlayPublisherExtension> {
     track = "beta"
+    defaultToAppBundles = true
     serviceAccountCredentials = file("../local/play-store-key.json")
 }
 
@@ -145,6 +151,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
     implementation("com.google.android.material:material:1.2.0-alpha02")
+    
+    // AdMob
+    implementation("com.google.android.gms:play-services-ads:18.3.0")
     
     // Splitties
     implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-alpha06")
@@ -178,6 +187,13 @@ dependencies {
     implementation("io.objectbox:objectbox-kotlin:$objectBoxVersion")
     debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectBoxVersion")
     kapt("io.objectbox:objectbox-processor:$objectBoxVersion")
+    
+    // Key-value store
+    implementation("com.tencent:mmkv:1.0.23")
+    
+    //Firebase
+    implementation("com.google.firebase:firebase-analytics:17.2.1")
+    
     
     // Testing
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")

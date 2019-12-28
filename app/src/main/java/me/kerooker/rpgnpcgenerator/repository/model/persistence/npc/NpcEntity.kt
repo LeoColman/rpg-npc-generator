@@ -1,4 +1,4 @@
-package me.kerooker.rpgnpcgenerator.repository.model.persistence
+package me.kerooker.rpgnpcgenerator.repository.model.persistence.npc
 
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity

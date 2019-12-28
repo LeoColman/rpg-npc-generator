@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Age
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CompleteNpcGenerator
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpc
@@ -167,18 +167,19 @@ class RandomNpcViewModel(
         }
     }
     
-    private fun GeneratedNpcData.toEntity() = NpcEntity(
-        this.name,
-        this.nickname,
-        this.gender,
-        this.sexuality,
-        this.race,
-        this.age,
-        this.profession,
-        this.motivation,
-        this.alignment,
-        this.personalityTraits,
-        this.languages,
-        imagePath = null
-    )
+    private fun GeneratedNpcData.toEntity() =
+        NpcEntity(
+            this.name,
+            this.nickname,
+            this.gender,
+            this.sexuality,
+            this.race,
+            this.age,
+            this.profession,
+            this.motivation,
+            this.alignment,
+            this.personalityTraits,
+            this.languages,
+            imagePath = null
+        )
 }

@@ -4,12 +4,17 @@ import android.content.Context
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
 import me.kerooker.rpgnpcgenerator.BuildConfig
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.admob.AdmobRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.MyObjectBox
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
-val objectBoxModule = module {
+val persistenceModule = module {
     single(createdAtStart = true) { createObjectBox() }
-    single<NpcRepository>{ NpcBoxRepository(get<BoxStore>().boxFor(NpcEntity::class.java)) }
+    single { NpcRepository(get<BoxStore>().boxFor(NpcEntity::class.java)) }
+    single { AdmobRepository(get()) }
 }
 
 private fun Scope.createObjectBox(): BoxStore {

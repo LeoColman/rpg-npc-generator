@@ -16,3 +16,4 @@ local/
 build/
 buildSrc/build/
 app/build
+local/*

@@ -18,7 +18,7 @@ import com.lucasurbas.listitemview.ListItemView
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import kotlinx.android.synthetic.main.mynpcs_fragment.my_npcs_recycler
 import me.kerooker.rpgnpcgenerator.R
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
 import me.kerooker.rpgnpcgenerator.view.my.npc.MyNpcsAdapter.MyNpcViewHolder
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.MyNpcsViewModel
 import org.koin.android.viewmodel.ext.android.viewModel

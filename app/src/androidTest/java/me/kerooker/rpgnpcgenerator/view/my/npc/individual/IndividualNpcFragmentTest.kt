@@ -14,8 +14,8 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.delay
 import me.kerooker.rpgnpcgenerator.R
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

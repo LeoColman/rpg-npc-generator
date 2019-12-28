@@ -3,8 +3,8 @@ package me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 
 class IndividualNpcViewModel(
     npcId: Long,

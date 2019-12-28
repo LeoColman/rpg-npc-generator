@@ -2,13 +2,12 @@ package io.kotest.android
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
-import io.kotest.TestCase
-import io.kotest.TestResult
+import io.kotest.Spec
 import io.kotest.extensions.TestListener
 
 class InstantLivedataListener : TestListener {
     
-    override fun beforeTest(testCase: TestCase) {
+    override fun beforeSpec(spec: Spec) {
         ArchTaskExecutor.getInstance().setDelegate(object : TaskExecutor() {
             override fun executeOnDiskIO(runnable: Runnable) = runnable.run()
             
@@ -21,7 +20,7 @@ class InstantLivedataListener : TestListener {
         )
     }
     
-    override fun afterTest(testCase: TestCase, result: TestResult) {
+    override fun afterSpec(spec: Spec) {
         ArchTaskExecutor.getInstance().setDelegate(null)
     }
 }
