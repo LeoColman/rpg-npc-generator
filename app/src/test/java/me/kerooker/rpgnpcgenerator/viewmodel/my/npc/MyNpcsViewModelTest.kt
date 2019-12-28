@@ -10,8 +10,8 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcRepository
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
+import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
 
 class MyNpcsViewModelTest : ShouldSpec() {
     

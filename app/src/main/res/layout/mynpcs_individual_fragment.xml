@@ -305,7 +305,7 @@
 
         <import type="androidx.lifecycle.LiveData" />
 
-        <import type="me.kerooker.rpgnpcgenerator.repository.model.persistence.NpcEntity" />
+        <import type="me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity" />
 
         <import type="me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState" />
 

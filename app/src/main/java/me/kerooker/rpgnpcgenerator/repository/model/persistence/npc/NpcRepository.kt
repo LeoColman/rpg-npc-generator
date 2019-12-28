@@ -1,4 +1,4 @@
-package me.kerooker.rpgnpcgenerator.repository.model.persistence
+package me.kerooker.rpgnpcgenerator.repository.model.persistence.npc
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,34 +8,29 @@ import io.objectbox.query.Query
 import io.objectbox.reactive.DataObserver
 import io.objectbox.reactive.DataSubscription
 
-interface NpcRepository {
 
-    fun all(): LiveData<List<NpcEntity>>
-    
-    fun put(npcEntity: NpcEntity): Long
-
-    fun get(id: Long): MutableLiveData<NpcEntity>
-    
-    fun delete(npcEntity: NpcEntity)
-}
-
-class NpcBoxRepository(
+class NpcRepository(
     private val box: Box<NpcEntity>
-) : NpcRepository {
+) {
     
-    override fun all(): LiveData<List<NpcEntity>> {
+    fun all(): LiveData<List<NpcEntity>> {
         return ObjectBoxLiveData(box.query().build())
     }
     
-    override fun put(npcEntity: NpcEntity): Long {
+    fun put(npcEntity: NpcEntity): Long {
         return box.put(npcEntity)
     }
 
-    override fun get(id: Long): MutableLiveData<NpcEntity> {
-        return ObjectBoxSingleLiveData(box.query().equal(NpcEntity_.id, id).build())
+    fun get(id: Long): MutableLiveData<NpcEntity> {
+        return ObjectBoxSingleLiveData(
+            box.query().equal(
+                NpcEntity_.id,
+                id
+            ).build()
+        )
     }
     
-    override fun delete(npcEntity: NpcEntity) {
+    fun delete(npcEntity: NpcEntity) {
         box.remove(npcEntity)
     }
 }
