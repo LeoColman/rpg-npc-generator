@@ -9,14 +9,11 @@
         android:id="@+id/randomNpcFragment"
         android:name="me.kerooker.rpgnpcgenerator.view.random.npc.RandomNpcFragment"
         android:label="fragment_random_npc"
-        tools:layout="@layout/randomnpc_fragment" >
-        <action
-            android:id="@+id/action_randomNpcFragment_to_myNpcsFragment"
-            app:destination="@id/myNpcsFragment" />
-    </fragment>
+        tools:layout="@layout/randomnpc_fragment" />
     <fragment
         android:id="@+id/myNpcsFragment"
         android:name="me.kerooker.rpgnpcgenerator.view.my.npc.MyNpcsFragment"
+        tools:layout="@layout/mynpcs_fragment"
         android:label="MyNpcsFragment" >
         <action
             android:id="@+id/action_myNpcsFragment_to_individualNpcFragment"
@@ -29,9 +26,15 @@
     <fragment
         android:id="@+id/individualNpcFragment"
         android:name="me.kerooker.rpgnpcgenerator.view.my.npc.individual.IndividualNpcFragment"
+        tools:layout="@layout/mynpcs_individual_fragment"
         android:label="IndividualNpcFragment" >
         <argument
             android:name="npc_id"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="me.kerooker.rpgnpcgenerator.view.settings.SettingsFragment"
+        tools:layout="@layout/settings_fragment"
+        android:label="SettingsFragment" />
 </navigation>

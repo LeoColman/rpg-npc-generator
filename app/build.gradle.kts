@@ -17,6 +17,7 @@ plugins {
     id("net.thauvin.erik.gradle.semver") version "1.0.4"
     id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
+    id("com.google.android.gms.oss-licenses-plugin")
     idea
 }
 
@@ -164,6 +165,12 @@ dependencies {
     
     // List Item View
     implementation("com.lucasurbas:listitemview:1.1.1")
+    
+    // Settings
+    implementation("androidx.preference:preference-ktx:1.1.0")
+    
+    // Open source libraries
+    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     
     // Image loading
     implementation("com.github.dhaval2404:imagepicker:1.5")
