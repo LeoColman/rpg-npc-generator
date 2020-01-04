@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="about_category"
+        app:title="@string/preferences_about_title">
+        
+        <Preference
+            app:key="project_repository"
+            app:title="@string/preferences_project_repository_title"
+            app:summary="@string/preferences_project_repository_summary"
+            app:icon="@drawable/github_32px"/>
+        
+        <Preference
+            app:key="bug_report"
+            app:title="@string/preferences_bug_report_title"
+            app:summary="@string/preferences_bug_report_summary"
+            app:icon="@drawable/ic_bug_report_black_24dp"/>
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        app:key="go_pro_category"
+        app:title="@string/preferences_go_pro_category_title">
+        
+        <Preference
+            app:key="go_pro"
+            app:title="@string/preferences_go_pro_title"
+            app:summary="@string/preferences_go_pro_summary"
+            app:icon="@drawable/ic_star_black_24dp" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        app:key="open_source_libs_category"
+        app:title="@string/preferences_open_source_libs_title">
+        
+        <Preference
+            app:key="open_source_libs"
+            app:title="@string/preferences_open_source_libs_title"
+            app:summary="@string/preferences_open_source_libs_summary"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
