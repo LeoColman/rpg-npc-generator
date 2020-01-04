@@ -13,4 +13,8 @@
         android:title="@string/nav_bar_my_npcs"
         android:icon="@drawable/ic_library_book"
         />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/nav_bar_settings" />
 </menu>
