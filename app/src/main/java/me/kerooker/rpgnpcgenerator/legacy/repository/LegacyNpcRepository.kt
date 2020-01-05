@@ -18,23 +18,27 @@ class LegacyNpcRepository : KoinComponent {
 
     fun loadLegacyNpcs(): List<LegacyNpc> {
         val npcJsons = getNpcJsons()
-
-        return npcJsons.map {
-            val information = it.getInformationArray()
-            LegacyNpc(
-                information.name,
-                information.age,
-                information.race,
-                information.subRace,
-                information.gender,
-                information.alignment,
-                information.sexuality,
-                information.profession,
-                information.motivation,
-                information.personalityTraits,
-                information.fear,
-                information.languages
-            )
+    
+        return npcJsons.mapNotNull {
+            try {
+                val information = it.getInformationArray()
+                LegacyNpc(
+                    tryOrEmpty { information.name },
+                    tryOrEmpty { information.age },
+                    tryOrEmpty { information.race },
+                    tryOrEmptyN { information.subRace },
+                    tryOrEmpty { information.gender },
+                    tryOrEmpty { information.alignment },
+                    tryOrEmpty { information.sexuality },
+                    tryOrEmpty { information.profession },
+                    tryOrEmpty { information.motivation },
+                    tryOrEmptyL { information.personalityTraits },
+                    tryOrEmpty { information.fear },
+                    tryOrEmptyL { information.languages }
+                )
+            } catch (_: Exception) {
+                null
+            }
         }
     }
 
@@ -101,8 +105,26 @@ class LegacyNpcRepository : KoinComponent {
     private fun JsonObject.node(key: String) = get(key) as JsonObject
 
     private fun String.withUnderscoresReplaced() = replace("_", " ")
-
+    
     private fun String.capitalizeWords() = split(" ").joinToString(separator = " ") { it.capitalize() }
+    
+    private fun tryOrEmpty(block: () -> String) = try {
+        block()
+    } catch (_: Exception) {
+        ""
+    }
+    
+    private fun tryOrEmptyN(block: () -> String?) = try {
+        block()
+    } catch (_: Exception) {
+        null
+    }
+    
+    private fun tryOrEmptyL(block: () -> List<String>) = try {
+        block()
+    } catch (_: Exception) {
+        emptyList<String>()
+    }
 }
 
 data class LegacyNpc(
