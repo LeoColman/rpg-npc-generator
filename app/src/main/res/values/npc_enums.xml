@@ -51,15 +51,15 @@
     <string name="race_high_elf">High Elf</string>
     <string name="race_wood_elf">Wood Elf</string>
     <string name="race_drow">Drow</string>
-    <string name="race_forest_halfling">Forest Halfling</string>
+    <string name="race_stout_halfling">Stout Halfling</string>
+    <string name="race_lightfoot_halfling">Lightfoot Halfling</string>
     <string name="race_human">Human</string>
+    <string name="race_dragonborn">Dragonborn</string>
     <string name="race_forest_gnome">Forest Gnome</string>
+    <string name="race_rock_gnome">Rock Gnome</string>
     <string name="race_half_elf">Half-Elf</string>
     <string name="race_half_orc">Half-Orc</string>
     <string name="race_tiefling">Tiefling</string>
-    <string name="race_rock_halfling">Rock Halfling</string>
-    <string name="race_dragonborn">Dragonborn</string>
-    <string name="race_rock_gnome">Rock Gnome</string>
 
 
 
