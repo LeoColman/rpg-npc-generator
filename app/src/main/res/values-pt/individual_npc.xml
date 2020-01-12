@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="individual_npc_race_hint">Raça</string>
+    <string name="individual_npc_age_hint">Idade</string>
+    <string name="individual_npc_gender_hint">Gênero</string>
+    <string name="individual_npc_profession_hint">Profissão</string>
+    <string name="individual_npc_sexuality_hint">Sexualidade</string>
+    <string name="individual_npc_alignment_hint">Tendência</string>
+    <string name="individual_npc_motivation_hint">Motivação</string>
+    <string name="individual_npc_languages_label">Idiomas</string>
+    <string name="individual_npc_language_hint">Idioma</string>
+    <string name="individual_npc_personality_label">Traços de Personalidade</string>
+    <string name="individual_npc_personality_hint">Traço de Personalidade</string>
+    <string name="individual_npc_add_item">Adicionar Item</string>
+
+
+
+    <string name="individual_npc_edit">Editar</string>
+    <string name="individual_npc_save">Salvar</string>
+    <string name="individual_npc_cancel">Cancelar</string>
+    <string name="individual_npc_notes_hint">Anotações</string>
+
+</resources>

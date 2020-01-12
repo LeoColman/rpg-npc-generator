@@ -1,0 +1,62 @@
+Ator
+Adestrador de animais
+Assistente de Ferreiro
+Atendente
+Empacotador
+Assistente de padeiro
+Assistente do ladrão
+Assistente do Bardo
+Assistente do Fazedor de Cestas
+Mendigo
+Tocador de Sino
+Vendedor de livros
+Assistente de fazendeiro de frango
+Palhaço
+Assistente de cozinheiro
+Agricultor
+Mensageiro
+Treinador de cachorro
+Catador Esterco
+Agricultor
+Assistente de pescador
+Assistente de pescador (água doce)
+Assistente de pescador (água salgada)
+Fruticultor
+Assistente de jardineiro
+Pintor
+Pintor de vidro
+Assistente de fabricante de chapéus
+Assistente do Herbalista
+Bobo da Corte
+Malabarista
+Assistente do bibliotecário
+Assistente do Fazedor de Flautas
+Assistente do Flautista
+Assistente de açougueiro
+Mineiro
+Assistente do Monge
+Músico
+Assistente do Fazedor de redes
+O filho de nobre
+Órfão
+Batedor de carteiras
+Assistente do fabricante de tortas
+Fazendeiro de porco
+Apanhador de ratos
+Assistente do fabricante de cordas
+Assistente do fabricante de tapetes
+Servo
+Aprendiz do Xamã
+Assistente de Tecelão
+Assistente de pastor
+Engraxate
+Escravo
+Mágico de rua
+Varredor de rua
+Assistente de Alfaiate
+Vagabundo
+Fazendeiro
+Idiota da vila
+Transportador de água
+Vendedor de Água
+Catador de Minhoca

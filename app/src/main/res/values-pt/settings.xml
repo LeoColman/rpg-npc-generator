@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="preferences_about_title">Sobre</string>
+    <string name="preferences_open_source_libs_title">Bibliotecas Open Source</string>
+    <string name="preferences_open_source_libs_summary">Lista de todas as bibliotecas open source que foram utilizadas neste aplicativo.</string>
+    
+    <string name="preferences_project_repository_title">Repositório do projeto</string>
+    <string name="preferences_project_repository_summary">Este projeto é 100% open source, e seu código fonte está inteiramente disponível. Estamos abertos à contribuições e dispostos a melhorar!</string>
+    
+    <string name="preferences_bug_report_title">Denunciar um erro</string>
+    <string name="preferences_bug_report_summary">Achou um comportamento estranho? Algo parece fora do lugar? Por favor, denuncie o erro e nos ajude a consertar!</string>
+    
+    <string name="preferences_go_pro_category_title">Compre PRO</string>
+    <string name="preferences_go_pro_title">Habilitando PRO</string>
+    <string name="preferences_go_pro_summary">Habilitando o PRO retira todos os anúncios e ajuda o desenvolvimenteo do aplicativo. Não há nenhuma outra funcionalidade exclusivamente premium.</string>
+    
+</resources>
