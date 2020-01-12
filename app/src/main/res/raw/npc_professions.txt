@@ -247,7 +247,6 @@ Oil merchant
 Oilmaker
 Old-clothes dealer
 Opium merchant
-Organ thief
 Orphan
 Ostler
 Outlaw

@@ -1,395 +1,346 @@
+Abatedor de Animais
 Acadêmico
-Contador
-Ator
+Acendedor de Lâmpadas
+Advogado
+Agiota
+Agricultor
+Agricultor de Ervas
+Ajudante de Cozinha
+Alambrador
+Alfaiate
 Alquimista
-Treinador de animais
-Boticário
+Apanhador de Ratos
+Apicultor
+Apostador
+Arauto
 Arcebispo
-Arqueiro
-Arquiteto
 Aristocrata
 Armeiro
-Fabricante de armaduras
+Arqueiro
+Arquiteto
 Arrowsmith
 Artesão
 Artista
+Artista de Rua
+Assaltante
 Assassino
+Assentador de Tijolos
 Astrólogo
-Fabricante de arcos
-Attendent
-Bagger
-Oficial de justiça
-Padeiro
+Atendente
+Ator
+Açogueiro de Carne
+Açougueiro
+Açougueiro de Frango
 Bandido
 Banqueiro
 Barbeiro
 Bardo
 Barman
-Fabricante de cestas
-Beachcomber
-Apicultor
-Vendedor de cerveja
-Cervejeiro
-Mendigo
-Beguina
-Bellfounder
-Fabricante de sinos
-Tocador de sinos
-Fabricante de vassouras
-Bispo
-Ferreiro
-Bloodletter
 Barqueiro
-Bodger
-Guarda-Costas
-Bonecarver
-Vendedor de livros
-Segurança
-Bowman
-Vendedor de arcos
-Brewer
-Assentador de tijolos
-Buffoon
-Construtor
-Assaltante
-Artista de rua
-Açougueiro
-Mordomo
-Buttonmaker
-Fabricante de gabinetes
-Calígrafo
-Camp cook
-Camp follower
-Fabricante de velas
-Capitão
-Capitão da guarda
-Guarda da caravana
-Carpinteiro
-Cartógrafo
-Escultor
-Fabricante de correntes
-Chalk cutter
-Chapman
-Charcoal burner
-Charlatão
-Fabricante de queijos
-Queijeiro
-Açougueiro de frango
-Criador de frango
-Limpa-chaminés
-Guarda da cidade
-Clark
-Escriturário
-Fabricante de relógios
-Comerciante de tecidos
-Palhaço
-Sapateiro
-Fabricante de moedas
-Colportor
-Compositor
-Cozinheiro
-Tanoeiro
-Fabricante de tonéis
-Copista
-Sapateiro
-Cortesã
-Agricultor
-Besteiro
-Escultor de cristais
-Cultista
-Copeiro
-Curate
-Currier
-Batedor de carteiras
-Produtor de leite
-Dançarina
-Dentista
-Detetive
-Diplomata
-Escavador
-Doutor
-Criador de cães
-Treinador de cães
-Fabricante de vestidos
-Vendedor de drogas
-Fabricante de drogas
+Batedor de Carteiras
 Baterista
-Carreteiro de esterco
-Coletor de esterco
-Tintureiro
-Gravador
-Carrasco
-Curandeiro
-Falcoeiro
-Falso profeta
-Fazendeiro
-Ferrador
-Fabricante de feltro
-Alambrador
-Fewtrer
-Violinista
-Bombeiro
-Pescador
-Pescador (água doce)
-Pescador (água salgada)
-Flagelante
-Fabricantes de flechas
-Fazendeiro de Flores
-Crítico gastronômico
-Guarda florestal
-Vidente
-Fowler
-Fruticultor
-Vendedor de frutas
-Limpador de tecidos
-Criador de fungos
-Fabricante de móveis
-Peleiro
-Apostador
-Encarregado da caça
-Gardener
-Jardineiro
-Lapidador de gemas
-Vendedor de vidros
-Vidreiro
-Pintor de vidros
-Fabricante de cola
-Fazendeiro de gongo
-Fofoqueiro
-Coveiro
-Ladrão de túmulos
-Gravedigger
-Verdureiro
-Viagrista
-Guarda
-Guia
-Mestre da guilda
-Limpador de calha
-Haberdasher
-Faz-Tudo
-Fabricante de chapéus
-Hatmaker
-Chapeleiro
-Vendedor ambulante
-Comerciante de feno
-Hayward
-Arauto
-Agricultor de ervas
-Herborista
-Pastor
-Eremita
-Hetheleder
-Treinador de cavalos
-Encantador de cavalos
-Sanguessuga
-Caçador
-Huntsman
-Cortador de gelo
-Iluminador
-Illustrador
-Portador de incenso
-Dono de pousada
-Carcereiro
-Bobo da corte
-Joalheiro
-Marceneiro
-Malabarista
-Abatedor de animais
-Knapper
-Knifeman
-Fabricante de facas
-Cavaleiro
-Acendedor de lâmpadas
-Fabricante de lâmpadas
-Lanceiro
-Senhor da terra
-Fabricante de lanternas
-Lapidário
-Advogado
-Coureiro
-Leech
-bibliotecário
-Lighterman
-Linkboy
-Chaveiro
-Vigia
-Fabricante de alaúde
-Lutenist
-Fabricante de correio
-Fabricante de mapas
-Marinheiro
-Pedreiro
-Mestre de cães
-Matemático
-Açogueiro de carne
-Mercenário
-Mensageiro
+Beguina
+Besteiro
+Bibliotecário
+Bispo
 Bispo Metropolitano
-Parteira
-Miliciano
-Leiteira
-Moleiro
-Mineiro
-Menestrel
-Mirrorer
-Agiota
-Monge
-Limpador de estábulos
-Músico
-Manicure
-Navegador
-Fabricante de redes
-Vigia noturno
-Nobre
-Filho de nobre
-Enfermeira
-Comerciante de óleo
-Fabricante de óleo
-Negociante de roupas velhas
-Comerciante de ópio
-Ladrão de órgãos
-Órfão
-Rapaz da estrebaria
-Foragido
-Raspador de ostras
-Pintor
-Fabricante de papel
-Fabricante de pergaminho
-Parchmenter
-Vendedor de indulgências
-Penhorista
-Camponês
-Cortador de turfa
-Filósofo
-Físico
-Pickler
-Furtador
-Fabricante de torta
-Vendedor de torta
-Fazendeiro de porcos
-Soldado de lança
-Peregrino
+Bobo da Corte
+Bombeiro
+Boticário
 Cafetão
-Pirata
-Médico da peste
-Encanador
-Plumer
-Caçador ilegal
-Poeta
+Calígrafo
+Camponês
+Cantor
+Capitão
+Capitão da Guarda
+Capitão do Mar
+Carcereiro
+Carpinteiro
+Carrasco
+Carreteiro de Esterco
 Carteiro
+Cartógrafo
+Cavaleiro
+Caçador
+Caçador de Pássaros
+Caçador Ilegal
+Cervejeiro
+Chapeleiro
+Charlatão
+Chaveiro
+Cirurgião
+Coletor de Esterco
+Coletor de Impostos
+Colhedor de Algas
+Colportor
+Comerciante
+Comerciante de Feno
+Comerciante de Madeira
+Comerciante de Pimentas
+Comerciante de Tecidos
+Comerciante de Vinhos
+Comerciante de Água
+Comerciante de Óleo
+Comerciante de Ópio
+Comissário de Bordo
+Compositor
+Construtor
+Construtor Naval
+Contador
+Contador de Histórias
+Contrabandista
+Convocador (Lei)
+Copeiro
+Copista
+Cortador de Gelo
+Cortador de Pedra
+Cortador de Penas
+Cortador de Turfa
+Cortesã
+Costureira
+Coureiro
+Coveiro
+Cozinheiro
+Cozinheiro de Campo
+Criador de Cães
+Criador de Frango
+Criador de Fungos
+Crítico Gastronômico
+Cuidador de Cães de Guarda
+Cultista
+Cultivador de Minhocas
+Curandeiro
+dançarina
+dentista
+detetive
+Diplomata
+Diretor da Escola
+Diretor da Prisão
+dono de Pousada
+dono de Taverna
+doutor
+Empacotador
+Encanador
+Encantador de Cavalos
+Encarregado da Caça
+Enfermeira
+Engenheiro de Cerco
+Engraxate
+Entalhador
+Entalhador de Pedra
+Eremita
+Escavador
+Escoteiro
+Escravo
+Escritor
+Escriturário
+Escrivão
+Escudeiro
+Escultor
+Escultor de Cristais
+Espião
+Estivador
+Estudioso
+Fabricante de Alaúde
+Fabricante de Arcos
+Fabricante de Armaduras
+Fabricante de Armas
+Fabricante de Bolsa
+Fabricante de Botões
+Fabricante de Cerveja
+Fabricante de Cestas
+Fabricante de Chapéus
+Fabricante de Cola
+Fabricante de Cordas
+Fabricante de Correio
+Fabricante de Correntes
+Fabricante de Drogas
+Fabricante de Espadas
+Fabricante de Facas
+Fabricante de Feltro
+Fabricante de Gabinetes
+Fabricante de Lanternas
+Fabricante de Lâmpadas
+Fabricante de Mapas
+Fabricante de Moedas
+Fabricante de Móveis
+Fabricante de Papel
+Fabricante de Pergaminho
+Fabricante de Queijos
+Fabricante de Redes
+Fabricante de Relógios
+Fabricante de Sabão
+Fabricante de Sapatos
+Fabricante de Sinos
+Fabricante de Tapetes
+Fabricante de Tonéis
+Fabricante de Torta
+Fabricante de Vassouras
+Fabricante de Velas
+Fabricante de Velas Marítimas
+Fabricante de Vestidos
+Fabricante de Óleo
+Fabricantes de Flechas
+Falcoeiro
+Falso Profeta
+Faz Tudo
+Fazendeiro
+Fazendeiro de Flores
+Fazendeiro de Gongo
+Fazendeiro de Porcos
+Fazendeiro de Vegetais
+Ferrador
+Ferreiro
+Filho de Nobre
+Filósofo
+Flagelante
+Flautista
+Fofoqueiro
+Foragido
+Fornecedor de Navios
+Fruticultor
+Fundidor
+Funileiro
+Furtador
+Físico
+Gravador
+Guarda
+Guarda da Caravana
+Guarda da Cidade
+Guarda Florestal
+Guarda Costas
+Guardador de Porcos
+Guia
+Herborista
+Idiota da Vila
+Illustrador
+Iluminador
+Jardineiro
+Joalheiro
+Ladrão
+Ladrão de Tapetes
+Ladrão de Túmulos
+Lanceiro
+Lapidador de Gemas
+Lapidário
+Leiteira
+Lenhador
+Limpa Chaminés
+Limpador de Calha
+Limpador de Cavalos
+Limpador de Estábulos
+Limpador de Tecidos
+Malabarista
+Manicure
+Marceneiro
+Marinheiro
+Marionetista
+Matemático
+Mendigo
+Menestrel
+Mensageiro
+Mercador
+Mercenário
+Mestre da Guilda
+Mestre de Cães
+Miliciano
+Mineiro
+Moleiro
+Monge
+Mordomo
+Mágico de Rua
+Médico da Peste
+Músico
+Músico Profissional
+Navegador
+Negociante de Peles
+Negociante de Roupas Velhas
+Nobre
+Oficial de Justiça
 Oleiro
-Sacerdote
-Diretor da prisão
-Músico profissional
+Operador de Fornalha
+Ourives
+Ouriço
+Padeiro
+Palhaço
+Parteira
+Pastor
+Pastor de Ovelhas
+Pedreiro
+Peleiro
+Penhorista
+Peregrino
+Pescador
+Pescador (Água doce)
+Pescador (Água Salgada)
+Pescador de Camarões
+Pintor
+Pintor de Vidros
+Piqueiro
+Pirata
+Poeta
+Portador de Incenso
+Pregoeiro da Cidade
+Procurador
+Produtor de Leite
+Produtor de Sal
 Professor
 Prostituta
-Marionetista
-Fabricante de bolsa
-Quarryman
-Cortador de penas
-Apanhador de ratos
-Fabricante de cordas
-Provador da comida real
-Fabricante de tapetes
-Ladão de tapetes
+Provador da Comida Real
+Queijeiro
+Rapaz da Estrebaria
+Raspador de Ostras
+Sacerdote
+Sanguessuga
+Sapateiro
+Saqueador
+Segurança
 Seleiro
-Fabricante de velas marítimas
-Sailmaker
-Veleiro
-Saltboiler
-Produtor de sal
-Estudioso
-Diretor da escola
-Escoteiro
-Escrivão
-Scrimshaw
-Ajudante de cozinha
-Escultor
-Capitão do mar
-Costureira
-Colhedor de algas
+Senhor da Terra
+Sequestrador
+Seringueiro
 Servo
-Sewerhand
-Xamã
-Tosquiador de ovelhas
-Pastor de ovelhas
-Shingler
-fornecedor de navios
-Construtor naval
-Engraxate
-Fabricante de sapatos
-Pescador de camarões
-Shrubber
-Engenheiro de cerco
-Siever
-Ourives
 Sinecura
-Cantor
-Negociante de peles
-Escravo
-Traficante de escravos
-Fundidor
-Smith
-Contrabandista
-Fabricante de sabão
 Soldado
-Procurador
-Spearman
-Comerciante de pimentas
-Espião
-Escudeiro
-Stablehand
-Estivador
-Comissário de bordo
-Entalhador de pedra
-Cortador de pedra
-Stonemason
-Stoner
-Contador de histórias
-Mágico de rua
-Varredor de rua
-Stringer
-Convocador (lei)
-Cirurgião
-Guardador de porcos
-Fabricante de espadas
-Alfaiate
-Tanner
+Soldado de Lança
+Tanoeiro
 Tapeceiro
-Dono de taverna
-Coletor de impostos
 Taxidermista
-Professor
-Thatcher
+Tecelão
 Teólogo
-Ladrão
-Bandido
-Funileiro
+Tintureiro
+Tocador de Sinos
 Torturador
-pregoeiro da cidade
-Comerciante
-Caçador
+Tosquiador de Ovelhas
+Traficante de Escravos
+Transportador de Água
+Treinador de Animais
+Treinador de Cavalos
+Treinador de Cães
 Trovador
-Ouriço
+Vadio
 Vagabundo
 Vaginarius
-Vadio
-Fazendeiro de vegetais
-Veterinário
-Idiota da vila
-Viticultor
 Vagão
-Wainwright
-Transportador de água
-Barqueiro
-Comerciante de água
-Fabricante de armas
-Tecelão
-Seringueiro
-Comerciante de vinhos
-Comerciante de madeira
-Entalhador
-Lenhador
-Cultivador de minhocas
-Escritor
-Zealot
+Varredor de Rua
+Veleiro
+Vendedor Ambulante
+Vendedor de Arcos
+Vendedor de Cerveja
+Vendedor de Drogas
+Vendedor de Frutas
+Vendedor de Indulgências
+Vendedor de Livros
+Vendedor de Torta
+Vendedor de Vidros
+Verdureiro
+Veterinário
+Viagrista
+Vidente
+Vidreiro
+Vigia
+Vigia Noturno
+Violinista
+Viticultor
+Xamã
+Órfão
