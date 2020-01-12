@@ -180,7 +180,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     
     // Image loading
-    implementation("com.github.dhaval2404:imagepicker:1.5")
+    implementation("com.github.dhaval2404:imagepicker:1.6")
     implementation("com.github.florent37:inline-activity-result-kotlin:1.0.1")
     implementation("io.coil-kt:coil:0.8.0")
 
