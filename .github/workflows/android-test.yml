@@ -14,4 +14,11 @@ jobs:
         with:
           api-level: 28
           emulator-options: ""
-          script: "./gradlew connectedCheck test detekt" 
+          script: "./gradlew connectedCheck test detekt"
+      
+      - name: upload failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: build-artifact
+          path: app/build
