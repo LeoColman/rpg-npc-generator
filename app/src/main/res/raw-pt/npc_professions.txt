@@ -1,396 +1,395 @@
-Academic
-Accountant
-Actor
-Alchemist
-Animal Trainer
-Apothecary
-Archbishop
-Archer
-Architect
-Aristocrat
-Armorer
-Armorsmith
+Acadêmico
+Contador
+Ator
+Alquimista
+Treinador de animais
+Boticário
+Arcebispo
+Arqueiro
+Arquiteto
+Aristocrata
+Armeiro
+Armorsmith/Fabricante de armaduras
 Arrowsmith
-Artisan
-Artist
-Assassin
-Astrologer
-Atilliator
+Artesão
+Artista
+Assassino
+Astrólogo
+Fabricante de arcos
 Attendent
 Bagger
-Bailiff
-Baker
-Bandit
-Banker
-Barbier
-Bard
-Bartender
-Basketmaker
+Oficial de justiça
+Padeiro
+Bandido
+Banqueiro
+Barbeiro
+Bardo
+Barman
+Fabricante de cestas
 Beachcomber
-Beekeeper
-Beer seller
-Beerbrewer
-Beggar
-Beguine
+Apicultor
+Vendedor de cerveja
+Cervejeiro
+Mendigo
+Beguina
 Bellfounder
-Bellmaker
-Bellringer
-Besom maker
-Bishop
-Blacksmith
+Fabricante de sinos
+Tocador de sinos
+Fabricante de vassouras
+Bispo
+Ferreiro
 Bloodletter
-Boatman
+Barqueiro
 Bodger
-Bodyguard
+Guarda-Costas
 Bonecarver
-Book seller
-Bouncer
+Vendedor de livros
+Segurança
 Bowman
-Bowyer
+Vendedor de arcos
 Brewer
-Bricklayer
+Assentador de tijolos
 Buffoon
-Builder
-Burglar
-Busker
-Butcher
-Butler
+Construtor
+Assaltante
+Artista de rua
+Açougueiro
+Mordomo
 Buttonmaker
-Cabinetmaker
-Calligrapher
+Fabricante de gabinetes
+Calígrafo
 Camp cook
 Camp follower
-Candlestick maker
-Captain
-Captain of the guard
-Caravan guard
-Carpenter
-Cartographer
-Carver
-Chainmaker
+Fabricante de velas
+Capitão
+Capitão da guarda
+Guarda da caravana
+Carpinteiro
+Cartógrafo
+Escultor
+Fabricante de correntes
 Chalk cutter
 Chapman
 Charcoal burner
-Charlatan
-Cheesemaker
-Cheesemonger
-Chicken butcher
-Chicken Farmer
-Chimney sweep
-City guardsman
+Charlatão
+Fabricante de queijos
+Queijeiro
+Açougueiro de frango
+Criador de frango
+Limpa-chaminés
+Guarda da cidade
 Clark
-Clerk
-Clockmaker
-Clothier
-Clown
-Cobbler
-Coiner
-Colporteur
-Composer
-Cook
-Cooper
-Coppersmith
-Copyist
-Cordwainer
-Courtesan
-Crop farmer
-Crossbowman
-Crystal carver
-Cultist
-Cupbearer
+Escriturário
+Fabricante de relógios
+Comerciante de tecidos
+Palhaço
+Sapateiro
+Fabricante de moedas
+Colportor
+Compositor
+Cozinheiro
+Tanoeiro
+Fabricante de tonéis
+Copista
+Sapateiro
+Cortesã
+Agricultor
+Besteiro
+Escultor de cristais
+Cultista
+Copeiro
 Curate
 Currier
-Cutpurse
-Dairy farmer
-Dancer
-Dentist
-Detective
-Diplomat
-Ditch digger
-Doctor
-Dog breeder
-Dog trainer
-Dresser
-Drug dealer
-Drug farmer
-Drummer
-Dung carter
-Dung collector
-Dyer
-Engraver
-Executioner
-Faith healer
-Falconer
-False prophet
-Farmer
-Farrier
-Feltmaker
-Fence
+Batedor de carteiras
+Produtor de leite
+Dançarina
+Dentista
+Detetive
+Diplomata
+Escavador
+Doutor
+Criador de cães
+Treinador de cães
+Fabricante de vestidos
+Vendedor de drogas
+Fabricante de drogas
+Baterista
+Carreteiro de esterco
+Coletor de esterco
+Tintureiro
+Gravador
+Carrasco
+Curandeiro
+Falcoeiro
+Falso profeta
+Fazendeiro
+Ferrador
+Fabricante de feltro
+Alambrador
 Fewtrer
-Fiddler
-Fireman
-Fisherman
-Fisherman (freshwater)
-Fisherman (saltwater)
-Flagellant
-Fletcher
-Flower farmer
-Food critic
-Forester
-Fortune teller
+Violinista
+Bombeiro
+Pescador
+Pescador (água doce)
+Pescador (água salgada)
+Flagelante
+Fabricantes de flechas
+Fazendeiro de Flores
+Crítico gastronômico
+Guarda florestal
+Vidente
 Fowler
-Fruit farmer
-Fruiterer
-Fuller
-Fungus Farmer
-Furniture maker
-Furrier
-Gambler
-Gamekeeper
+Fruticultor
+Vendedor de frutas
+Limpador de tecidos
+Criador de fungos
+Fabricante de móveis
+Peleiro
+Apostador
+Encarregado da caça
 Gardener
-Gardner
-Gemcutter
-Glass seller
-Glassblower
-Glasspainter
-Gluemaker
-Gong farmer
-Gossip
-Grave digger
-Grave robber
+Jardineiro
+Lapidador de gemas
+Vendedor de vidros
+Vidreiro
+Pintor de vidros
+Fabricante de cola
+Fazendeiro de gongo
+Fofoqueiro
+Coveiro
+Ladrão de túmulos
 Gravedigger
-Greengrocer
-Grifter
-Guardsman
-Guide
-Guild master
-Gutter cleaner
+Verdureiro
+Viagrista
+Guarda
+Guia
+Mestre da guilda
+Limpador de calha
 Haberdasher
-Handyman
-Hat maker
+Faz-Tudo
+Fabricante de chapéus
 Hatmaker
-Hatter
-Hawker
-Hay merchant
+Chapeleiro
+Vendedor ambulante
+Comerciante de feno
 Hayward
-Herald
-Herb farmer
-Herbalist
-Herder
-Hermit
+Arauto
+Agricultor de ervas
+Herborista
+Pastor
+Eremita
 Hetheleder
-Horse trainer
-Horse whisperer
-Horseleech
-Hunter
+Treinador de cavalos
+Encantador de cavalos
+Sanguessuga
+Caçador
 Huntsman
-Icecutter
-Illuminator
-Illustrator
-Incense bearer
-Innkeeper
-Jailer
-Jester
-Jeweler
-Joiner
-Juggler
-Knacker
+Cortador de gelo
+Iluminador
+Illustrador
+Portador de incenso
+Dono de pousada
+Carcereiro
+Bobo da corte
+Joalheiro
+Marceneiro
+Malabarista
+Abatedor de animais
 Knapper
 Knifeman
-Knifesmith
-Knight
-Lamp lighter
-Lampwright
-Lancier
-Landlord
-Lanternmaker
-Lapidary
-Lawyer
-Leatherworker
+Fabricante de facas
+Cavaleiro
+Acendedor de lâmpadas
+Fabricante de lâmpadas
+Lanceiro
+Senhor da terra
+Fabricante de lanternas
+Lapidário
+Advogado
+Coureiro
 Leech
-Librarian
+bibliotecário
 Lighterman
 Linkboy
-Locksmith
-Lookout
-Lutemaker
+Chaveiro
+Vigia
+Fabricante de alaúde
 Lutenist
-Mailmaker
-Mapmaker
-Mariner
-Mason
-Master of hounds
-Mathematician
-Meat butcher
-Mercenary
-Messenger
-Metropolitan bishop
-Midwife
-Militia
-Milkmaid
-Miller
-Miner
-Minstrel
+Fabricante de correio
+Fabricante de mapas
+Marinheiro
+Pedreiro
+Mestre de cães
+Matemático
+Açogueiro de carne
+Mercenário
+Mensageiro
+Bispo Metropolitano
+Parteira
+Miliciano
+Leiteira
+Moleiro
+Mineiro
+Menestrel
 Mirrorer
-Moneylender
-Monk
-Mucker
-Musician
-Nailmaker
-Navigator
-Netmaker
-Night watchman
-Noble
-Nobleman's son
-Nurse
-Oil merchant
-Oilmaker
-Old-clothes dealer
-Opium merchant
-Organ thief
-Orphan
-Ostler
-Outlaw
-Oyster raker
-Painter
-Papermaker
-Parchment maker
+Agiota
+Monge
+Limpador de estábulos
+Músico
+Manicure
+Navegador
+Fabricante de redes
+Vigia noturno
+Nobre
+Filho de nobre
+Enfermeira
+Comerciante de óleo
+Fabricante de óleo
+Negociante de roupas velhas
+Comerciante de ópio
+Ladrão de órgãos
+Órfão
+Rapaz da estrebaria
+Foragido
+Raspador de ostras
+Pintor
+Fabricante de papel
+Fabricante de pergaminho
 Parchmenter
-Pardoner
-Pawnbroker
-Peasant
-Peat cutter
-Philosopher
-Physician
+Vendedor de indulgências
+Penhorista
+Camponês
+Cortador de turfa
+Filósofo
+Físico
 Pickler
-Pickpocket
-Pie maker
-Pie seller
-Pig Farmer
-Pikeman
-Pilgrim
-Pimp
-Pirate
-Plague doctor
-Plumber
+Furtador
+Fabricante de torta
+Vendedor de torta
+Fazendeiro de porcos
+Soldado de lança
+Peregrino
+Cafetão
+Pirata
+Médico da peste
+Encanador
 Plumer
-Poacher
-Poet
-Postman
-Potter
-Priest
-Prison warden
-Professional musician
+Caçador ilegal
+Poeta
+Carteiro
+Oleiro
+Sacerdote
+Diretor da prisão
+Músico profissional
 Professor
-Prostitute
-Puppeteer
-Purse maker
+Prostituta
+Marionetista
+Fabricante de bolsa
 Quarryman
-Quill cutter
-Rat catcher
-Ropemaker
-Royal food taster
-Rugmaker
-Rugweaver
-Saddler
-Sail maker
+Cortador de penas
+Apanhador de ratos
+Fabricante de cordas
+Provador da comida real
+Fabricante de tapetes
+Ladão de tapetes
+Seleiro
+Fabricante de velas marítimas
 Sailmaker
-Sailor
+Veleiro
 Saltboiler
-Salter
-Scholar
-Schoolmaster
-Scout
-Scribe
-Scribe
+Produtor de sal
+Estudioso
+Diretor da escola
+Escoteiro
+Escrivão
 Scrimshaw
-Scullion
-Sculptor
-Sea captain
-Seamstress
-Seaweed harvester
-Servant
+Ajudante de cozinha
+Escultor
+Capitão do mar
+Costureira
+Colhedor de algas
+Servo
 Sewerhand
-Shaman
-Sheepshearer
-Shepherd
+Xamã
+Tosquiador de ovelhas
+Pastor de ovelhas
 Shingler
-Ship provisioner
-Shipwright
-Shoe shiner
-Shoemaker
-Shrimper
+fornecedor de navios
+Construtor naval
+Engraxate
+Fabricante de sapatos
+Pescador de camarões
 Shrubber
-Siege engineer
+Engenheiro de cerco
 Siever
-Silversmith
-Sinecure
-Singer
-Skinner
-Slave
-Slaver
-Smelter
+Ourives
+Sinecura
+Cantor
+Negociante de peles
+Escravo
+Traficante de escravos
+Fundidor
 Smith
-Smuggler
-Soaper
-Soldier
-Solicitor
+Contrabandista
+Fabricante de sabão
+Soldado
+Procurador
 Spearman
-Spice merchant
-Spy
-Squire
+Comerciante de pimentas
+Espião
+Escudeiro
 Stablehand
-Stevedore
-Steward
-Stonecarver
-Stonecutter
+Estivador
+Comissário de bordo
+Entalhador de pedra
+Cortador de pedra
 Stonemason
 Stoner
-Storyteller
-Street magician
-Street sweeper
+Contador de histórias
+Mágico de rua
+Varredor de rua
 Stringer
-Summoner (law)
-Surgeon
-Swineherd
-Swordsmith
-Tailor
+Convocador (lei)
+Cirurgião
+Guardador de porcos
+Fabricante de espadas
+Alfaiate
 Tanner
-Tapestrymaker
-Taverner
-Tax collector
-Taxidermist
-Teacher
+Tapeceiro
+Dono de taverna
+Coletor de impostos
+Taxidermista
+Professor
 Thatcher
-Theologian
-Thief
-Thug
-Tinker
-Torturer
-Town crier
-Trader
-Trapper
-Troubadour
-Urchin
-Vagabond
+Teólogo
+Ladrão
+Bandido
+Funileiro
+Torturador
+pregoeiro da cidade
+Comerciante
+Caçador
+Trovador
+Ouriço
+Vagabundo
 Vaginarius
-Vagrant
-Vegetable Farmer
-Veterinarian
-Village idiot
-Vintner
-Wagoner
+Vadio
+Fazendeiro de vegetais
+Veterinário
+Idiota da vila
+Viticultor
+Vagão
 Wainwright
-Water carrier
-Waterman
-Waterseller
-Weaponsmith
-Weaver
-Window tapper
-Wine seller
-Wood seller
-Woodcarver
-Woodcutter
-Worm farmer
-Writer
+Transportador de água
+Barqueiro
+Comerciante de água
+Fabricante de armas
+Tecelão
+Seringueiro
+Comerciante de vinhos
+Comerciante de madeira
+Entalhador
+Lenhador
+Cultivador de minhocas
+Escritor
 Zealot
