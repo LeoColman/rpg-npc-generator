@@ -9,7 +9,7 @@ Arqueiro
 Arquiteto
 Aristocrata
 Armeiro
-Armorsmith/Fabricante de armaduras
+Fabricante de armaduras
 Arrowsmith
 Artesão
 Artista
