@@ -100,7 +100,7 @@ fun BaseAppModuleExtension.setupBuildTypes() {
 
         getByName("debug") {
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "RPG NPC Generator Debug")
+            resValue("string", "app_name_en", "RPG NPC Generator Debug")
         }
     }
 }
@@ -111,12 +111,15 @@ fun BaseAppModuleExtension.setupFlavors() {
     productFlavors {
         create("free") {
             applicationId = "me.kerooker.rpgcharactergenerator"
-            resValue("string", "app_name", "RPG NPC Generator")
+            resValue("string", "app_name_en", "RPG NPC Generator")
+            resValue("string", "app_name_pt", "Gerador de NPC para RPG")
         }
         create("pro") {
             applicationId = "me.kerooker.rpgcharactergeneratorpro"
-            resValue("string", "app_name", "RPG NPC Generator PRO")
-
+            resValue("string", "app_name_en", "RPG NPC Generator PRO")
+            resValue("string", "app_name_pt", "Gerador de NPC para RPG PRO")
+    
+    
         }
     }
 }
