@@ -21,8 +21,8 @@
     <string name="alignment_chaotic_evil">Caótico e Mau</string>
 
     <!--GENDER-->
-    <string name="gender_male">Homem</string>
-    <string name="gender_female">Mulher</string>
+    <string name="gender_male">Masculino</string>
+    <string name="gender_female">Feminino</string>
 
     <!--SEXUALITY-->
     <string name="sexuality_homosexual">Homossexual</string>
@@ -60,7 +60,5 @@
     <string name="race_half_elf">Meio-Elfo</string>
     <string name="race_half_orc">Meio-Orc</string>
     <string name="race_tiefling">Tiefling</string>
-
-
 
 </resources>

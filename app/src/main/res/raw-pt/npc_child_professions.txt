@@ -1,62 +1,61 @@
-Ator
-Adestrador de animais
-Assistente de Ferreiro
-Atendente
-Empacotador
-Assistente de padeiro
-Assistente do ladrão
-Assistente do Bardo
-Assistente do Fazedor de Cestas
-Mendigo
-Tocador de Sino
-Vendedor de livros
-Assistente de fazendeiro de frango
-Palhaço
-Assistente de cozinheiro
+Adestrador de Animais
 Agricultor
-Mensageiro
-Treinador de cachorro
-Catador Esterco
-Agricultor
-Assistente de pescador
-Assistente de pescador (água doce)
-Assistente de pescador (água salgada)
-Fruticultor
-Assistente de jardineiro
-Pintor
-Pintor de vidro
-Assistente de fabricante de chapéus
-Assistente do Herbalista
-Bobo da Corte
-Malabarista
-Assistente do bibliotecário
-Assistente do Fazedor de Flautas
-Assistente do Flautista
-Assistente de açougueiro
-Mineiro
-Assistente do Monge
-Músico
-Assistente do Fazedor de redes
-O filho de nobre
-Órfão
-Batedor de carteiras
-Assistente do fabricante de tortas
-Fazendeiro de porco
-Apanhador de ratos
-Assistente do fabricante de cordas
-Assistente do fabricante de tapetes
-Servo
+Apanhador de Ratos
 Aprendiz do Xamã
+Assistente de Alfaiate
+Assistente de Açougueiro
+Assistente de Cozinheiro
+Assistente de Fabricante de Chapéus
+Assistente de Fazendeiro de Frango
+Assistente de Ferreiro
+Assistente de Jardineiro
+Assistente de Padeiro
+Assistente de Pastor
+Assistente de Pescador
+Assistente de Pescador (Água doce)
+Assistente de Pescador (Água Salgada)
 Assistente de Tecelão
-Assistente de pastor
+Assistente do Bardo
+Assistente do Bibliotecário
+Assistente do Fabricante de Cordas
+Assistente do Fabricante de Tapetes
+Assistente do Fabricante de Tortas
+Assistente do Fazedor de Cestas
+Assistente do Fazedor de Flautas
+Assistente do Fazedor de Redes
+Assistente do Flautista
+Assistente do Herbalista
+Assistente do Ladrão
+Assistente do Monge
+Atendente
+Ator
+Batedor de Carteiras
+Bobo da Corte
+Catador de Minhoca
+Catador Esterco
+Empacotador
 Engraxate
 Escravo
-Mágico de rua
-Varredor de rua
-Assistente de Alfaiate
-Vagabundo
 Fazendeiro
-Idiota da vila
-Transportador de água
+Fazendeiro de Porco
+Fruticultor
+Idiota da Vila
+Malabarista
+Mendigo
+Mensageiro
+Mineiro
+Mágico de Rua
+Músico
+O Filho de Nobre
+Palhaço
+Pintor
+Pintor de Vidro
+Servo
+Tocador de Sino
+Transportador de Água
+Treinador de Cachorro
+Vagabundo
+Varredor de Rua
+Vendedor de Livros
 Vendedor de Água
-Catador de Minhoca
+Órfão
