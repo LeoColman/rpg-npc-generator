@@ -1,0 +1,346 @@
+Abatedor de Animais
+Acadêmico
+Acendedor de Lâmpadas
+Advogado
+Agiota
+Agricultor
+Agricultor de Ervas
+Ajudante de Cozinha
+Alambrador
+Alfaiate
+Alquimista
+Apanhador de Ratos
+Apicultor
+Apostador
+Arauto
+Arcebispo
+Aristocrata
+Armeiro
+Arqueiro
+Arquiteto
+Arrowsmith
+Artesão
+Artista
+Artista de Rua
+Assaltante
+Assassino
+Assentador de Tijolos
+Astrólogo
+Atendente
+Ator
+Açogueiro de Carne
+Açougueiro
+Açougueiro de Frango
+Bandido
+Banqueiro
+Barbeiro
+Bardo
+Barman
+Barqueiro
+Batedor de Carteiras
+Baterista
+Beguina
+Besteiro
+Bibliotecário
+Bispo
+Bispo Metropolitano
+Bobo da Corte
+Bombeiro
+Boticário
+Cafetão
+Calígrafo
+Camponês
+Cantor
+Capitão
+Capitão da Guarda
+Capitão do Mar
+Carcereiro
+Carpinteiro
+Carrasco
+Carreteiro de Esterco
+Carteiro
+Cartógrafo
+Cavaleiro
+Caçador
+Caçador de Pássaros
+Caçador Ilegal
+Cervejeiro
+Chapeleiro
+Charlatão
+Chaveiro
+Cirurgião
+Coletor de Esterco
+Coletor de Impostos
+Colhedor de Algas
+Colportor
+Comerciante
+Comerciante de Feno
+Comerciante de Madeira
+Comerciante de Pimentas
+Comerciante de Tecidos
+Comerciante de Vinhos
+Comerciante de Água
+Comerciante de Óleo
+Comerciante de Ópio
+Comissário de Bordo
+Compositor
+Construtor
+Construtor Naval
+Contador
+Contador de Histórias
+Contrabandista
+Convocador (Lei)
+Copeiro
+Copista
+Cortador de Gelo
+Cortador de Pedra
+Cortador de Penas
+Cortador de Turfa
+Cortesã
+Costureira
+Coureiro
+Coveiro
+Cozinheiro
+Cozinheiro de Campo
+Criador de Cães
+Criador de Frango
+Criador de Fungos
+Crítico Gastronômico
+Cuidador de Cães de Guarda
+Cultista
+Cultivador de Minhocas
+Curandeiro
+dançarina
+dentista
+detetive
+Diplomata
+Diretor da Escola
+Diretor da Prisão
+dono de Pousada
+dono de Taverna
+doutor
+Empacotador
+Encanador
+Encantador de Cavalos
+Encarregado da Caça
+Enfermeira
+Engenheiro de Cerco
+Engraxate
+Entalhador
+Entalhador de Pedra
+Eremita
+Escavador
+Escoteiro
+Escravo
+Escritor
+Escriturário
+Escrivão
+Escudeiro
+Escultor
+Escultor de Cristais
+Espião
+Estivador
+Estudioso
+Fabricante de Alaúde
+Fabricante de Arcos
+Fabricante de Armaduras
+Fabricante de Armas
+Fabricante de Bolsa
+Fabricante de Botões
+Fabricante de Cerveja
+Fabricante de Cestas
+Fabricante de Chapéus
+Fabricante de Cola
+Fabricante de Cordas
+Fabricante de Correio
+Fabricante de Correntes
+Fabricante de Drogas
+Fabricante de Espadas
+Fabricante de Facas
+Fabricante de Feltro
+Fabricante de Gabinetes
+Fabricante de Lanternas
+Fabricante de Lâmpadas
+Fabricante de Mapas
+Fabricante de Moedas
+Fabricante de Móveis
+Fabricante de Papel
+Fabricante de Pergaminho
+Fabricante de Queijos
+Fabricante de Redes
+Fabricante de Relógios
+Fabricante de Sabão
+Fabricante de Sapatos
+Fabricante de Sinos
+Fabricante de Tapetes
+Fabricante de Tonéis
+Fabricante de Torta
+Fabricante de Vassouras
+Fabricante de Velas
+Fabricante de Velas Marítimas
+Fabricante de Vestidos
+Fabricante de Óleo
+Fabricantes de Flechas
+Falcoeiro
+Falso Profeta
+Faz Tudo
+Fazendeiro
+Fazendeiro de Flores
+Fazendeiro de Gongo
+Fazendeiro de Porcos
+Fazendeiro de Vegetais
+Ferrador
+Ferreiro
+Filho de Nobre
+Filósofo
+Flagelante
+Flautista
+Fofoqueiro
+Foragido
+Fornecedor de Navios
+Fruticultor
+Fundidor
+Funileiro
+Furtador
+Físico
+Gravador
+Guarda
+Guarda da Caravana
+Guarda da Cidade
+Guarda Florestal
+Guarda Costas
+Guardador de Porcos
+Guia
+Herborista
+Idiota da Vila
+Illustrador
+Iluminador
+Jardineiro
+Joalheiro
+Ladrão
+Ladrão de Tapetes
+Ladrão de Túmulos
+Lanceiro
+Lapidador de Gemas
+Lapidário
+Leiteira
+Lenhador
+Limpa Chaminés
+Limpador de Calha
+Limpador de Cavalos
+Limpador de Estábulos
+Limpador de Tecidos
+Malabarista
+Manicure
+Marceneiro
+Marinheiro
+Marionetista
+Matemático
+Mendigo
+Menestrel
+Mensageiro
+Mercador
+Mercenário
+Mestre da Guilda
+Mestre de Cães
+Miliciano
+Mineiro
+Moleiro
+Monge
+Mordomo
+Mágico de Rua
+Médico da Peste
+Músico
+Músico Profissional
+Navegador
+Negociante de Peles
+Negociante de Roupas Velhas
+Nobre
+Oficial de Justiça
+Oleiro
+Operador de Fornalha
+Ourives
+Ouriço
+Padeiro
+Palhaço
+Parteira
+Pastor
+Pastor de Ovelhas
+Pedreiro
+Peleiro
+Penhorista
+Peregrino
+Pescador
+Pescador (Água doce)
+Pescador (Água Salgada)
+Pescador de Camarões
+Pintor
+Pintor de Vidros
+Piqueiro
+Pirata
+Poeta
+Portador de Incenso
+Pregoeiro da Cidade
+Procurador
+Produtor de Leite
+Produtor de Sal
+Professor
+Prostituta
+Provador da Comida Real
+Queijeiro
+Rapaz da Estrebaria
+Raspador de Ostras
+Sacerdote
+Sanguessuga
+Sapateiro
+Saqueador
+Segurança
+Seleiro
+Senhor da Terra
+Sequestrador
+Seringueiro
+Servo
+Sinecura
+Soldado
+Soldado de Lança
+Tanoeiro
+Tapeceiro
+Taxidermista
+Tecelão
+Teólogo
+Tintureiro
+Tocador de Sinos
+Torturador
+Tosquiador de Ovelhas
+Traficante de Escravos
+Transportador de Água
+Treinador de Animais
+Treinador de Cavalos
+Treinador de Cães
+Trovador
+Vadio
+Vagabundo
+Vaginarius
+Vagão
+Varredor de Rua
+Veleiro
+Vendedor Ambulante
+Vendedor de Arcos
+Vendedor de Cerveja
+Vendedor de Drogas
+Vendedor de Frutas
+Vendedor de Indulgências
+Vendedor de Livros
+Vendedor de Torta
+Vendedor de Vidros
+Verdureiro
+Veterinário
+Viagrista
+Vidente
+Vidreiro
+Vigia
+Vigia Noturno
+Violinista
+Viticultor
+Xamã
+Órfão

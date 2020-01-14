@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">@string/app_name_pt</string>
+
+    <string name="nav_bar_random_npc">Aleatório</string>
+    <string name="nav_bar_my_npcs">NPCs</string>
+    <string name="nav_bar_settings">Ajustes</string>
+</resources>

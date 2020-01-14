@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="random_npc_full_name_hint">Nome Completo</string>
+    <string name="random_npc_nickname_hint">Apelido</string>
+    <string name="random_npc_race_hint">Raça</string>
+    <string name="random_npc_age_hint">Idade</string>
+    <string name="random_npc_gender_hint">Gênero</string>
+    <string name="random_npc_profession_hint">Profissão</string>
+    <string name="random_npc_sexuality_hint">Sexualidade</string>
+    <string name="random_npc_alignment_hint">Tendência</string>
+    <string name="random_npc_motivation_hint">Motivação</string>
+    <string name="random_npc_languages_label">Idiomas</string>
+    <string name="random_npc_language_hint">Idioma</string>
+    <string name="random_npc_personality_traits_label">Traços de Personalidade</string>
+    <string name="random_npc_personality_hint">Traço de Personalidade</string>
+    <string name="random_npc_add_item">Adicionar Item</string>
+    
+    <string name="randomize_all">Tudo Aleatório</string>
+    <string name="save">Salvar</string>
+
+
+    <declare-styleable name="RandomNpcElementView">
+        <attr name="hint" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RandomNpcListView">
+        <attr name="list_hint" format="reference" />
+    </declare-styleable>
+
+
+</resources>
