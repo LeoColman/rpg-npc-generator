@@ -1,0 +1,69 @@
+Actor
+Adiestrador de animales
+Armorsmith's Assistant
+Arrowsmith's Assistant
+Attendent
+Bagger
+Ayudante de panadero
+Ayudante de bandido
+Ayudante de bardo
+Basketmaker's Assistant
+Beggar
+Bellringer (botones?)
+Blacksmith's Assistant
+Book seller
+Chicken Farmer's Assistant
+Clown
+Cook's Assistant
+Crop farmer
+Currier
+Adiestrador de perros
+Drummer
+Dung carter
+Dung collector
+Ayudante de granjero
+Ayudante de pescador
+Ayudante de pescador (agua dulce)
+Ayudante de pescador (agua salada)
+Fruit farmer
+Ayudante de jardinero
+Glasspainter
+Hat maker's Assistant
+Herb farmer's Assistant
+Herbalist's Assistant
+Bufón
+Juggler
+Librarian's Assistant
+Lutemaker's Assistant
+Meat butcher's Assistant
+Minero
+Ayudante de monje (asceta?)
+Musician
+Netmaker's Assistant
+Hijo de noble
+Huérfano
+Pickpocket
+Pie maker's Assistant
+Pig Farmer
+Rat catcher
+Ropemaker's Assistant
+Rugmaker's Assistant
+Saltboiler
+Siervo
+Shaman's Apprentice
+Sheepshearer's Assistant
+Shepherd's Assistant
+Shoe shiner
+Esclavo
+Street magician
+Street sweeper
+Swordsmith's Assistant
+Tailor's Assistant
+Tanner's Assistant
+Vagabond (Vagrant?
+Vegetable Farmer
+Tonto del pueblo
+Water carrier
+Waterseller
+Weaponsmith's Assistant
+Worm farmer
