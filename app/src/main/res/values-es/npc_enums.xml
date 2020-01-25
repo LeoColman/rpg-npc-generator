@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--AGE-->
+    <string name="age_child">Niño</string>
+    <string name="age_teenager">Adolescente</string>
+    <string name="age_young_adult">Adulto joven</string>
+    <string name="age_adult">Adulto</string>
+    <string name="age_old">Viejo</string>
+    <string name="age_very_old">Muy viejo</string>
+
+    <!--ALIGNMENT-->
+    <string name="alignment_lawful_good">Lawful Good</string>
+    <string name="alignment_lawful_neutral">Lawful Neutral</string>
+    <string name="alignment_lawful_evil">Lawful Evil</string>
+    <string name="alignment_neutral_good">Neutral Good</string>
+    <string name="alignment_neutral">Neutral</string>
+    <string name="alignment_neutral_evil">Neutral Evil</string>
+    <string name="alignment_chaotic_good">Chaotic Good</string>
+    <string name="alignment_chaotic_neutral">Chaotic Neutral</string>
+    <string name="alignment_chaotic_evil">Chaotic Evil</string>
+
+    <!--GENDER-->
+    <string name="gender_male">Hombre</string>
+    <string name="gender_female">Mujer</string>
+
+    <!--SEXUALITY-->
+    <string name="sexuality_homosexual">Homosexual</string>
+    <string name="sexuality_bisexual">Bisexual</string>
+    <string name="sexuality_asexual">Asexual</string>
+    <string name="sexuality_heterosexual">Heterosexual</string>
+
+    <!--LANGUAGE-->
+    <string name="language_common">Common</string>
+    <string name="language_elvish">Elvish</string>
+    <string name="language_gnomish">Gnomish</string>
+    <string name="language_goblin">Goblin</string>
+    <string name="language_halfling">Halfling</string>
+    <string name="language_orc">Orc</string>
+    <string name="language_celestial">Celestial</string>
+    <string name="language_abyssal">Abyssal</string>
+    <string name="language_infernal">Infernal</string>
+    <string name="language_druidic">Druidic</string>
+    <string name="language_draconic">Draconic</string>
+    <string name="language_dwarvish">Dwarvish</string>
+    <string name="language_giant">Giant</string>
+
+    <!--RACE-->
+    <string name="race_hill_dwarf">Hill Dwarf</string>
+    <string name="race_mountain_dwarf">Mountain Dwarf</string>
+    <string name="race_high_elf">High Elf</string>
+    <string name="race_wood_elf">Wood Elf</string>
+    <string name="race_drow">Drow</string>
+    <string name="race_stout_halfling">Stout Halfling</string>
+    <string name="race_lightfoot_halfling">Lightfoot Halfling</string>
+    <string name="race_human">Human</string>
+    <string name="race_dragonborn">Dragonborn</string>
+    <string name="race_forest_gnome">Forest Gnome</string>
+    <string name="race_rock_gnome">Rock Gnome</string>
+    <string name="race_half_elf">Half-Elf</string>
+    <string name="race_half_orc">Half-Orc</string>
+    <string name="race_tiefling">Tiefling</string>
+
+
+
+</resources>
