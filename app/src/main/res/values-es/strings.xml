@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">@string/app_name_en</string>
+    
+    <string name="nav_bar_random_npc">Aleatorio</string>
+    <string name="nav_bar_my_npcs">PNJs</string>
+    <string name="nav_bar_settings">Opciones</string>
+</resources>
