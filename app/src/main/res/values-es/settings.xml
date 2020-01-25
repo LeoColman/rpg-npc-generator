@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="preferences_about_title">About</string>
+    <string name="preferences_open_source_libs_title">Open Source Libraries</string>
+    <string name="preferences_open_source_libs_summary">List of all the open source libraries that were used in this app</string>
+    
+    <string name="preferences_project_repository_title">Project Repository</string>
+    <string name="preferences_project_repository_summary">This project is 100% open source, and it\'s source code is available in its entirety. We are open to contributions and eager to improve!</string>
+    
+    <string name="preferences_bug_report_title">Report a bug</string>
+    <string name="preferences_bug_report_summary">Found a strange behavior? Something isn\'t working as it should? Please let us know but submitting a bug report.</string>
+    
+    <string name="preferences_go_pro_category_title">Go PRO</string>
+    <string name="preferences_go_pro_title">Enabling PRO</string>
+    <string name="preferences_go_pro_summary">Enabling PRO removes advertisements and supports the app development. There is no pro-exclusive features</string>
+    
+</resources>
