@@ -300,7 +300,6 @@ Scholar
 Schoolmaster
 Scout
 Scribe
-Scribe
 Scrimshaw
 Scullion
 Sculptor
