@@ -158,7 +158,6 @@ Gong farmer
 Gossip
 Grave digger
 Grave robber
-Gravedigger
 Greengrocer
 Grifter
 Guardsman
