@@ -106,11 +106,11 @@ class AdmobViewmodelTest : BehaviorSpec() {
                     }
                     
                     Then("Ad banner ID should be production banner") {
-                        target.bannerAdId shouldBe "ca-app-pub-3225017918525788/2974185880"
+                        target.bannerAdId shouldBe "ca-app-pub-4066886200642192/4591525789"
                     }
                     
                     Then("Rewarded ad ID should be production id") {
-                        target.rewardedAdId shouldBe "ca-app-pub-3225017918525788/7230261136"
+                        target.rewardedAdId shouldBe "ca-app-pub-4066886200642192/4016810716"
                     }
                 }
                 
