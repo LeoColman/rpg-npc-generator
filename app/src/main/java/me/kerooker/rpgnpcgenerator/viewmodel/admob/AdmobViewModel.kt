@@ -13,11 +13,11 @@ class AdmobViewModel(
     
     val bannerAdId = 
         if("debug" in MyBuildConfig.APPLICATION_ID) "ca-app-pub-3940256099942544/6300978111" 
-        else "ca-app-pub-3225017918525788/2974185880"
+        else "ca-app-pub-4066886200642192/4591525789"
     
     val rewardedAdId =
         if("debug" in MyBuildConfig.APPLICATION_ID) "ca-app-pub-3940256099942544/5224354917"
-        else "ca-app-pub-3225017918525788/7230261136"
+        else "ca-app-pub-4066886200642192/4016810716"
     
     private val _shouldShowAd by lazy { MutableLiveData(calculateShouldShowAd()) }
     val shouldShowAd: LiveData<Boolean> by lazy { _shouldShowAd }
