@@ -1,6 +1,7 @@
 package me.kerooker.rpgnpcgenerator
 
 import android.app.Application
+import android.provider.Settings
 import com.google.android.gms.ads.MobileAds
 import me.kerooker.rpgnpcgenerator.legacy.repository.LegacyNpcImporter
 import me.kerooker.rpgnpcgenerator.legacy.repository.LegacyNpcRepository
@@ -13,6 +14,9 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+var isFirebaseDevice = false
+private set
+
 class RpgNpcGeneratorApplication : Application() {
 
     private val legacyNpcImporter by inject<LegacyNpcImporter>()
@@ -23,6 +27,7 @@ class RpgNpcGeneratorApplication : Application() {
         startKoinModules()
         legacyNpcImporter.importAll()
         initializeAds()
+        checkFirebaseDevice()
     }
 
     private fun startKoinModules() {
@@ -35,6 +40,10 @@ class RpgNpcGeneratorApplication : Application() {
     
     private fun initializeAds() {
         MobileAds.initialize(this)
+    }
+    
+    private fun checkFirebaseDevice() {
+        isFirebaseDevice = Settings.System.getString(contentResolver, "firebase.test.lab") == "true"
     }
 }
 

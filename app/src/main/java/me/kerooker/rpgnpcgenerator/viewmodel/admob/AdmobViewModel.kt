@@ -3,6 +3,7 @@ package me.kerooker.rpgnpcgenerator.viewmodel.admob
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.kerooker.rpgnpcgenerator.isFirebaseDevice
 import me.kerooker.rpgnpcgenerator.repository.model.persistence.admob.AdmobRepository
 import java.util.Date
 
@@ -23,12 +24,14 @@ class AdmobViewModel(
     val shouldShowAd: LiveData<Boolean> by lazy { _shouldShowAd }
     
     private fun calculateShouldShowAd(): Boolean {
+        if(isFirebaseDevice) return false
         if ("pro" in MyBuildConfig.APPLICATION_ID) return false
         if(admobRepository.stopAdsUntil > Date().time) return false
         return true
     }
     
     fun shouldSuggestRemovingAds(): Boolean {
+        if(isFirebaseDevice) return false
         if(!calculateShouldShowAd()) return false
         if(admobRepository.stopSuggestingRemovalUntil > Date().time) return false
         return true
