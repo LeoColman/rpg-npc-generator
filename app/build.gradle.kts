@@ -184,7 +184,7 @@ dependencies {
     
     // Image loading
     implementation("com.github.dhaval2404:imagepicker:1.6")
-    implementation("com.github.florent37:inline-activity-result-kotlin:1.0.1")
+    implementation("com.github.florent37:inline-activity-result-kotlin:1.0.4")
     implementation("io.coil-kt:coil:0.8.0")
 
     // Android Navigation
