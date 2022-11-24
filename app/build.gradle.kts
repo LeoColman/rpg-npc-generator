@@ -167,7 +167,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:18.3.0")
     
     // Splitties
-    implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-alpha06")
+    implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0")
     
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.1.0")
