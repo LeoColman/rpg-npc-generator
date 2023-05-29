@@ -1,96 +1,51 @@
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.android.build.gradle.internal.dsl.DefaultConfig
-import com.github.triplet.gradle.play.PlayPublisherExtension
-import groovy.lang.Closure
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.api.JavaVersion.VERSION_1_8
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import java.util.Properties
 
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
-    id("com.github.triplet.play") version "2.6.1"
-    id("net.thauvin.erik.gradle.semver") version "1.0.4"
-    id("io.gitlab.arturbosch.detekt").version("1.0.0-RC16")
+    id("io.gitlab.arturbosch.detekt").version("1.23.0")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
-    id("com.google.android.gms.oss-licenses-plugin")
-    idea
 }
 
-apply(plugin = "androidx.navigation.safeargs.kotlin")
-apply(plugin = "com.google.gms.google-services")
-
-
 android {
-    compileSdkVersion(28)
-    buildToolsVersion("29.0.0")
-    setupKotlinCompiler()
+    namespace = "me.kerooker.rpgnpcgenerator"
 
+    compileSdk = 33
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(28)
-
-        setupVersion()
-
+        minSdk = 21
+        targetSdk = 33
+        versionName = "4.0.0"
+        versionCode = 40000
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    setupSigningConfigs()
-    setupBuildTypes()
-    setupFlavors()
-    setupTests()
-
-    packagingOptions {
-        exclude("META-INF/LICENSE.md")
-        exclude("META-INF/LICENSE-notice.md")
-    }
-    
-    dataBinding { isEnabled = true }
-}
-
-fun BaseAppModuleExtension.setupKotlinCompiler() {
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = VERSION_1_8
+        targetCompatibility = VERSION_1_8
     }
-
     kotlinOptions {
-        val opts = this as KotlinJvmOptions
-        opts.jvmTarget = "1.8"
+        jvmTarget = "1.8"
     }
-}
-
-@Suppress("UNCHECKED_CAST", "MapGetWithNotNullAssertionOperator")
-fun DefaultConfig.setupVersion() {
-    val versionProps = Properties().apply {
-        load(file("version.properties").inputStream())
-    }.toMap() as Map<String, String>
-    versionName = versionProps["version.semver"].toString()
-    versionCode = (versionProps["version.major"]!!.toInt() * 10_000) + (versionProps["version.minor"]!!.toInt() * 100) + versionProps["version.patch"]!!.toInt()
-}
-
-fun BaseAppModuleExtension.setupSigningConfigs() {
 
     signingConfigs {
         create("release") {
             try {
-                val localProps = Properties().apply { load(project.rootProject.file("local.properties").inputStream()) }
+                val localProps = Properties().apply {
+                    load(
+                        project.rootProject.file("local.properties").inputStream()
+                    )
+                }
                 storeFile = file(localProps["key_file_location"]!!)
                 storePassword = localProps["keystore_password"].toString()
                 keyAlias = localProps["key_alias"].toString()
                 keyPassword = localProps["key_password"].toString()
-            } catch (_: Throwable) { }
+            } catch (_: Throwable) {
+            }
         }
     }
-}
-
-fun BaseAppModuleExtension.setupBuildTypes() {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
@@ -103,11 +58,7 @@ fun BaseAppModuleExtension.setupBuildTypes() {
             resValue("string", "app_name_en", "RPG NPC Generator Debug")
         }
     }
-}
-
-fun BaseAppModuleExtension.setupFlavors() {
     flavorDimensions("version")
-
     productFlavors {
         create("free") {
             applicationId = "me.kerooker.rpgcharactergenerator"
@@ -118,100 +69,47 @@ fun BaseAppModuleExtension.setupFlavors() {
             applicationId = "me.kerooker.rpgcharactergeneratorpro"
             resValue("string", "app_name_en", "RPG NPC Generator PRO")
             resValue("string", "app_name_pt", "Gerador de NPC para RPG PRO")
-    
-    
+
+
         }
     }
 }
 
-fun BaseAppModuleExtension.setupTests() {
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-        unitTests.all(closureOf<Test> {
-            useJUnitPlatform()
-            testLogging.showStackTraces = true
-            testLogging.showExceptions = true
-            testLogging.showCauses = true
-            testLogging.showStandardStreams = true
-            testLogging.exceptionFormat = TestExceptionFormat.FULL
-            testLogging.events = TestLogEvent.values().toSet()
-            testLogging.exceptionFormat = FULL
-        } as Closure<Test>)
-    }
+detekt {
+    config.from("config/detekt/detekt-config.yaml")
+    buildUponDefaultConfig = true
 }
 
-configure<PlayPublisherExtension> {
-    track = "beta"
-    defaultToAppBundles = true
-    serviceAccountCredentials = file("../local/play-store-key.json")
-}
-
-configure<DetektExtension> {
-    config = files("detekt-config.yml")
-}
 
 dependencies {
-    // Kotlin
-    implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.61")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
-
     // Android
     implementation("androidx.core:core-ktx:1.2.0-rc01")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
     implementation("com.google.android.material:material:1.2.0-alpha02")
-    
+
     // AdMob
     implementation("com.google.android.gms:play-services-ads:18.3.0")
-    
-    // Splitties
-    implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-alpha06")
-    
-    // RecyclerView
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-    implementation("jp.wasabeef:recyclerview-animators:3.0.0")
-    
-    // List Item View
-    implementation("com.lucasurbas:listitemview:1.1.1")
-    
+
     // Settings
     implementation("androidx.preference:preference-ktx:1.1.0")
-    
-    // Open source libraries
-    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    
+
     // Image loading
     implementation("com.github.dhaval2404:imagepicker:1.6")
-    implementation("com.github.florent37:inline-activity-result-kotlin:1.0.1")
     implementation("io.coil-kt:coil:0.8.0")
 
     // Android Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-    
+
     // Memory leak detection
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.0-beta-3")
 
-    // Koin
-    implementation("org.koin:koin-android:$koinVersion")
-    implementation("org.koin:koin-android-viewmodel:$koinVersion")
-    testImplementation("io.kotest:kotest-extensions-koin:$kotestVersion")
-    
-    // Object Box
-    releaseImplementation("io.objectbox:objectbox-android:$objectBoxVersion")
-    implementation("io.objectbox:objectbox-kotlin:$objectBoxVersion")
-    debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectBoxVersion")
-    kapt("io.objectbox:objectbox-processor:$objectBoxVersion")
-    
     // Key-value store
-    implementation("com.tencent:mmkv:1.0.23")
-    
-    //Firebase
-    implementation("com.google.firebase:firebase-analytics:17.2.1")
-    
-    
+    implementation("com.tencent:mmkv:1.2.16")
+
+
     // Testing
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("org.robolectric:robolectric:4.3")
@@ -231,9 +129,4 @@ dependencies {
         exclude("androidx.test", "core")
     }
 
-}
-
-// Must necesseraly be after the dependencies block as per documentation
-apply {
-    plugin("io.objectbox")
 }
