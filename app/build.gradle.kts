@@ -177,7 +177,7 @@ dependencies {
     implementation("com.lucasurbas:listitemview:1.1.1")
     
     // Settings
-    implementation("androidx.preference:preference-ktx:1.1.0")
+    implementation("androidx.preference:preference-ktx:1.2.1")
     
     // Open source libraries
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
