@@ -170,7 +170,7 @@ dependencies {
     implementation("com.louiscad.splitties:splitties-alertdialog:3.0.0-alpha06")
     
     // RecyclerView
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("jp.wasabeef:recyclerview-animators:3.0.0")
     
     // List Item View
