@@ -227,7 +227,7 @@ dependencies {
     androidTestImplementation("androidx.test:core-ktx:1.2.0")
     androidTestImplementation("io.mockk:mockk-android:1.9.3") { exclude(module = "objenesis") }
     androidTestImplementation("org.objenesis:objenesis:2.6")
-    debugImplementation("androidx.fragment:fragment-testing:1.2.0-alpha02") {
+    debugImplementation("androidx.fragment:fragment-testing:1.8.4") {
         exclude("androidx.test", "core")
     }
 
