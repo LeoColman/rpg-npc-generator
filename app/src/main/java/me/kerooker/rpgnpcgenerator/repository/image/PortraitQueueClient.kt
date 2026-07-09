@@ -68,7 +68,7 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         try {
             c.outputStream.use { it.write(body.toByteArray()) }
             if (c.responseCode != HttpURLConnection.HTTP_OK) {
-                throw IOException("$path HTTP ${c.responseCode}")
+                throw IOException("$path HTTP ${c.responseCode} ${c.errorText()}".trim())
             }
             return c.inputStream.use { it.readBytes().decodeToString() }
         } finally {
@@ -79,12 +79,18 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
     private fun get(path: String): String {
         val c = open(path)
         try {
-            if (c.responseCode != HttpURLConnection.HTTP_OK) throw IOException("$path HTTP ${c.responseCode}")
+            if (c.responseCode != HttpURLConnection.HTTP_OK) {
+                throw IOException("$path HTTP ${c.responseCode} ${c.errorText()}".trim())
+            }
             return c.inputStream.use { it.readBytes().decodeToString() }
         } finally {
             c.disconnect()
         }
     }
+
+    /** Best-effort read of the server's error body so failures carry the reason, not just a code. */
+    private fun HttpURLConnection.errorText(): String =
+        runCatching { errorStream?.use { it.readBytes().decodeToString() } }.getOrNull().orEmpty()
 
     private fun basicAuth(): String {
         val token = Base64.encodeToString("${config.username}:${config.password}".toByteArray(), Base64.NO_WRAP)

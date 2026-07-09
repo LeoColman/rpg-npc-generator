@@ -15,8 +15,8 @@
     <string name="cd_npc_portrait">Retrato do NPC</string>
     <string name="cd_change_portrait">Alterar retrato</string>
     <string name="individual_npc_generate_portrait">Gerar retrato</string>
-    <string name="individual_npc_portrait_generation_failed">Não foi possível gerar o retrato. Tente novamente.</string>
     <string name="portrait_queued_toast">Retrato na fila — avisaremos quando estiver pronto</string>
+    <string name="portrait_notification_channel_name">Geração de retrato</string>
     <string name="portrait_notification_queued">Na fila…</string>
     <string name="portrait_notification_generating">Gerando o retrato…</string>
     <string name="portrait_notification_in_queue">Na fila — %1$d à frente</string>

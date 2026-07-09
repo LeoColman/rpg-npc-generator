@@ -16,14 +16,15 @@ class PortraitNotifications(private val context: Context) {
 
     fun ensureChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, "Portrait generation", NotificationManager.IMPORTANCE_DEFAULT)
+            val channelName = context.getString(R.string.portrait_notification_channel_name)
+            val channel = NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT)
             channel.setShowBadge(false)
             context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
     }
 
     /** Ongoing, silent notification for queue/generation progress. Caller updates it as state changes. */
-    fun progress(npcId: Long, name: String, text: String): Notification =
+    fun progress(name: String, text: String): Notification =
         base(name)
             .setContentText(text)
             .setProgress(0, 0, true)
@@ -32,7 +33,7 @@ class PortraitNotifications(private val context: Context) {
             .build()
 
     fun notifyProgress(npcId: Long, name: String, text: String) {
-        safeNotify(npcId) { it.notify(npcId.toInt(), progress(npcId, name, text)) }
+        safeNotify(npcId) { it.notify(npcId.toInt(), progress(name, text)) }
     }
 
     fun notifyReady(npcId: Long, name: String) {

@@ -3,7 +3,9 @@ package me.kerooker.rpgnpcgenerator.repository.image
 import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -31,6 +33,19 @@ class GeneratePortraitWorker(
     private val npcRepository: NpcRepository by inject()
     private val queueClient: PortraitQueueClient by inject()
     private val notifications: PortraitNotifications by inject()
+
+    // Keeps the render alive when the app is backgrounded. On API < 31 expedited work runs as a
+    // short-lived foreground service using this notification; on API 31+ it's an expedited job.
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        notifications.ensureChannel()
+        val npcId = inputData.getLong(KEY_NPC_ID, -1L)
+        val id = if (npcId >= 0) npcId.toInt() else FOREGROUND_FALLBACK_ID
+        val notification = notifications.progress(
+            str(R.string.individual_npc_generate_portrait),
+            str(R.string.portrait_notification_queued)
+        )
+        return ForegroundInfo(id, notification)
+    }
 
     override suspend fun doWork(): Result {
         val npcId = inputData.getLong(KEY_NPC_ID, -1L)
@@ -104,13 +119,19 @@ class GeneratePortraitWorker(
     companion object {
         const val KEY_NPC_ID = "npc_id"
         private const val POLL_INTERVAL_MS = 2_000L
-        private const val MAX_WAIT_MS = 10 * 60_000L
+        // Stay under WorkManager's 10-minute execution cap so we surface a clean "failed"
+        // notification instead of being force-stopped mid-poll at the boundary.
+        private const val MAX_WAIT_MS = 9 * 60_000L
         private const val MAX_POLL_ERRORS = 5
+        private const val FOREGROUND_FALLBACK_ID = 0
 
         /** One background job per NPC; a second tap while one is running is ignored. */
         fun enqueue(context: Context, npcId: Long) {
             val request = OneTimeWorkRequestBuilder<GeneratePortraitWorker>()
                 .setInputData(workDataOf(KEY_NPC_ID to npcId))
+                // Start promptly and survive the app going to background; falls back to normal
+                // work (no crash) if the expedited quota is exhausted.
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
             WorkManager.getInstance(context).enqueueUniqueWork(
                 "portrait_$npcId",

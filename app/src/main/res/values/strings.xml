@@ -15,8 +15,8 @@
     <string name="cd_npc_portrait">NPC portrait</string>
     <string name="cd_change_portrait">Change portrait</string>
     <string name="individual_npc_generate_portrait">Generate portrait</string>
-    <string name="individual_npc_portrait_generation_failed">Couldn\'t generate a portrait. Try again.</string>
     <string name="portrait_queued_toast">Portrait queued — we\'ll notify you when it\'s ready</string>
+    <string name="portrait_notification_channel_name">Portrait generation</string>
     <string name="portrait_notification_queued">Queued…</string>
     <string name="portrait_notification_generating">Generating your portrait…</string>
     <string name="portrait_notification_in_queue">In queue — %1$d ahead</string>
