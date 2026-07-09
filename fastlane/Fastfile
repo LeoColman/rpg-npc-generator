@@ -1,0 +1,17 @@
+default_platform(:android)
+
+# The AAB is built by the release workflow (./gradlew bundleRelease) before these lanes run,
+# so the lanes only upload it (together with the store listing under fastlane/metadata).
+AAB_PATH = "app/build/outputs/bundle/release/app-release.aab"
+
+platform :android do
+  desc "Upload the release bundle to the Google Play Store production track"
+  lane :playstore do
+    upload_to_play_store(aab: AAB_PATH, timeout: 600)
+  end
+
+  desc "Upload the release bundle to the Google Play Store internal test track"
+  lane :internal_test do
+    upload_to_play_store(track: "internal", aab: AAB_PATH, timeout: 600)
+  end
+end

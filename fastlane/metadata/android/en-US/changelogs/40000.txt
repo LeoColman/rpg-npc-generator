@@ -1,0 +1,5 @@
+A complete rebuild: brand-new Jetpack Compose interface with Material 3, light and dark themes, and edge-to-edge design.
+
+- Redesigned generator with per-field re-roll and a "regenerate all" option for personality traits.
+- Cleaner saved-NPC list and detail/edit screens with portrait support.
+- Ads removed. 100% open source.

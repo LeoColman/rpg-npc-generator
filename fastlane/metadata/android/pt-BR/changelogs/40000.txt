@@ -1,0 +1,5 @@
+Uma reconstrução completa: nova interface em Jetpack Compose com Material 3, temas claro e escuro e design de ponta a ponta.
+
+- Gerador redesenhado com sorteio por campo e opção de "regerar todos" os traços de personalidade.
+- Lista de NPCs salvos e telas de detalhe/edição mais limpas, com suporte a retrato.
+- Anúncios removidos. 100% código aberto.

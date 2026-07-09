@@ -1,0 +1,13 @@
+RPG NPC Generator instantly creates believable non-player characters for your tabletop role-playing games.
+
+Perfect for Dungeon Masters who need a memorable innkeeper, a mysterious stranger, or a whole town full of townsfolk on the spot.
+
+Features:
+- One-tap random NPC generation: name, nickname, race, age, gender, profession, alignment, sexuality, motivation, languages and personality traits.
+- Re-roll any single field with a die, or randomize the whole character at once.
+- Save the NPCs you like and browse them any time.
+- Edit every detail and add a portrait and your own notes.
+- Clean Material 3 interface with light and dark themes.
+- Available in English and Portuguese.
+
+100% open source. No ads.

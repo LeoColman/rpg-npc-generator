@@ -1,0 +1,13 @@
+O Gerador de NPC para RPG cria instantaneamente personagens não-jogáveis convincentes para os seus jogos de RPG de mesa.
+
+Ideal para mestres que precisam de um taverneiro marcante, um estranho misterioso ou uma cidade inteira de habitantes na hora.
+
+Recursos:
+- Geração aleatória com um toque: nome, apelido, raça, idade, gênero, profissão, tendência, sexualidade, motivação, idiomas e traços de personalidade.
+- Sorteie novamente qualquer campo com um dado, ou gere o personagem inteiro de uma vez.
+- Salve os NPCs que você gostar e consulte quando quiser.
+- Edite todos os detalhes e adicione um retrato e suas próprias anotações.
+- Interface Material 3 limpa, com temas claro e escuro.
+- Disponível em português e inglês.
+
+100% código aberto. Sem anúncios.
