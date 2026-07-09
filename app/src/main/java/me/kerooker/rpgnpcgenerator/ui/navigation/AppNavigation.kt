@@ -1,9 +1,10 @@
 package me.kerooker.rpgnpcgenerator.ui.navigation
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -15,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -50,13 +53,17 @@ private data class TopLevelTab(
     val route: Any,
     val routeClass: KClass<*>,
     @StringRes val labelRes: Int,
-    val icon: ImageVector
+    val icon: ImageVector? = null,
+    @DrawableRes val iconRes: Int? = null
 )
 
 private val topLevelTabs = listOf(
-    TopLevelTab(RandomNpcRoute, RandomNpcRoute::class, R.string.nav_bar_random_npc, Icons.Filled.Casino),
-    TopLevelTab(MyNpcsRoute, MyNpcsRoute::class, R.string.nav_bar_my_npcs, Icons.Filled.Groups),
-    TopLevelTab(SettingsRoute, SettingsRoute::class, R.string.nav_bar_settings, Icons.Filled.Settings)
+    TopLevelTab(
+        RandomNpcRoute, RandomNpcRoute::class, R.string.nav_bar_random_npc,
+        iconRes = R.drawable.ic_twenty_sided_dice
+    ),
+    TopLevelTab(MyNpcsRoute, MyNpcsRoute::class, R.string.nav_bar_my_npcs, icon = Icons.Filled.Groups),
+    TopLevelTab(SettingsRoute, SettingsRoute::class, R.string.nav_bar_settings, icon = Icons.Filled.Settings)
 )
 
 @Composable
@@ -83,7 +90,17 @@ fun AppRoot() {
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(tab.icon, contentDescription = null) },
+                            icon = {
+                                if (tab.iconRes != null) {
+                                    Icon(
+                                        painter = painterResource(tab.iconRes),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                } else if (tab.icon != null) {
+                                    Icon(tab.icon, contentDescription = null)
+                                }
+                            },
                             label = { Text(stringResource(tab.labelRes)) }
                         )
                     }
