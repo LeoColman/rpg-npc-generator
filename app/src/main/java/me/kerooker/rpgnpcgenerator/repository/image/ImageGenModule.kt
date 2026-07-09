@@ -13,7 +13,8 @@ val imageGenModule = module {
             password = BuildConfig.NPC_IMAGE_PASSWORD
         )
     }
-    // Server render first, on-device sd.cpp as the offline fallback.
-    single<PortraitGenerator> { RemotePortraitGenerator(get(), AndroidPortraitGenerator(get())) }
-    single { PortraitRepository(androidContext(), get()) }
+    single { PortraitQueueClient(get()) }
+    single { PortraitNotifications(androidContext()) }
+    // On-device sd.cpp generator, used as the offline fallback by GeneratePortraitWorker.
+    single<PortraitGenerator> { AndroidPortraitGenerator(get()) }
 }

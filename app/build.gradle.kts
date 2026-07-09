@@ -159,6 +159,9 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.splashscreen)
+
+    // Background portrait generation (fire-and-forget + notification)
+    implementation(libs.androidx.work.runtime.ktx)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Lifecycle + ViewModel for Compose

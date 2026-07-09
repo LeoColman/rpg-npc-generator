@@ -1,12 +1,16 @@
 package me.kerooker.rpgnpcgenerator.ui.mynpcs.individual
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,8 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -48,11 +54,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +71,6 @@ import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.IndividualNpcViewModel
-import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.PortraitGenState
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,21 +82,14 @@ fun NpcDetailScreen(
 ) {
     val npc by viewModel.npc.collectAsStateWithLifecycle()
     val editState by viewModel.editState.collectAsStateWithLifecycle()
-    val portraitState by viewModel.portraitState.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // The editable working copy. Reset to the persisted value whenever we are not editing.
+    // The editable working copy. Reset to the persisted value whenever we are not editing. A portrait
+    // generated in the background lands on the persisted NPC, so it flows in here via [npc].
     var draft by remember { mutableStateOf<Npc?>(null) }
     LaunchedEffect(npc, isEditing) {
         if (!isEditing) draft = npc
-    }
-
-    // A freshly generated portrait becomes part of the current edit draft (saved on Check).
-    LaunchedEffect(Unit) {
-        viewModel.generatedPortraitPath.collect { path ->
-            draft = draft?.copy(imagePath = path)
-        }
     }
 
     Scaffold(
@@ -136,8 +134,7 @@ fun NpcDetailScreen(
                 draft = editing,
                 isEditing = isEditing,
                 contentPadding = padding,
-                portraitState = portraitState,
-                onGeneratePortrait = { viewModel.generatePortrait(editing) },
+                onGeneratePortrait = viewModel::generatePortrait,
                 onDraftChange = { draft = it }
             )
         }
@@ -177,7 +174,6 @@ private fun NpcDetailContent(
     draft: Npc,
     isEditing: Boolean,
     contentPadding: PaddingValues,
-    portraitState: PortraitGenState,
     onGeneratePortrait: () -> Unit,
     onDraftChange: (Npc) -> Unit
 ) {
@@ -191,6 +187,19 @@ private fun NpcDetailContent(
             }
         }
     }
+    val notificationPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val queuedMessage = stringResource(R.string.portrait_queued_toast)
+    val queuePortrait: () -> Unit = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        onGeneratePortrait()
+        Toast.makeText(context, queuedMessage, Toast.LENGTH_LONG).show()
+    }
 
     Column(
         modifier = Modifier
@@ -201,29 +210,22 @@ private fun NpcDetailContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val isGenerating = portraitState == PortraitGenState.Generating
         Portrait(
             imagePath = draft.imagePath,
-            editable = isEditing && !isGenerating,
-            isGenerating = isGenerating,
-            onClick = {
+            editable = isEditing,
+            onPick = {
                 pickPortrait.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
         )
 
-        if (isEditing) {
-            OutlinedButton(onClick = onGeneratePortrait, enabled = !isGenerating) {
+        // Fire-and-forget: renders on the server queue and notifies when ready. View mode only,
+        // since the result attaches to the saved NPC (the user can leave and come back).
+        if (!isEditing) {
+            OutlinedButton(onClick = queuePortrait) {
                 Icon(Icons.Filled.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                 Text(
                     text = stringResource(R.string.individual_npc_generate_portrait),
                     modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-            if (portraitState is PortraitGenState.Error) {
-                Text(
-                    text = stringResource(R.string.individual_npc_portrait_generation_failed),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
@@ -327,15 +329,16 @@ private fun NpcDetailContent(
 }
 
 @Composable
-private fun Portrait(imagePath: String?, editable: Boolean, isGenerating: Boolean, onClick: () -> Unit) {
-    var imageBoxModifier = Modifier
-        .size(160.dp)
-        .clip(CircleShape)
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-    if (editable) imageBoxModifier = imageBoxModifier.clickable(onClick = onClick)
-
-    Box(modifier = Modifier.size(160.dp)) {
-        Box(modifier = imageBoxModifier, contentAlignment = Alignment.Center) {
+private fun Portrait(imagePath: String?, editable: Boolean, onPick: () -> Unit) {
+    // Rounded portrait card sized to the generated art's aspect, so the whole figure shows uncropped.
+    Box(modifier = Modifier.width(PORTRAIT_WIDTH).aspectRatio(PORTRAIT_ASPECT)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
             if (imagePath != null) {
                 AsyncImage(
                     model = File(imagePath),
@@ -351,24 +354,14 @@ private fun Portrait(imagePath: String?, editable: Boolean, isGenerating: Boolea
                     modifier = Modifier.size(72.dp)
                 )
             }
-            if (isGenerating) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.4f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color.White)
-                }
-            }
         }
-        if (editable && !isGenerating) {
+        if (editable) {
             IconButton(
-                onClick = onClick,
+                onClick = onPick,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .offset(x = 8.dp, y = 8.dp)
-                    .size(36.dp)
+                    .size(40.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
             ) {
@@ -376,9 +369,12 @@ private fun Portrait(imagePath: String?, editable: Boolean, isGenerating: Boolea
                     imageVector = Icons.Filled.Edit,
                     contentDescription = stringResource(R.string.cd_change_portrait),
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
     }
 }
+
+private val PORTRAIT_WIDTH = 200.dp
+private const val PORTRAIT_ASPECT = 512f / 640f

@@ -10,7 +10,7 @@ data class PortraitRequest(
     val prompt: String,
     val negativePrompt: String,
     val width: Int = 512,
-    val height: Int = 512,
+    val height: Int = 640,
     val steps: Int = 20,
     val cfgScale: Float = 7f,
     val seed: Long = -1L
