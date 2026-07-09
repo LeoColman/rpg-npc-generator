@@ -1,5 +1,5 @@
 # RPG NPC portrait renderer.
-#   queue  - public FastAPI FIFO proxy (submit/status), exposed via caddy at npc-fast.colman.com.br
+#   queue  - public Ktor FIFO proxy (submit/status), exposed via caddy at npc-fast.colman.com.br
 #   fastsd - FastSD CPU (OpenVINO/LCM) renderer, internal only; queue forwards to it one at a time
 # TEMPLATE: deploy.sh substitutes __BCRYPT__ (with $ doubled) -> docker-compose.rendered.yml.
 services:

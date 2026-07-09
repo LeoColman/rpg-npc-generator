@@ -8,6 +8,8 @@ cd "$(dirname "$0")"
 STACK=rpg-npc-fastsd
 IMAGE=rpg-npc-fastsd:openvino
 DOMAIN=npc-fast.colman.com.br
+# Repo root: the queue image builds from the shared Gradle project (needs gradlew + version catalog).
+REPO_ROOT="$(cd ../.. && pwd)"
 CADDY_IMAGE=lucaslorentz/caddy-docker-proxy:2.9.1-alpine
 AUTH_FILE="$(pwd)/auth.txt"
 SIBLING_AUTH="$(pwd)/../rpg-npc-image/auth.txt"
@@ -49,8 +51,8 @@ awk -v h="$HASH_ESC" '{gsub(/__BCRYPT__/, h)}1' docker-compose.yml > docker-comp
 # 3) Build + deploy.
 log "Building $IMAGE (torch CPU + openvino + deps; slow first time)"
 docker build -t "$IMAGE" .
-log "Building queue proxy image"
-docker build -t rpg-npc-queue:latest -f Dockerfile.queue .
+log "Building queue proxy image (Ktor fat jar via Gradle)"
+docker build -t rpg-npc-queue:latest -f queue/Dockerfile "$REPO_ROOT"
 log "Deploying stack $STACK"
 docker stack deploy --resolve-image never -c docker-compose.rendered.yml "$STACK"
 
@@ -60,8 +62,8 @@ for i in $(seq 1 40); do
   echo "  [$i] $st"; case "$st" in Running*) break;; esac; sleep 5
 done
 
-# 4) Warm up (first call downloads + compiles the OpenVINO model — slow), then a timed run.
-log "Warm-up request (downloads/compiles $OV_MODEL; may take a few minutes)"
+# 4) Warm up (first call downloads + builds the diffusion pipeline — slow), then a timed run.
+log "Warm-up request (downloads/compiles $BASE_MODEL; may take a few minutes)"
 curl -s -u "npc:$PW" -X POST "https://$DOMAIN/api/generate" -H 'Content-Type: application/json' \
      -d "$(gen_body 'a wizard portrait, fantasy')" --max-time 900 -o warmup.json || true
 python3 -c "import json;d=json.load(open('warmup.json'));print('warmup latency:',d.get('latency'),'images:',len(d.get('images',[])),'err:',d.get('error'))" 2>/dev/null || echo "warmup parse failed"

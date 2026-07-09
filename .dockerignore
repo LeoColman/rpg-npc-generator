@@ -1,0 +1,13 @@
+# Keeps the repo-root build context small for the Ktor queue image (server/portrait-renderer/queue).
+# Only the Gradle wrapper, version catalog and the queue module are needed to build the fat jar.
+.git
+.gradle
+**/build
+**/.gradle
+app/build
+build
+server/portrait-renderer/hf
+server/portrait-renderer/queue/build
+**/*.png
+**/*.log
+local.properties

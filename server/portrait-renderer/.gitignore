@@ -15,3 +15,7 @@ gen10*.sh
 runtest.sh
 lcmtest.sh
 *_results.txt
+
+# Ktor queue module build output
+queue/build/
+queue/.gradle/

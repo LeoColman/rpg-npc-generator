@@ -7,21 +7,26 @@ Swarm stack on the Hetzner box (`ritalee`), fronted by caddy-docker-proxy at
 ## Architecture
 
 ```
-Android app ──HTTPS+basicauth──> caddy ──> queue (FastAPI FIFO) ──> fastsd (FastSD CPU)
-                                            /submit  /status/{id}      /api/generate
+Android app ──HTTPS+basicauth──> caddy ──> queue (Ktor FIFO) ──> fastsd (FastSD CPU)
+                                            /submit  /status/{id}    /api/generate
 ```
 
-- **`queue`** (`queue_app.py`, `Dockerfile.queue`) — a small FastAPI FIFO proxy.
-  FastSD renders one image at a time, so the queue accepts submissions immediately,
-  assigns a position, and drains them serially. The app shows "you're #N in line"
-  and polls for the result. Public (via caddy); this is the only exposed service.
+- **`queue`** (`queue/`, a Ktor / Kotlin-JVM module — `:portrait-queue` in this repo's
+  Gradle build) — a small FIFO proxy. FastSD renders one image at a time, so the queue
+  accepts submissions immediately, assigns a position, and drains them serially. The app
+  shows "you're #N in line" and polls for the result. Public (via caddy); this is the only
+  exposed service.
   - `POST /submit` → `{ job_id, ahead }`
   - `GET /status/{job_id}` → `{ state, ahead, queue_length, image, error }`
     (`state` = `queued | processing | done | error`; `image` is base64 PNG when done)
-- **`fastsd`** (`Dockerfile`) — [FastSD CPU](https://github.com/rupeshs/fastsdcpu),
-  internal only. The queue forwards each request body **verbatim** to its
-  `POST /api/generate`, so the **app chooses the model per request** — the server
-  keeps no fixed model.
+  - Built with the project's shared version catalog (same Kotlin/coroutines/serialization
+    as the app). `queue/Dockerfile` builds the Ktor fat jar via `./gradlew
+    :portrait-queue:buildFatJar` — its build context is the **repo root**, and it swaps in
+    `settings-docker.gradle.kts` so the image build never needs the Android SDK.
+- **`fastsd`** (`Dockerfile`) — [FastSD CPU](https://github.com/rupeshs/fastsdcpu), a
+  third-party Python renderer, internal only. The queue forwards each request body
+  **verbatim** to its `POST /api/generate`, so the **app chooses the model per request** —
+  the server keeps no fixed model. (Only the queue is ours; FastSD stays upstream Python.)
 
 ## Model / licensing
 
