@@ -1,0 +1,40 @@
+build:
+  maxIssues: 0
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    ignoreAnnotated: ['Composable']
+
+complexity:
+  TooManyFunctions:
+    thresholdInClasses: 25
+    thresholdInFiles: 25
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 8
+    ignoreAnnotated: ['Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
+
+style:
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    maxLineLength: 140
+  ReturnCount:
+    max: 3
+
+formatting:
+  Filename:
+    active: false
+  MaximumLineLength:
+    active: true
+    maxLineLength: 140
+  ArgumentListWrapping:
+    active: false
+  ParameterListWrapping:
+    active: false
+  Wrapping:
+    active: false

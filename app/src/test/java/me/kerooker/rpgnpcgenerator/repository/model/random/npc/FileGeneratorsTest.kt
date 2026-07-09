@@ -1,72 +1,46 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
-import android.content.Context
-import io.kotest.IsolationMode
-import io.kotest.TestCase
-import io.kotest.TestResult
-import io.kotest.experimental.robolectric.RobolectricTest
-import io.kotest.extensions.TestListener
-import io.kotest.shouldBe
-import io.kotest.specs.FreeSpec
-import io.kotest.specs.FunSpec
+import io.kotest.core.spec.style.FreeSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import me.kerooker.rpgnpcgenerator.R
-import org.koin.core.KoinComponent
-import org.koin.core.context.stopKoin
-import org.koin.core.get
+import java.io.File
 
-@RobolectricTest
-class FileGeneratorsTest : FreeSpec(), KoinComponent {
+class FileGeneratorsTest : FreeSpec({
 
-    init {
-        "File generators should generate values from their expected file" {
-            // Only picking ChildProfessions because it's the smallest file. Less statistical chance to screw up
-            val generator = object : FileGenerator(R.raw.npc_child_professions, get()) { }
+    "File generators should generate values from their expected file" {
+        // Only picking ChildProfessions because it's the smallest file. Less statistical chance to screw up.
+        val lines = File("src/main/res/raw/npc_child_professions.txt").readLines()
+        val generator = object : FileGenerator(lines) {}
 
-            val generatedSet = List(100_000) { generator.random() }.toSet()
+        val generatedSet = List(100_000) { generator.random() }.toSet()
 
-            generatedSet shouldBe getAllLinesFromFile()
-        }
+        generatedSet shouldBe lines.toSet()
     }
+})
 
-    private fun getAllLinesFromFile() =
-        get<Context>().resources.openRawResource(R.raw.npc_child_professions).bufferedReader().readLines().toSet()
+class ProfessionGeneratorTest : FunSpec({
 
-    override fun isolationMode() = IsolationMode.InstancePerTest
-    
-    override fun listeners() = listOf<TestListener>(object: TestListener {
-        override fun afterTest(testCase: TestCase, result: TestResult) {
-            stopKoin()
-        }
-    })
-}
-
-class ProfessionGeneratorTest : FunSpec() {
-
-    private val commonProfessionGenerator = mockk<CommonProfessionGenerator> {
+    val commonProfessionGenerator = mockk<CommonProfessionGenerator> {
         every { random() } returns "Common"
     }
-    private val childProfessionGenerator = mockk<ChildProfessionGenerator> {
+    val childProfessionGenerator = mockk<ChildProfessionGenerator> {
         every { random() } returns "Child"
     }
 
-    private val target = ProfessionGenerator(
+    val target = ProfessionGenerator(
         childProfessionGenerator,
         commonProfessionGenerator
     )
 
-    init {
-        test("When age is Child, should generate from ChildProfessionGenerator") {
-            target.random(Age.Child) shouldBe "Child"
-        }
-
-        test("When age is not Child, should generate from CommonProfessionGenerator") {
-            Age.values().filterNot { it == Age.Child }.forEach {
-                target.random(it) shouldBe "Common"
-            }
-        }
+    test("When age is Child, should generate from ChildProfessionGenerator") {
+        target.random(Age.Child) shouldBe "Child"
     }
 
-    override fun isolationMode() = IsolationMode.InstancePerTest
-}
+    test("When age is not Child, should generate from CommonProfessionGenerator") {
+        Age.values().filterNot { it == Age.Child }.forEach {
+            target.random(it) shouldBe "Common"
+        }
+    }
+})

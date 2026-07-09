@@ -19,14 +19,4 @@
     <string name="randomize_all">Randomize All</string>
     <string name="save">Save</string>
 
-
-    <declare-styleable name="RandomNpcElementView">
-        <attr name="hint" format="reference" />
-    </declare-styleable>
-
-    <declare-styleable name="RandomNpcListView">
-        <attr name="list_hint" format="reference" />
-    </declare-styleable>
-
-
 </resources>

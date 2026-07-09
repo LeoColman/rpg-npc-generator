@@ -1,0 +1,44 @@
+import kotlin.String;
+import kotlin.collections.List;
+
+CREATE TABLE npc (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    fullName TEXT NOT NULL,
+    nickname TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    sexuality TEXT NOT NULL,
+    race TEXT NOT NULL,
+    age TEXT NOT NULL,
+    profession TEXT NOT NULL,
+    motivation TEXT NOT NULL,
+    alignment TEXT NOT NULL,
+    personalityTraits TEXT AS List<String> NOT NULL,
+    languages TEXT AS List<String> NOT NULL,
+    imagePath TEXT,
+    notes TEXT NOT NULL DEFAULT ''
+);
+
+selectAll:
+SELECT * FROM npc ORDER BY id;
+
+selectById:
+SELECT * FROM npc WHERE id = ?;
+
+insert:
+INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+insertWithId:
+INSERT INTO npc(id, fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE npc
+SET fullName = ?, nickname = ?, gender = ?, sexuality = ?, race = ?, age = ?, profession = ?, motivation = ?, alignment = ?, personalityTraits = ?, languages = ?, imagePath = ?, notes = ?
+WHERE id = ?;
+
+deleteById:
+DELETE FROM npc WHERE id = ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
