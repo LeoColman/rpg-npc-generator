@@ -20,7 +20,6 @@ val appVersionCode: Int = versionProps.getProperty("version.major").toInt() * 10
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
-    ndkVersion = "28.2.13676358"
 
     defaultConfig {
         applicationId = "me.kerooker.rpgcharactergenerator"
@@ -29,9 +28,9 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
-        // Server-side portrait renderer. Password comes from a gradle property (e.g. in
+        // Server-side portrait renderer (ritalee). Password comes from a gradle property (e.g. in
         // ~/.gradle/gradle.properties or -PnpcImagePassword=...), never committed; empty disables
-        // the remote path and the app renders on-device.
+        // portrait generation entirely (there is no on-device path).
         buildConfigField(
             "String",
             "NPC_IMAGE_BASE_URL",
@@ -45,17 +44,6 @@ android {
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        externalNativeBuild {
-            cmake {
-                cppFlags += "-std=c++17"
-            }
-        }
-        ndk {
-            // x86_64 for the emulator, arm64-v8a for real devices. Drop x86_64
-            // once you move to on-device testing to roughly halve native build time.
-            abiFilters += listOf("x86_64", "arm64-v8a")
-        }
     }
 
     // Release signing. The keystore and its passwords are kept out of the repo and revealed in CI
@@ -85,13 +73,6 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
         }
     }
 

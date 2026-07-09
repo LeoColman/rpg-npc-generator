@@ -26,6 +26,19 @@ object ImageStore {
     fun persistBitmap(context: Context, bitmap: Bitmap): String? =
         runCatching { writeJpeg(context, bitmap) }.getOrNull()
 
+    /**
+     * Deletes a portrait file that is no longer referenced (replaced or its NPC deleted). Guarded to
+     * only touch files inside our own portraits directory, so a stray/foreign path can't delete
+     * anything unexpected.
+     */
+    fun deletePortrait(context: Context, path: String) {
+        val directory = File(context.filesDir, DIRECTORY)
+        val file = File(path)
+        if (file.absolutePath.startsWith(directory.absolutePath)) {
+            runCatching { file.delete() }
+        }
+    }
+
     private fun writeJpeg(context: Context, bitmap: Bitmap): String {
         val directory = File(context.filesDir, DIRECTORY).apply { mkdirs() }
         val destination = File(directory, "${UUID.randomUUID()}.jpg")

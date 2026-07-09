@@ -31,9 +31,8 @@ The app has ads, so the render config must be commercially licensed. The app sen
 `PortraitQueueClient` in the app. Because the queue forwards the body untouched,
 switching models is an app-side change only; no redeploy here.
 
-> Note: `deploy.sh`'s warm-up/smoke-test still calls the older SDXS-512 OpenVINO
-> model, which is **non-commercial** — fine for a local timing check, but do not use
-> it for anything user-facing.
+`deploy.sh`'s warm-up/smoke-test sends the same commercial DreamShaper-8 + LCM-LoRA
+config the app uses, so deploying never pulls a non-commercial model onto the box.
 
 ## Deploy
 

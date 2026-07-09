@@ -11,14 +11,17 @@ DOMAIN=npc-fast.colman.com.br
 CADDY_IMAGE=lucaslorentz/caddy-docker-proxy:2.9.1-alpine
 AUTH_FILE="$(pwd)/auth.txt"
 SIBLING_AUTH="$(pwd)/../rpg-npc-image/auth.txt"
-# SDXS-512-0.9 OpenVINO + tiny autoencoder, 1 step — the fast Intel path.
-OV_MODEL="rupeshs/sdxs-512-0.9-openvino"
+# Smoke-test with the SAME commercially-licensed config the app sends: DreamShaper-8
+# (CreativeML OpenRAIL-M) + LCM-LoRA, 4 steps, tiny autoencoder. Keeps the warm-up from
+# pulling the non-commercial SDXS model onto a server that serves an ad-supported app.
+BASE_MODEL="Lykon/dreamshaper-8"
+LCM_LORA="latent-consistency/lcm-lora-sdv1-5"
 
 log() { printf '\n\033[1;36m==> %s\033[0m\n' "$*"; }
 
 gen_body() { # $1 = prompt
   cat <<JSON
-{"prompt":"$1","negative_prompt":"","use_openvino":true,"openvino_lcm_model_id":"$OV_MODEL","use_tiny_auto_encoder":true,"inference_steps":1,"guidance_scale":1.0,"image_width":512,"image_height":512,"diffusion_task":"text_to_image","number_of_images":1,"use_seed":false}
+{"prompt":"$1","negative_prompt":"","use_openvino":false,"use_lcm_lora":true,"lcm_lora":{"base_model_id":"$BASE_MODEL","lcm_lora_id":"$LCM_LORA"},"use_tiny_auto_encoder":true,"inference_steps":4,"guidance_scale":1.0,"image_width":512,"image_height":640,"diffusion_task":"text_to_image","number_of_images":1,"use_seed":false}
 JSON
 }
 

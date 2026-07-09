@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.image.GeneratePortraitWorker
+import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 
 class IndividualNpcViewModel(
     private val npcId: Long,
@@ -35,15 +36,22 @@ class IndividualNpcViewModel(
     }
 
     fun saveEdit(edited: Npc) {
+        val previousImage = npc.value?.imagePath
         _editState.value = EditState.VIEW
         viewModelScope.launch(Dispatchers.IO) {
             npcRepository.update(edited.copy(id = npcId))
+            // If the user picked a new portrait, the old file is now orphaned — remove it.
+            if (!previousImage.isNullOrBlank() && previousImage != edited.imagePath) {
+                ImageStore.deletePortrait(appContext, previousImage)
+            }
         }
     }
 
     fun delete() {
+        val image = npc.value?.imagePath
         viewModelScope.launch(Dispatchers.IO) {
             npcRepository.delete(npcId)
+            if (!image.isNullOrBlank()) ImageStore.deletePortrait(appContext, image)
         }
     }
 
