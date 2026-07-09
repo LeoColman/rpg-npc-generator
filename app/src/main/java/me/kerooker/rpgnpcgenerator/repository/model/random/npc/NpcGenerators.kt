@@ -1,11 +1,9 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
-import org.koin.core.KoinComponent
 import org.koin.dsl.module
 import kotlin.random.Random
 
 val npcGeneratorsModule = module {
-
 }
 
 @Suppress("TooManyFunctions")
@@ -55,7 +53,7 @@ class NpcDataGenerator(
 
 class CompleteNpcGenerator(
     private val npcDataGenerator: NpcDataGenerator
-) : KoinComponent {
+) {
 
     fun generate(): GeneratedNpc {
         val name = generateFullName()
@@ -106,8 +104,9 @@ class CompleteNpcGenerator(
     private fun generatePersonalityTraits(): MutableList<String> {
         val list = MutableList(2) { npcDataGenerator.generatePersonalityTrait() }
         repeat(MaxAmountOfExtraPersonalityTraits) {
-            if(hitsChance(ChanceOfExtraPersonalityTraits))
+            if (hitsChance(ChanceOfExtraPersonalityTraits)) {
                 list += npcDataGenerator.generatePersonalityTrait()
+            }
         }
         return list
     }
@@ -118,31 +117,33 @@ class CompleteNpcGenerator(
             .tryToAddRacial(racialLanguage)
             .tryToAddExtraCommonLanguage(racialLanguage)
             .tryToAddExtraExoticLanguage(racialLanguage)
-
     }
 
     private fun MutableList<Language>.tryToAddCommon() = apply {
-        if (hitsChance(ChanceOfSpeakingCommon))
+        if (hitsChance(ChanceOfSpeakingCommon)) {
             this += CommonLanguage.Common
+        }
     }
 
     private fun MutableList<Language>.tryToAddRacial(racialLanguage: Language?) = apply {
-        if(hitsChance(ChanceOfSpeakingRacial) && racialLanguage != null)
+        if (hitsChance(ChanceOfSpeakingRacial) && racialLanguage != null) {
             this += racialLanguage
+        }
     }
 
     private fun MutableList<Language>.tryToAddExtraCommonLanguage(racialLanguage: Language?) = apply {
-        if(hitsChance(ChanceOfExtraCommonLanguage))
+        if (hitsChance(ChanceOfExtraCommonLanguage)) {
             this += npcDataGenerator.generateCommonLanguage(this + listOfNotNull(racialLanguage))
+        }
     }
 
     private fun MutableList<Language>.tryToAddExtraExoticLanguage(racialLanguage: Language?) = apply {
-        if(hitsChance(ChanceOfExtraExoticLanguage))
+        if (hitsChance(ChanceOfExtraExoticLanguage)) {
             this += npcDataGenerator.generateExoticLanguage(this + listOfNotNull(racialLanguage))
+        }
     }
 
     private fun hitsChance(chance: Double) = Random.nextDouble() <= chance
-
 
     companion object {
         private const val ChanceOfSpeakingCommon = 0.995

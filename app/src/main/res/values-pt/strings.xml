@@ -1,7 +1,20 @@
 <resources>
-    <string name="app_name">@string/app_name_pt</string>
+    <string name="app_name">Gerador de NPC para RPG</string>
 
     <string name="nav_bar_random_npc">Aleatório</string>
     <string name="nav_bar_my_npcs">NPCs</string>
     <string name="nav_bar_settings">Ajustes</string>
+
+    <string name="cd_reroll">Sortear %1$s novamente</string>
+    <string name="cd_remove_item">Remover %1$s</string>
+    <string name="cd_back">Voltar</string>
+    <string name="cd_npc_portrait">Retrato do NPC</string>
+    <string name="cd_change_portrait">Alterar retrato</string>
+    <string name="my_npcs_empty_title">Nenhum NPC salvo ainda</string>
+    <string name="my_npcs_empty_subtitle">Gere um personagem na aba Aleatório e toque em Salvar para guardá-lo aqui.</string>
+    <string name="delete_npc_confirm_title">Excluir NPC?</string>
+    <string name="delete_npc_confirm_message">Isto removerá %1$s permanentemente.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="npc_saved">NPC salvo</string>
+    <string name="settings_version">Versão %1$s</string>
 </resources>

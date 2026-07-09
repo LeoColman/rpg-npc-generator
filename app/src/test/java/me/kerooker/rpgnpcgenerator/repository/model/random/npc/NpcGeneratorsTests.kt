@@ -1,39 +1,43 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
-import android.content.Context
-import io.kotest.IsolationMode
-import io.kotest.TestCase
-import io.kotest.TestResult
-import io.kotest.experimental.robolectric.RobolectricTest
-import io.kotest.extensions.TestListener
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeInRange
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.shouldNotBe
-import io.kotest.specs.FunSpec
-import me.kerooker.rpgnpcgenerator.R
-import org.koin.core.KoinComponent
-import org.koin.core.context.stopKoin
-import org.koin.core.get
+import java.io.File
 
-@RobolectricTest
-class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
+private fun rawLines(fileName: String): List<String> =
+    File("src/main/res/raw/$fileName").readLines()
 
-    private val target
-        get() = get<CompleteNpcGenerator>()
+private fun completeGenerator(): CompleteNpcGenerator {
+    val professions = ProfessionGenerator(
+        ChildProfessionGenerator(rawLines("npc_child_professions.txt")),
+        CommonProfessionGenerator(rawLines("npc_professions.txt"))
+    )
+    val dataGenerator = NpcDataGenerator(
+        NameGenerator(rawLines("npc_names.txt")),
+        NicknameGenerator(rawLines("npc_nicknames.txt")),
+        professions,
+        MotivationGenerator(rawLines("npc_motivations.txt")),
+        PersonalityTraitGenerator(rawLines("npc_personality_trait.txt"))
+    )
+    return CompleteNpcGenerator(dataGenerator)
+}
 
-    private val childrenProfessions by lazy {
-        get<Context>().resources.openRawResource(R.raw.npc_child_professions).bufferedReader().readLines()
-    }
+class CompleteNpcGeneratorTest : FunSpec() {
 
-    private val normalProfessions by lazy {
-        get<Context>().resources.openRawResource(R.raw.npc_professions).bufferedReader().readLines()
-    }
+    private val target = completeGenerator()
+    private val childrenProfessions = rawLines("npc_child_professions.txt")
+    private val normalProfessions = rawLines("npc_professions.txt")
+
+    private fun generate(amount: Int) = List(amount) { target.generate() }
+    private fun generateMany() = generate(100_000)
 
     init {
         test("Should generate a npc") {
-            generateOne().first().shouldBeInstanceOf<GeneratedNpc>()
+            generate(1).first().shouldBeInstanceOf<GeneratedNpc>()
         }
 
         test("Should have a .5% chance of not speaking common") {
@@ -41,20 +45,23 @@ class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
         }
 
         test("Should have a .5% chance of not speaking racial language") {
-            generateMany().map { it.race.racialLanguage to it.languages }.count {  (language, spoken) ->
-                if(language == null) false
-                else language !in spoken
+            generateMany().map { it.race.racialLanguage to it.languages }.count { (language, spoken) ->
+                if (language == null) {
+                    false
+                } else {
+                    language !in spoken
+                }
             } shouldBeInRange (300..700)
         }
 
         test("Should have 25% chance to have an extra non-racial common language") {
-            generateMany().map { it.race.racialLanguage to it.languages }.count {  (language, spoken) ->
+            generateMany().map { it.race.racialLanguage to it.languages }.count { (language, spoken) ->
                 spoken.any { it != language && it != CommonLanguage.Common && it is CommonLanguage }
             } shouldBeInRange (24_500..25_500)
         }
 
         test("Should have 5% chance to have an extra non-racial exotic language") {
-            generateMany().map { it.race.racialLanguage to it.languages }.count {  (language, spoken) ->
+            generateMany().map { it.race.racialLanguage to it.languages }.count { (language, spoken) ->
                 spoken.any { it != language && it is ExoticLanguage }
             } shouldBeInRange (4_700..5_300)
         }
@@ -79,7 +86,7 @@ class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
 
             generateMany().map { it.personalityTraits }.forEach {
                 it.size shouldBeInRange (2..5)
-                when(it.size) {
+                when (it.size) {
                     2 -> twoTraits++
                     3 -> threeTraits++
                     4 -> fourTraits++
@@ -91,22 +98,6 @@ class CompleteNpcGeneratorTest : FunSpec(), KoinComponent {
             threeTraits shouldNotBe 0
             fourTraits shouldNotBe 0
             fiveTraits shouldNotBe 0
-
         }
-
     }
-
-    private fun generateOne() = generate(1)
-
-    private fun generateMany() = generate(100_000)
-
-    private fun generate(amount: Int) = List(amount) { target.generate() }
-
-    override fun isolationMode() = IsolationMode.InstancePerTest
-    
-    override fun listeners() = listOf<TestListener>(object: TestListener {
-        override fun afterTest(testCase: TestCase, result: TestResult) {
-            stopKoin()
-        }
-    })
 }

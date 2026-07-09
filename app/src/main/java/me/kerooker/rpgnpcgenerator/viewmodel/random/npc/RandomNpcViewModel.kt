@@ -1,13 +1,16 @@
 package me.kerooker.rpgnpcgenerator.viewmodel.random.npc
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcEntity
-import me.kerooker.rpgnpcgenerator.repository.model.persistence.npc.NpcRepository
+import me.kerooker.rpgnpcgenerator.data.Npc
+import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Age
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CompleteNpcGenerator
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpc
@@ -24,162 +27,156 @@ class RandomNpcViewModel(
     private val temporaryRandomNpcRepository: TemporaryRandomNpcRepository,
     private val npcRepository: NpcRepository
 ) : ViewModel() {
-    
-    
-    val data: LiveData<GeneratedNpcData> by lazy {
-        if(temporaryRandomNpcRepository.generatedNpcData.value == null) {
+
+    init {
+        if (temporaryRandomNpcRepository.generatedNpcData.value == null) {
             temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
         }
+    }
+
+    val data: StateFlow<GeneratedNpcData> =
         temporaryRandomNpcRepository.generatedNpcData
-    }
-    
+            .filterNotNull()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                requireNotNull(temporaryRandomNpcRepository.generatedNpcData.value)
+            )
+
     fun randomizeName() = setName(npcDataGenerator.generateFullName())
-    
+
     fun setName(name: String) = temporaryRandomNpcRepository.setFullName(name)
-    
-    fun randomizeNickname() {
-        val nickname = npcDataGenerator.generateNickname()
-        setNickname(nickname)
-    }
-    
+
+    fun randomizeNickname() = setNickname(npcDataGenerator.generateNickname())
+
     fun setNickname(nickname: String) = temporaryRandomNpcRepository.setNickname(nickname)
-    
-    
+
     fun randomizeRace() {
         val race = npcDataGenerator.generateRace()
         temporaryRandomNpcRepository.setRace(context.getString(race.nameResource))
     }
-    
+
     fun setRace(race: String) = temporaryRandomNpcRepository.setRace(race)
-    
+
     fun randomizeAge() {
         val age = npcDataGenerator.generateAge()
-        if(age.isNotSameGroupAsCurrentAge()) {
-            randomizeProfession()   // It's possible that the generated age has an incompatible profession
+        if (age.isNotSameGroupAsCurrentAge()) {
+            randomizeProfession() // A newly generated age may have an incompatible profession.
         }
         setAge(context.getString(age.nameResource))
     }
-    
+
     private fun Age.isNotSameGroupAsCurrentAge(): Boolean {
         return when {
-            currentAgeIsChild() && this != Age.Child  -> true
+            currentAgeIsChild() && this != Age.Child -> true
             !currentAgeIsChild() && this == Age.Child -> true
-            else                                      -> false
+            else -> false
         }
     }
-    
+
     fun setAge(age: String) = temporaryRandomNpcRepository.setAge(age)
-    
+
     fun randomizeGender() {
         val gender = npcDataGenerator.generateGender()
         setGender(context.getString(gender.nameResource))
     }
-    
+
     fun setGender(gender: String) = temporaryRandomNpcRepository.setGender(gender)
-    
+
     fun randomizeProfession() {
-        val profession = if(currentAgeIsChild()) {
+        val profession = if (currentAgeIsChild()) {
             npcDataGenerator.generateProfession(Age.Child)
         } else {
             npcDataGenerator.generateProfession(Age.Adult)
         }
         setProfession(profession)
     }
-    
+
     private fun currentAgeIsChild(): Boolean {
         val childResource = context.getString(Age.Child.nameResource)
-        return data.value?.age.equals(childResource, true)
+        return data.value.age.equals(childResource, true)
     }
-    
+
     fun setProfession(profession: String) = temporaryRandomNpcRepository.setProfession(profession)
-    
+
     fun randomizeSexuality() {
         val sexuality = npcDataGenerator.generateSexuality()
         setSexuality(context.getString(sexuality.nameResource))
     }
-    
+
     fun setSexuality(sexuality: String) = temporaryRandomNpcRepository.setSexuality(sexuality)
-    
+
     fun randomizeAlignment() {
         val alignment = npcDataGenerator.generateAlignment()
         setAlignment(context.getString(alignment.nameResource))
     }
-    
+
     fun setAlignment(alignment: String) = temporaryRandomNpcRepository.setAlignment(alignment)
-    
-    fun randomizeMotivation() {
-        val motivation = npcDataGenerator.generateMotivation()
-        setMotivation(motivation)
-    }
-    
+
+    fun randomizeMotivation() = setMotivation(npcDataGenerator.generateMotivation())
+
     fun setMotivation(motivation: String) = temporaryRandomNpcRepository.setMotivation(motivation)
-    
+
     fun randomizeLanguage(index: Int) {
         val languages = Language.values().map { context.getString(it.nameResource) }
-        val newRandomLanguages = languages.filter { it !in (data.value?.languages ?: emptyList<String>()) }
-        
+        val newRandomLanguages = languages.filter { it !in data.value.languages }
         val randomLanguage = if (newRandomLanguages.isEmpty()) languages.first() else newRandomLanguages.random()
-        
         setLanguage(index, randomLanguage)
     }
-    
-    fun setLanguage(index: Int, language: String) {
-        temporaryRandomNpcRepository.setLanguage(index, language)
-    }
-    
+
+    fun setLanguage(index: Int, language: String) = temporaryRandomNpcRepository.setLanguage(index, language)
+
     fun removeLanguage(index: Int) = temporaryRandomNpcRepository.removeLanguage(index)
-    
-    fun randomizePersonality(index: Int) {
-        val personality = npcDataGenerator.generatePersonalityTrait()
-        setPersonality(index, personality)
-    }
-    
+
+    fun randomizePersonality(index: Int) =
+        setPersonality(index, npcDataGenerator.generatePersonalityTrait())
+
     fun setPersonality(index: Int, personality: String) =
         temporaryRandomNpcRepository.setPersonality(index, personality)
-    
+
     fun removePersonality(index: Int) = temporaryRandomNpcRepository.removePersonality(index)
-    
+
     fun randomizeAll() {
-        val randomNpc = completeNpcGenerator.generate()
-        temporaryRandomNpcRepository.setNpc(randomNpc.toNpcData())
+        temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
     }
-    
-    private fun GeneratedNpc.toNpcData(): GeneratedNpcData {
-        return GeneratedNpcData(
-            name,
-            nickname,
-            context.getString(gender.nameResource),
-            context.getString(sexuality.nameResource),
-            context.getString(race.nameResource),
-            context.getString(age.nameResource),
-            profession,
-            motivation,
-            context.getString(alignment.nameResource),
-            personalityTraits.toMutableList(),
-            languages.map { context.getString(it.nameResource) }.toMutableList()
-        )
-    }
-    
+
     fun saveCurrentNpc() {
-        val npcToPersist = data.value!!.toEntity()
+        val npc = data.value.toNpc()
         viewModelScope.launch(Dispatchers.IO) {
-            npcRepository.put(npcToPersist)
+            npcRepository.insert(npc)
         }
     }
-    
-    private fun GeneratedNpcData.toEntity() =
-        NpcEntity(
-            this.name,
-            this.nickname,
-            this.gender,
-            this.sexuality,
-            this.race,
-            this.age,
-            this.profession,
-            this.motivation,
-            this.alignment,
-            this.personalityTraits,
-            this.languages,
-            imagePath = null
+
+    private fun GeneratedNpc.toNpcData(): GeneratedNpcData {
+        return GeneratedNpcData(
+            name = name,
+            nickname = nickname,
+            gender = context.getString(gender.nameResource),
+            sexuality = context.getString(sexuality.nameResource),
+            race = context.getString(race.nameResource),
+            age = context.getString(age.nameResource),
+            profession = profession,
+            motivation = motivation,
+            alignment = context.getString(alignment.nameResource),
+            personalityTraits = personalityTraits,
+            languages = languages.map { context.getString(it.nameResource) }
         )
+    }
+
+    private fun GeneratedNpcData.toNpc() = Npc(
+        id = 0,
+        fullName = name,
+        nickname = nickname,
+        gender = gender,
+        sexuality = sexuality,
+        race = race,
+        age = age,
+        profession = profession,
+        motivation = motivation,
+        alignment = alignment,
+        personalityTraits = personalityTraits,
+        languages = languages,
+        imagePath = null,
+        notes = ""
+    )
 }

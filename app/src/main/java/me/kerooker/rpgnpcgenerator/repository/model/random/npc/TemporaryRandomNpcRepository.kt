@@ -1,63 +1,65 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
+/**
+ * Holds the NPC currently being rolled on the generator screen as an observable [StateFlow], so it
+ * survives navigation between tabs (the instance is a Koin singleton).
+ */
 @Suppress("TooManyFunctions")
 class TemporaryRandomNpcRepository {
-    
-    private val _generatedNpcData = MutableLiveData<GeneratedNpcData>()
-    
-    val generatedNpcData: LiveData<GeneratedNpcData>
-        get() = _generatedNpcData
-    
+
+    private val _generatedNpcData = MutableStateFlow<GeneratedNpcData?>(null)
+    val generatedNpcData: StateFlow<GeneratedNpcData?> = _generatedNpcData.asStateFlow()
+
     private val current
-        get() = generatedNpcData.value ?: throw IllegalStateException("Repository was not started before usage")
-    
+        get() = _generatedNpcData.value ?: error("Repository was not started before usage")
+
     fun setNpc(npc: GeneratedNpcData) {
         _generatedNpcData.value = npc
     }
-    
-    fun setFullName(name: String) = updating { it.name = name }
-    
-    fun setNickname(nickname: String) = updating { it.nickname = nickname }
-    
-    fun setRace(race: String) = updating { it.race = race }
-    
-    fun setGender(gender: String) = updating { it.gender = gender }
-    
-    fun setAge(age: String) = updating { it.age = age }
-    
-    fun setProfession(profession: String) = updating { it.profession = profession }
-    
-    fun setSexuality(sexuality: String) = updating { it.sexuality = sexuality }
-    
-    fun setAlignment(alignment: String) = updating { it.alignment = alignment }
-    
-    fun setMotivation(motivation: String) = updating { it.motivation = motivation }
-    
-    fun setLanguage(index: Int, language: String) = updating {
-        if (index in it.languages.indices) {
-            it.languages[index] = language
-        } else {
-            it.languages.add(language)
-        }
+
+    fun setFullName(name: String) = update { it.copy(name = name) }
+
+    fun setNickname(nickname: String) = update { it.copy(nickname = nickname) }
+
+    fun setRace(race: String) = update { it.copy(race = race) }
+
+    fun setGender(gender: String) = update { it.copy(gender = gender) }
+
+    fun setAge(age: String) = update { it.copy(age = age) }
+
+    fun setProfession(profession: String) = update { it.copy(profession = profession) }
+
+    fun setSexuality(sexuality: String) = update { it.copy(sexuality = sexuality) }
+
+    fun setAlignment(alignment: String) = update { it.copy(alignment = alignment) }
+
+    fun setMotivation(motivation: String) = update { it.copy(motivation = motivation) }
+
+    fun setLanguage(index: Int, language: String) = update { data ->
+        val languages = data.languages.toMutableList()
+        if (index in languages.indices) languages[index] = language else languages.add(language)
+        data.copy(languages = languages)
     }
-    
-    fun removeLanguage(index: Int) = updating { it.languages.removeAt(index) }
-    
-    fun setPersonality(index: Int, personality: String) = updating {
-        if(index in it.personalityTraits.indices) {
-            it.personalityTraits[index] = personality
-        } else {
-            it.personalityTraits.add(personality)
-        }
+
+    fun removeLanguage(index: Int) = update { data ->
+        data.copy(languages = data.languages.toMutableList().apply { removeAt(index) })
     }
-    
-    fun removePersonality(index: Int) = updating { it.personalityTraits.removeAt(index) }
-    
-    private inline fun updating(block: (GeneratedNpcData) -> Unit) {
-        block(current)
-        _generatedNpcData.value = _generatedNpcData.value
+
+    fun setPersonality(index: Int, personality: String) = update { data ->
+        val traits = data.personalityTraits.toMutableList()
+        if (index in traits.indices) traits[index] = personality else traits.add(personality)
+        data.copy(personalityTraits = traits)
+    }
+
+    fun removePersonality(index: Int) = update { data ->
+        data.copy(personalityTraits = data.personalityTraits.toMutableList().apply { removeAt(index) })
+    }
+
+    private inline fun update(block: (GeneratedNpcData) -> GeneratedNpcData) {
+        _generatedNpcData.value = block(current)
     }
 }

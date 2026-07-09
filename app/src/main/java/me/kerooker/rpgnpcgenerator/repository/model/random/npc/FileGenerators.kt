@@ -2,39 +2,27 @@ package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import android.content.Context
 import androidx.annotation.RawRes
-import me.kerooker.rpgnpcgenerator.R
 
 abstract class FileGenerator(
-    @RawRes fileResource: Int,
-    context: Context
-)  {
-
-    private val fileLines by lazy {
-        linesFromRaw(
-            fileResource,
-            context
-        )
-    }
-
-    fun random(): String = fileLines.random()
+    private val lines: List<String>
+) {
+    fun random(): String = lines.random()
 }
 
-class NameGenerator(context: Context) : FileGenerator(R.raw.npc_names, context)
+class NameGenerator(lines: List<String>) : FileGenerator(lines)
 
-class NicknameGenerator(context: Context) : FileGenerator(R.raw.npc_nicknames, context)
+class NicknameGenerator(lines: List<String>) : FileGenerator(lines)
 
-class CommonProfessionGenerator(context: Context) : FileGenerator(R.raw.npc_professions, context)
+class CommonProfessionGenerator(lines: List<String>) : FileGenerator(lines)
 
-class ChildProfessionGenerator(context: Context) : FileGenerator(R.raw.npc_child_professions, context)
+class ChildProfessionGenerator(lines: List<String>) : FileGenerator(lines)
 
-class MotivationGenerator(context: Context) : FileGenerator(R.raw.npc_motivations, context)
+class MotivationGenerator(lines: List<String>) : FileGenerator(lines)
 
-class PersonalityTraitGenerator(context: Context) : FileGenerator(R.raw.npc_personality_trait, context)
+class PersonalityTraitGenerator(lines: List<String>) : FileGenerator(lines)
 
-
-fun linesFromRaw(@RawRes rawResource: Int, context: Context) =
+fun linesFromRaw(@RawRes rawResource: Int, context: Context): List<String> =
     context.resources.openRawResource(rawResource).bufferedReader().readLines()
-
 
 class ProfessionGenerator(
     private val childProfessionGenerator: ChildProfessionGenerator,
@@ -43,7 +31,7 @@ class ProfessionGenerator(
     fun random(age: Age): String {
         return when (age) {
             Age.Child -> childProfessionGenerator.random()
-            else  -> commonProfessionGenerator.random()
+            else -> commonProfessionGenerator.random()
         }
     }
 }
