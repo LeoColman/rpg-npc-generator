@@ -17,3 +17,12 @@ build/
 buildSrc/build/
 app/build
 local/*
+
+# Release secrets — kept out of the repo; committed only as git-secret *.secret files
+app/keystore
+app/keystore.properties
+*.jks
+fastlane/google-play.json
+.gitsecret/keys/*~
+.gitsecret/keys/random_seed
+!*.secret
