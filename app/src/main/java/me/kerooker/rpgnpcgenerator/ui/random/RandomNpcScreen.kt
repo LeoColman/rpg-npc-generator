@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
+import me.kerooker.rpgnpcgenerator.ui.components.FieldGroup
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.components.RerollButton
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.RandomNpcViewModel
@@ -74,71 +75,79 @@ fun RandomNpcScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            NpcField(
-                label = stringResource(R.string.random_npc_full_name_hint),
-                value = npc.name,
-                editable = true,
-                onValueChange = viewModel::setName,
-                onReroll = viewModel::randomizeName
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_nickname_hint),
-                value = npc.nickname,
-                editable = true,
-                onValueChange = viewModel::setNickname,
-                onReroll = viewModel::randomizeNickname
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_race_hint),
-                value = npc.race,
-                editable = true,
-                onValueChange = viewModel::setRace,
-                onReroll = viewModel::randomizeRace
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_age_hint),
-                value = npc.age,
-                editable = true,
-                onValueChange = viewModel::setAge,
-                onReroll = viewModel::randomizeAge
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_gender_hint),
-                value = npc.gender,
-                editable = true,
-                onValueChange = viewModel::setGender,
-                onReroll = viewModel::randomizeGender
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_profession_hint),
-                value = npc.profession,
-                editable = true,
-                onValueChange = viewModel::setProfession,
-                onReroll = viewModel::randomizeProfession
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_sexuality_hint),
-                value = npc.sexuality,
-                editable = true,
-                onValueChange = viewModel::setSexuality,
-                onReroll = viewModel::randomizeSexuality
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_alignment_hint),
-                value = npc.alignment,
-                editable = true,
-                onValueChange = viewModel::setAlignment,
-                onReroll = viewModel::randomizeAlignment
-            )
-            NpcField(
-                label = stringResource(R.string.random_npc_motivation_hint),
-                value = npc.motivation,
-                editable = true,
-                onValueChange = viewModel::setMotivation,
-                onReroll = viewModel::randomizeMotivation
-            )
+            FieldGroup(title = stringResource(R.string.group_identity)) {
+                NpcField(
+                    label = stringResource(R.string.random_npc_full_name_hint),
+                    value = npc.name,
+                    editable = true,
+                    onValueChange = viewModel::setName,
+                    onReroll = viewModel::randomizeName
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_nickname_hint),
+                    value = npc.nickname,
+                    editable = true,
+                    onValueChange = viewModel::setNickname,
+                    onReroll = viewModel::randomizeNickname
+                )
+            }
+
+            FieldGroup(title = stringResource(R.string.group_characteristics)) {
+                NpcField(
+                    label = stringResource(R.string.random_npc_race_hint),
+                    value = npc.race,
+                    editable = true,
+                    onValueChange = viewModel::setRace,
+                    onReroll = viewModel::randomizeRace
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_age_hint),
+                    value = npc.age,
+                    editable = true,
+                    onValueChange = viewModel::setAge,
+                    onReroll = viewModel::randomizeAge
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_gender_hint),
+                    value = npc.gender,
+                    editable = true,
+                    onValueChange = viewModel::setGender,
+                    onReroll = viewModel::randomizeGender
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_sexuality_hint),
+                    value = npc.sexuality,
+                    editable = true,
+                    onValueChange = viewModel::setSexuality,
+                    onReroll = viewModel::randomizeSexuality
+                )
+            }
+
+            FieldGroup(title = stringResource(R.string.group_background)) {
+                NpcField(
+                    label = stringResource(R.string.random_npc_profession_hint),
+                    value = npc.profession,
+                    editable = true,
+                    onValueChange = viewModel::setProfession,
+                    onReroll = viewModel::randomizeProfession
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_alignment_hint),
+                    value = npc.alignment,
+                    editable = true,
+                    onValueChange = viewModel::setAlignment,
+                    onReroll = viewModel::randomizeAlignment
+                )
+                NpcField(
+                    label = stringResource(R.string.random_npc_motivation_hint),
+                    value = npc.motivation,
+                    editable = true,
+                    onValueChange = viewModel::setMotivation,
+                    onReroll = viewModel::randomizeMotivation
+                )
+            }
 
             EditableListSection(
                 title = stringResource(R.string.random_npc_languages_label),
@@ -159,7 +168,8 @@ fun RandomNpcScreen(
                 onItemChange = viewModel::setPersonality,
                 onReroll = viewModel::randomizePersonality,
                 onRemove = viewModel::removePersonality,
-                onAdd = { viewModel.randomizePersonality(npc.personalityTraits.size) }
+                onAdd = { viewModel.randomizePersonality(npc.personalityTraits.size) },
+                onRerollAll = viewModel::randomizeAllPersonalities
             )
         }
     }

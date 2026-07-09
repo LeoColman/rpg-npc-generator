@@ -59,6 +59,8 @@ class TemporaryRandomNpcRepository {
         data.copy(personalityTraits = data.personalityTraits.toMutableList().apply { removeAt(index) })
     }
 
+    fun setPersonalities(personalities: List<String>) = update { it.copy(personalityTraits = personalities) }
+
     private inline fun update(block: (GeneratedNpcData) -> GeneratedNpcData) {
         _generatedNpcData.value = block(current)
     }

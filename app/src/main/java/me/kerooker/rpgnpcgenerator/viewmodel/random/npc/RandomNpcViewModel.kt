@@ -136,6 +136,12 @@ class RandomNpcViewModel(
 
     fun removePersonality(index: Int) = temporaryRandomNpcRepository.removePersonality(index)
 
+    fun randomizeAllPersonalities() {
+        val count = data.value.personalityTraits.size.coerceAtLeast(1)
+        val fresh = List(count) { npcDataGenerator.generatePersonalityTrait() }
+        temporaryRandomNpcRepository.setPersonalities(fresh)
+    }
+
     fun randomizeAll() {
         temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
     }

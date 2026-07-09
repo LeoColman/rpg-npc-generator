@@ -3,12 +3,13 @@ package me.kerooker.rpgnpcgenerator.ui.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,11 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.kerooker.rpgnpcgenerator.R
 
-/** A dice button that spins each time it is pressed. */
+/** A twenty-sided die button that spins each time it is pressed. */
 @Composable
 fun RerollButton(
     contentDescription: String,
@@ -45,14 +47,33 @@ fun RerollButton(
         modifier = modifier
     ) {
         Icon(
-            imageVector = Icons.Filled.Casino,
+            painter = painterResource(R.drawable.ic_twenty_sided_dice),
             contentDescription = contentDescription,
-            modifier = Modifier.rotate(rotation)
+            modifier = Modifier
+                .size(24.dp)
+                .rotate(rotation)
         )
     }
 }
 
-/** A single labelled NPC attribute. Shows a re-roll dice when [onReroll] is provided. */
+/** A titled group of related NPC attributes. */
+@Composable
+fun FieldGroup(
+    title: String,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        content()
+    }
+}
+
+/** A single labelled NPC attribute. Shows a re-roll die when [onReroll] is provided. */
 @Composable
 fun NpcField(
     label: String,
@@ -78,6 +99,7 @@ fun NpcField(
 /**
  * A titled, editable list of short strings (languages, personality traits). Each row can be edited,
  * re-rolled (when [onReroll] is given) and removed while [editable]; an "add" affordance appends.
+ * When [onRerollAll] is given, the header shows a die that regenerates every item at once.
  */
 @Composable
 fun EditableListSection(
@@ -89,14 +111,24 @@ fun EditableListSection(
     onRemove: (index: Int) -> Unit,
     onAdd: () -> Unit,
     modifier: Modifier = Modifier,
-    onReroll: ((index: Int) -> Unit)? = null
+    onReroll: ((index: Int) -> Unit)? = null,
+    onRerollAll: (() -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.weight(1f)
+            )
+            if (editable && onRerollAll != null) {
+                RerollButton(
+                    contentDescription = stringResource(R.string.cd_reroll_all, title),
+                    onClick = onRerollAll
+                )
+            }
+        }
         items.forEachIndexed { index, item ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
