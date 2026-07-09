@@ -109,9 +109,11 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         val use_seed: Boolean = false
     )
 
+    // DreamShaper-8: fantasy-tuned SD 1.5, CreativeML OpenRAIL-M (commercial-safe), LCM-LoRA compatible.
+    // Knows D&D races far better than vanilla SD 1.5; stays ~20s because it's still SD 1.5 + LCM.
     @Serializable
     private data class LcmLora(
-        val base_model_id: String = "stable-diffusion-v1-5/stable-diffusion-v1-5",
+        val base_model_id: String = "Lykon/dreamshaper-8",
         val lcm_lora_id: String = "latent-consistency/lcm-lora-sdv1-5"
     )
 
