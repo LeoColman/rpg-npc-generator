@@ -14,6 +14,8 @@
     <string name="cd_back">Back</string>
     <string name="cd_npc_portrait">NPC portrait</string>
     <string name="cd_change_portrait">Change portrait</string>
+    <string name="individual_npc_generate_portrait">Generate portrait</string>
+    <string name="individual_npc_portrait_generation_failed">Couldn\'t generate a portrait. Try again.</string>
     <string name="my_npcs_empty_title">No saved NPCs yet</string>
     <string name="my_npcs_empty_subtitle">Roll a character on the Randomize tab and tap Save to keep it here.</string>
     <string name="delete_npc_confirm_title">Delete NPC?</string>

@@ -17,7 +17,6 @@ kotest = "5.9.1"
 robolectric = "4.15.1"
 mockk = "1.14.2"
 turbine = "1.2.1"
-leakcanary = "2.14"
 splashscreen = "1.2.0-rc01"
 androidxTest = "1.6.1"
 
@@ -54,7 +53,6 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 
-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 

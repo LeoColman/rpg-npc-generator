@@ -20,6 +20,7 @@ val appVersionCode: Int = versionProps.getProperty("version.major").toInt() * 10
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     defaultConfig {
         applicationId = "me.kerooker.rpgcharactergenerator"
@@ -28,22 +29,49 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
+        // Server-side portrait renderer. Password comes from a gradle property (e.g. in
+        // ~/.gradle/gradle.properties or -PnpcImagePassword=...), never committed; empty disables
+        // the remote path and the app renders on-device.
+        buildConfigField(
+            "String",
+            "NPC_IMAGE_BASE_URL",
+            "\"${providers.gradleProperty("npcImageBaseUrl").getOrElse("https://npc-fast.colman.com.br")}\""
+        )
+        buildConfigField("String", "NPC_IMAGE_USER", "\"${providers.gradleProperty("npcImageUser").getOrElse("npc")}\"")
+        buildConfigField(
+            "String",
+            "NPC_IMAGE_PASSWORD",
+            "\"${providers.gradleProperty("npcImagePassword").getOrElse("")}\""
+        )
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+            }
+        }
+        ndk {
+            // x86_64 for the emulator, arm64-v8a for real devices. Drop x86_64
+            // once you move to on-device testing to roughly halve native build time.
+            abiFilters += listOf("x86_64", "arm64-v8a")
+        }
     }
 
+    // Release signing. The keystore and its passwords are kept out of the repo and revealed in CI
+    // via git-secret (see app/keystore.secret / app/keystore.properties.secret). When the secrets
+    // are not present (fresh clone, PR builds) the release variant simply stays unsigned.
     signingConfigs {
-        create("release") {
-            val localProps = Properties()
-            val localFile = rootProject.file("local.properties")
-            if (localFile.exists()) {
-                localFile.inputStream().use { localProps.load(it) }
+        val keystorePropertiesFile = file("keystore.properties")
+        if (keystorePropertiesFile.exists()) {
+            val keystoreProperties = Properties().apply {
+                keystorePropertiesFile.inputStream().use { load(it) }
             }
-            val keyFile = localProps.getProperty("key_file_location")
-            if (keyFile != null) {
-                storeFile = file(keyFile)
-                storePassword = localProps.getProperty("keystore_password")
-                keyAlias = localProps.getProperty("key_alias")
-                keyPassword = localProps.getProperty("key_password")
+            create("release") {
+                storeFile = file(keystoreProperties.getProperty("STORE_FILE", "keystore"))
+                storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
+                keyAlias = keystoreProperties.getProperty("SIGNING_KEY_ALIAS")
+                keyPassword = keystoreProperties.getProperty("SIGNING_KEY_PASSWORD")
             }
         }
     }
@@ -53,10 +81,17 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.findByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
 
@@ -145,9 +180,6 @@ dependencies {
     // Persistence (SQLDelight)
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines.extensions)
-
-    // Leak detection
-    debugImplementation(libs.leakcanary)
 
     // Detekt formatting (ktlint rules)
     detektPlugins(libs.detekt.formatting)

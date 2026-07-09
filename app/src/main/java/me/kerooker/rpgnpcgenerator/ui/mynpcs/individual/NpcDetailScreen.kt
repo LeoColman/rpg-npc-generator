@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -30,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -62,6 +65,7 @@ import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.IndividualNpcViewModel
+import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.PortraitGenState
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +77,7 @@ fun NpcDetailScreen(
 ) {
     val npc by viewModel.npc.collectAsStateWithLifecycle()
     val editState by viewModel.editState.collectAsStateWithLifecycle()
+    val portraitState by viewModel.portraitState.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -80,6 +85,13 @@ fun NpcDetailScreen(
     var draft by remember { mutableStateOf<Npc?>(null) }
     LaunchedEffect(npc, isEditing) {
         if (!isEditing) draft = npc
+    }
+
+    // A freshly generated portrait becomes part of the current edit draft (saved on Check).
+    LaunchedEffect(Unit) {
+        viewModel.generatedPortraitPath.collect { path ->
+            draft = draft?.copy(imagePath = path)
+        }
     }
 
     Scaffold(
@@ -124,6 +136,8 @@ fun NpcDetailScreen(
                 draft = editing,
                 isEditing = isEditing,
                 contentPadding = padding,
+                portraitState = portraitState,
+                onGeneratePortrait = { viewModel.generatePortrait(editing) },
                 onDraftChange = { draft = it }
             )
         }
@@ -163,6 +177,8 @@ private fun NpcDetailContent(
     draft: Npc,
     isEditing: Boolean,
     contentPadding: PaddingValues,
+    portraitState: PortraitGenState,
+    onGeneratePortrait: () -> Unit,
     onDraftChange: (Npc) -> Unit
 ) {
     val context = LocalContext.current
@@ -185,13 +201,32 @@ private fun NpcDetailContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val isGenerating = portraitState == PortraitGenState.Generating
         Portrait(
             imagePath = draft.imagePath,
-            editable = isEditing,
+            editable = isEditing && !isGenerating,
+            isGenerating = isGenerating,
             onClick = {
                 pickPortrait.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
         )
+
+        if (isEditing) {
+            OutlinedButton(onClick = onGeneratePortrait, enabled = !isGenerating) {
+                Icon(Icons.Filled.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
+                Text(
+                    text = stringResource(R.string.individual_npc_generate_portrait),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+            if (portraitState is PortraitGenState.Error) {
+                Text(
+                    text = stringResource(R.string.individual_npc_portrait_generation_failed),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
 
         NpcField(
             label = stringResource(R.string.random_npc_full_name_hint),
@@ -292,41 +327,56 @@ private fun NpcDetailContent(
 }
 
 @Composable
-private fun Portrait(imagePath: String?, editable: Boolean, onClick: () -> Unit) {
-    var boxModifier = Modifier
+private fun Portrait(imagePath: String?, editable: Boolean, isGenerating: Boolean, onClick: () -> Unit) {
+    var imageBoxModifier = Modifier
         .size(160.dp)
         .clip(CircleShape)
         .background(MaterialTheme.colorScheme.secondaryContainer)
-    if (editable) boxModifier = boxModifier.clickable(onClick = onClick)
+    if (editable) imageBoxModifier = imageBoxModifier.clickable(onClick = onClick)
 
-    Box(modifier = boxModifier, contentAlignment = Alignment.Center) {
-        if (imagePath != null) {
-            AsyncImage(
-                model = File(imagePath),
-                contentDescription = stringResource(R.string.cd_npc_portrait),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = stringResource(R.string.cd_npc_portrait),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(72.dp)
-            )
+    Box(modifier = Modifier.size(160.dp)) {
+        Box(modifier = imageBoxModifier, contentAlignment = Alignment.Center) {
+            if (imagePath != null) {
+                AsyncImage(
+                    model = File(imagePath),
+                    contentDescription = stringResource(R.string.cd_npc_portrait),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = stringResource(R.string.cd_npc_portrait),
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(72.dp)
+                )
+            }
+            if (isGenerating) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.4f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.White)
+                }
+            }
         }
-        if (editable) {
-            Box(
+        if (editable && !isGenerating) {
+            IconButton(
+                onClick = onClick,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.25f)),
-                contentAlignment = Alignment.Center
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 8.dp, y = 8.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
                     contentDescription = stringResource(R.string.cd_change_portrait),
-                    tint = Color.White,
-                    modifier = Modifier.size(36.dp)
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }

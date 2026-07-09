@@ -17,14 +17,23 @@ object ImageStore {
 
     fun persistPortrait(context: Context, uri: Uri): String? = runCatching {
         val bitmap = decodeScaledBitmap(context, uri) ?: return null
+        val path = writeJpeg(context, bitmap)
+        bitmap.recycle()
+        path
+    }.getOrNull()
+
+    /** Persists an in-memory bitmap (e.g. a generated portrait) to app storage. */
+    fun persistBitmap(context: Context, bitmap: Bitmap): String? =
+        runCatching { writeJpeg(context, bitmap) }.getOrNull()
+
+    private fun writeJpeg(context: Context, bitmap: Bitmap): String {
         val directory = File(context.filesDir, DIRECTORY).apply { mkdirs() }
         val destination = File(directory, "${UUID.randomUUID()}.jpg")
         destination.outputStream().use { output ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, output)
         }
-        bitmap.recycle()
-        destination.absolutePath
-    }.getOrNull()
+        return destination.absolutePath
+    }
 
     private fun decodeScaledBitmap(context: Context, uri: Uri): Bitmap? {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
