@@ -319,7 +319,10 @@ class RandomNpcViewModel(
         private const val PORTRAIT_POLL_INTERVAL_MS = 2_000L
         private const val PORTRAIT_MAX_WAIT_MS = 9 * 60_000L
         private const val PORTRAIT_MAX_POLL_ERRORS = 5
-        private const val SECONDS_PER_RENDER = 25
+
+        // Warm per-render wall time on the server, used only for the ETA estimate. ~45s reflects
+        // guidance_scale 1.5 (the NSFW-safe negative pass roughly doubles it vs the old cfg=1.0 ~25s).
+        private const val SECONDS_PER_RENDER = 45
     }
 }
 
