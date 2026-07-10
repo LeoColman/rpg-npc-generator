@@ -119,10 +119,11 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         @SerialName("use_lcm_lora") val useLcmLora: Boolean = true,
         @SerialName("lcm_lora") val lcmLora: LcmLora = LcmLora(),
         @SerialName("use_tiny_auto_encoder") val useTinyAutoEncoder: Boolean = true,
-        @SerialName("inference_steps") val inferenceSteps: Int = 4,
-        // >1 so the hardened negative prompt (anti-nudity) actually takes effect; at 1.0 the negative
-        // pass is skipped. 1.5 keeps LCM quality while roughly doubling render time vs cfg=1.0.
-        @SerialName("guidance_scale") val guidanceScale: Float = 1.5f,
+        @SerialName("inference_steps") val inferenceSteps: Int = 2,
+        // cfg 1.0 skips the unconditional pass, so 2 steps = 2 UNet evals — ~2.8x faster (~14s vs
+        // ~40s at cfg1.5/4steps). NSFW is caught server-side by the diffusers safety_checker (which
+        // blanks explicit output independently of guidance), not by the now-inert negative prompt.
+        @SerialName("guidance_scale") val guidanceScale: Float = 1.0f,
         @SerialName("diffusion_task") val diffusionTask: String = "text_to_image",
         @SerialName("number_of_images") val numberOfImages: Int = 1,
         @SerialName("use_seed") val useSeed: Boolean = false,
@@ -132,7 +133,7 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
     )
 
     // DreamShaper-8: fantasy-tuned SD 1.5, CreativeML OpenRAIL-M (commercial-safe), LCM-LoRA compatible.
-    // Knows D&D races far better than vanilla SD 1.5; stays ~20s because it's still SD 1.5 + LCM.
+    // Knows D&D races far better than vanilla SD 1.5; ~14s at cfg1.0/2 steps.
     @Serializable
     private data class LcmLora(
         @SerialName("base_model_id") val baseModelId: String = "Lykon/dreamshaper-8",
