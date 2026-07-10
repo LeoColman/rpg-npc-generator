@@ -1,0 +1,1 @@
+Portrait generation now makes fuller use of your saved notes and character details for a closer likeness.
