@@ -1,14 +1,58 @@
 # RPG NPC Generator
-RPG NPC Generator is an Android application to help Dungeon Masters create non-playable-characters for their campaigns.
 
-It aims to be easy yet powerful to help DMs with their creativity and enhance their tabletop experience
+**RPG NPC Generator** is an Android app that helps Dungeon Masters create
+non-player characters for their tabletop campaigns — rolling up a believable NPC
+in seconds, saving the ones worth keeping, and even generating a portrait to go
+with them.
+
+It aims to be easy yet powerful, so DMs can spend their creativity where it
+matters and enrich their players' experience.
 
 <a href='https://play.google.com/store/apps/details?id=me.kerooker.rpgcharactergenerator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-## The software
+## Features
 
-The app is written 100% in Kotlin with a Jetpack Compose (Material 3) UI, SQLDelight persistence and
-Koin for dependency injection. Business logic is tested with Kotest, and UI components with Robolectric.
+- **Randomize an NPC** — roll a complete D&D-flavoured character: race, age,
+  gender, profession, alignment, personality, motivation, languages, name and
+  nickname. Re-roll any single trait until it fits your scene.
+- **AI portraits** — generate a fantasy portrait from the NPC's own traits,
+  rendered on a self-hosted server and delivered in the background
+  (see [`server/portrait-renderer`](server/portrait-renderer/README.md)).
+- **Save & browse** — keep the NPCs you like and revisit them any time; each
+  retains its attributes and portrait.
+- **Offline-first** — attribute generation and your saved roster work with no
+  network; only portrait rendering reaches out.
+- **Localised** — available in English and Portuguese.
+
+## Tech stack
+
+100% Kotlin. Jetpack Compose (Material 3) UI, SQLDelight persistence, Koin for
+dependency injection, WorkManager for background portrait jobs and coil3 for
+image loading. Business logic is tested with Kotest and UI components with
+Robolectric; Detekt and Android Lint run in CI.
+
+## Project structure
+
+- **`:app`** — the Android application (`me.kerooker.rpgnpcgenerator`).
+- **`:portrait-queue`** ([`server/portrait-renderer`](server/portrait-renderer/README.md))
+  — a small Kotlin/Ktor FIFO queue fronting the CPU image renderer the app calls
+  for portraits. Runs as a Docker Swarm stack and is not needed to build or run
+  the app.
+
+## Building & running
+
+The app targets Android (minSdk 26, targetSdk 36) and builds with JDK 17+
+(CI uses JDK 21).
+
+```bash
+./gradlew :app:assembleDebug    # build the debug APK
+./gradlew :app:installDebug     # install on a connected device/emulator
+./gradlew test                  # run the Kotest + Robolectric tests
+```
+
+Portrait generation talks to a private render server; pass its basic-auth
+password with `-PnpcImagePassword=<password>` to exercise that feature in a local
+build. Without it the app still runs and portrait requests simply fail cleanly.
 
 ## Contributing
 
@@ -55,3 +99,8 @@ ojD+C+gO6t2gyw==
 =VUVq
 -----END PGP PUBLIC KEY BLOCK-----
 ```
+
+## License
+
+RPG NPC Generator is licensed under the **GNU Affero General Public License v3.0**
+(AGPL-3.0). See [LICENSE](LICENSE).
