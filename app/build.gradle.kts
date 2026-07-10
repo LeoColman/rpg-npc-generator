@@ -175,6 +175,7 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.sqldelight.sqlite.driver)
+    testImplementation(libs.androidx.work.testing)
 
     // Compose UI tests under Robolectric (no emulator needed in CI)
     testImplementation(platform(libs.androidx.compose.bom))
