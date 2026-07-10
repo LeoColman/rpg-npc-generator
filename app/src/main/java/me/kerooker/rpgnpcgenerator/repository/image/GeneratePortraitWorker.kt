@@ -56,8 +56,11 @@ class GeneratePortraitWorker(
         notifications.ensureChannel()
         notifications.notifyProgress(npcId, npc.fullName, str(R.string.portrait_notification_queued))
 
-        val path = if (!queueClient.enabled) null
-        else runCatching { renderRemote(npcId, npc.fullName, request) }.getOrNull()
+        val path = if (!queueClient.enabled) {
+            null
+        } else {
+            runCatching { renderRemote(npcId, npc.fullName, request) }.getOrNull()
+        }
         if (path == null) {
             notifications.notifyFailed(npcId, npc.fullName)
             return Result.failure()
@@ -107,14 +110,18 @@ class GeneratePortraitWorker(
     }
 
     private fun queueText(ahead: Int): String =
-        if (ahead <= 0) str(R.string.portrait_notification_generating)
-        else applicationContext.getString(R.string.portrait_notification_in_queue, ahead)
+        if (ahead <= 0) {
+            str(R.string.portrait_notification_generating)
+        } else {
+            applicationContext.getString(R.string.portrait_notification_in_queue, ahead)
+        }
 
     private fun str(id: Int) = applicationContext.getString(id)
 
     companion object {
         const val KEY_NPC_ID = "npc_id"
         private const val POLL_INTERVAL_MS = 2_000L
+
         // Stay under WorkManager's 10-minute execution cap so we surface a clean "failed"
         // notification instead of being force-stopped mid-poll at the boundary.
         private const val MAX_WAIT_MS = 9 * 60_000L
