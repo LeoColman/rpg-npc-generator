@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.data.Npc
@@ -36,13 +37,17 @@ class IndividualNpcViewModel(
     }
 
     fun saveEdit(edited: Npc) {
-        val previousImage = npc.value?.imagePath
+        val initialImage = npc.value?.imagePath
         _editState.value = EditState.VIEW
         viewModelScope.launch(Dispatchers.IO) {
-            npcRepository.update(edited.copy(id = npcId))
-            // If the user picked a new portrait, the old file is now orphaned — remove it.
-            if (!previousImage.isNullOrBlank() && previousImage != edited.imagePath) {
-                ImageStore.deletePortrait(appContext, previousImage)
+            val latest = npcRepository.get(npcId).firstOrNull() ?: return@launch
+            val mergedImage = if (edited.imagePath == initialImage) latest.imagePath else edited.imagePath
+            val merged = edited.copy(id = npcId, imagePath = mergedImage)
+
+            npcRepository.update(merged)
+            // If the edit replaced the latest portrait, the previous file is now orphaned — remove it.
+            if (!latest.imagePath.isNullOrBlank() && latest.imagePath != merged.imagePath) {
+                ImageStore.deletePortrait(appContext, latest.imagePath)
             }
         }
     }
@@ -50,6 +55,7 @@ class IndividualNpcViewModel(
     fun delete() {
         val image = npc.value?.imagePath
         viewModelScope.launch(Dispatchers.IO) {
+            GeneratePortraitWorker.cancel(appContext, npcId)
             npcRepository.delete(npcId)
             if (!image.isNullOrBlank()) ImageStore.deletePortrait(appContext, image)
         }

@@ -30,6 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 private const val NPC_ID = 42L
 private const val OLD_IMAGE_PATH = "/data/user/0/me.kerooker.rpgnpcgenerator/files/portraits/old.jpg"
 private const val NEW_IMAGE_PATH = "/data/user/0/me.kerooker.rpgnpcgenerator/files/portraits/new.jpg"
+private const val GENERATED_IMAGE_PATH = "/data/user/0/me.kerooker.rpgnpcgenerator/files/portraits/generated.jpg"
 
 // The viewmodel launches its DB/file work on the real Dispatchers.IO (hardcoded, not injected), so
 // there is no TestDispatcher to advance for it. verify(timeout = ...) polls until the mocked call is
@@ -171,12 +172,47 @@ class IndividualNpcViewModelTest : FunSpec({
         }
     }
 
+    test("saveEdit preserves a freshly generated portrait when the user did not change it in the editor") {
+        val repository = mockk<NpcRepository>()
+        val repositoryFlow = MutableStateFlow<Npc?>(null)
+        every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.update(any()) } just Runs
+        val context = mockk<Context>(relaxed = true)
+        mockkObject(ImageStore)
+        every { ImageStore.deletePortrait(any(), any()) } just Runs
+
+        val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
+
+        viewModel.npc.test {
+            awaitItem() shouldBe null
+            val original = sampleNpc(imagePath = OLD_IMAGE_PATH)
+            repositoryFlow.value = original
+            awaitItem() shouldBe original
+
+            // Simulate the background worker finishing while the user is still editing.
+            val generated = original.copy(imagePath = GENERATED_IMAGE_PATH)
+            repositoryFlow.value = generated
+            awaitItem() shouldBe generated
+
+            viewModel.saveEdit(original.copy(fullName = "Edited Name", imagePath = OLD_IMAGE_PATH))
+
+            verify(timeout = VERIFY_TIMEOUT_MS) {
+                repository.update(original.copy(id = NPC_ID, fullName = "Edited Name", imagePath = GENERATED_IMAGE_PATH))
+            }
+            verify(exactly = 0) { ImageStore.deletePortrait(context, GENERATED_IMAGE_PATH) }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     test("delete removes the npc and deletes its portrait image") {
         val repository = inMemoryRepository()
         repository.insertWithId(sampleNpc(id = NPC_ID, imagePath = OLD_IMAGE_PATH))
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
+        mockkObject(GeneratePortraitWorker.Companion)
         every { ImageStore.deletePortrait(any(), any()) } just Runs
+        every { GeneratePortraitWorker.cancel(any(), any()) } just Runs
 
         val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
 
@@ -188,6 +224,7 @@ class IndividualNpcViewModelTest : FunSpec({
 
             viewModel.delete()
 
+            verify(timeout = VERIFY_TIMEOUT_MS) { GeneratePortraitWorker.cancel(context, NPC_ID) }
             verify(timeout = VERIFY_TIMEOUT_MS) { ImageStore.deletePortrait(context, OLD_IMAGE_PATH) }
             cancelAndIgnoreRemainingEvents()
         }
@@ -200,6 +237,8 @@ class IndividualNpcViewModelTest : FunSpec({
         repository.insertWithId(sampleNpc(id = NPC_ID, imagePath = null))
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
+        mockkObject(GeneratePortraitWorker.Companion)
+        every { GeneratePortraitWorker.cancel(any(), any()) } just Runs
 
         val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
 
@@ -209,6 +248,7 @@ class IndividualNpcViewModelTest : FunSpec({
             loaded!!.imagePath shouldBe null
 
             viewModel.delete()
+            verify(timeout = VERIFY_TIMEOUT_MS) { GeneratePortraitWorker.cancel(context, NPC_ID) }
             cancelAndIgnoreRemainingEvents()
         }
         // Once the row is gone the delete coroutine has run past the (skipped) image branch.

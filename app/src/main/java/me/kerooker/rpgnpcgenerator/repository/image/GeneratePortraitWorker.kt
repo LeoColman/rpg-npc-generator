@@ -95,9 +95,11 @@ class GeneratePortraitWorker(
                 "done" -> {
                     val bytes = queueClient.decode(status.image ?: error("no image in response"))
                     val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: error("could not decode image")
-                    val stored = ImageStore.persistBitmap(applicationContext, bmp) ?: error("could not persist image")
-                    bmp.recycle()
-                    return stored
+                    try {
+                        return ImageStore.persistBitmap(applicationContext, bmp) ?: error("could not persist image")
+                    } finally {
+                        bmp.recycle()
+                    }
                 }
                 "error" -> error(status.error ?: "render error")
                 "processing" -> notifications.notifyProgress(npcId, name, str(R.string.portrait_notification_generating))
@@ -137,10 +139,16 @@ class GeneratePortraitWorker(
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
             WorkManager.getInstance(context).enqueueUniqueWork(
-                "portrait_$npcId",
+                uniqueWorkName(npcId),
                 androidx.work.ExistingWorkPolicy.KEEP,
                 request
             )
         }
+
+        fun cancel(context: Context, npcId: Long) {
+            WorkManager.getInstance(context).cancelUniqueWork(uniqueWorkName(npcId))
+        }
+
+        private fun uniqueWorkName(npcId: Long) = "portrait_$npcId"
     }
 }
