@@ -119,7 +119,7 @@ class QueueService(
         StatusResponse(
             state = job.state,
             ahead = ahead,
-            queueLength = waiting.size + if (current != null) 1 else 0,
+            queueLength = queueLengthLocked(),
             image = job.image,
             error = job.error,
         )
@@ -131,11 +131,11 @@ class QueueService(
 
     /** Total jobs in front of a new submission: those waiting plus the one rendering, if any. */
     suspend fun size(): QueueSizeResponse = lock.withLock {
-        val processing = current != null
+        pruneLocked()
         QueueSizeResponse(
-            size = waiting.size + if (processing) 1 else 0,
+            size = queueLengthLocked(),
             waiting = waiting.size,
-            processing = processing,
+            processing = current != null,
         )
     }
 
@@ -211,6 +211,9 @@ class QueueService(
         }
         return true
     }
+
+    /** Jobs occupying the line: those queued plus the one rendering, if any. Caller holds [lock]. */
+    private fun queueLengthLocked(): Int = waiting.size + if (current != null) 1 else 0
 
     /** Drop finished jobs whose result has outlived the TTL. Caller must hold [lock]. */
     private fun pruneLocked() {

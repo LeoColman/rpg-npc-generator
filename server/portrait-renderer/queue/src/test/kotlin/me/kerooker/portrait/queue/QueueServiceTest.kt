@@ -11,12 +11,31 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import java.io.IOException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /** FastSD stand-in that always returns [body] with [status]. */
 private fun clientReturning(body: String, status: HttpStatusCode = HttpStatusCode.OK) =
     HttpClient(MockEngine) {
         engine {
             addHandler { respond(body, status, headersOf(HttpHeaders.ContentType, "application/json")) }
+        }
+    }
+
+/**
+ * FastSD stand-in that blocks inside the render call: completes [started] once the request lands
+ * (so the job is `current`/processing), then waits for [release] before responding. Lets a test
+ * observe queue state while a job is mid-render.
+ */
+private fun gatedClient(started: CompletableDeferred<Unit>, release: CompletableDeferred<Unit>) =
+    HttpClient(MockEngine) {
+        engine {
+            addHandler {
+                started.complete(Unit)
+                release.await()
+                respond(DONE_BODY, HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            }
         }
     }
 
@@ -49,6 +68,29 @@ class QueueServiceTest : FunSpec({
         status.queueLength shouldBe 1
         status.image.shouldBeNull()
         status.error.shouldBeNull()
+    }
+
+    test("size() counts the currently rendering job as processing") {
+        val started = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val service = QueueService(gatedClient(started, release), "http://fastsd/api")
+        service.submit("{}")
+
+        coroutineScope {
+            val worker = launch { service.processNext() }
+            started.await() // the render call has landed, so the job is now current/processing
+
+            val snapshot = service.size()
+            snapshot.processing shouldBe true
+            snapshot.size shouldBe 1      // the one rendering, even though nothing is waiting
+            snapshot.waiting shouldBe 0
+
+            release.complete(Unit)
+            worker.join()
+        }
+
+        // once it finishes, it no longer counts toward size or processing
+        service.size() shouldBe QueueSizeResponse(size = 0, waiting = 0, processing = false)
     }
 
     test("processNext renders a job to done and returns the FastSD image") {

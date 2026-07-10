@@ -13,8 +13,10 @@ services:
       labels:
         caddy: "npc-fast.colman.com.br"
         caddy.reverse_proxy: "{{upstreams 9000}}"
-        # /queue (public queue size) is exempt from auth; /submit /status /jobs stay protected.
-        caddy.@protected.not: "path /queue"
+        # Only GET /queue (public queue size) is exempt from auth; every other path/method
+        # (incl. any future non-GET on /queue) stays behind basic auth.
+        caddy.@protected.not.path: "/queue"
+        caddy.@protected.not.method: "GET"
         caddy.basic_auth: "@protected"
         caddy.basic_auth.npc: "__BCRYPT__"
     networks: [default, caddy]

@@ -17,11 +17,14 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.headersOf
 import io.ktor.server.testing.testApplication
+import kotlinx.serialization.json.Json
 
 /** Worker is disabled in these tests, so submitted jobs stay "queued" for deterministic assertions. */
 private fun idleClient() = HttpClient(MockEngine) {
     engine { addHandler { respond("{}", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json")) } }
 }
+
+private val parseJson = Json { ignoreUnknownKeys = true }
 
 private fun jobIdOf(body: String) = Regex("\"job_id\":\"([a-f0-9]+)\"").find(body)!!.groupValues[1]
 
@@ -133,17 +136,16 @@ class QueueRoutesTest : FunSpec({
 
             val empty = client.get("/queue")
             empty.status shouldBe HttpStatusCode.OK
-            empty.bodyAsText() shouldContain "\"size\":0"
+            parseJson.decodeFromString(QueueSizeResponse.serializer(), empty.bodyAsText()) shouldBe
+                QueueSizeResponse(size = 0, waiting = 0, processing = false)
 
             client.post("/submit") {
                 contentType(ContentType.Application.Json)
                 setBody("""{"prompt":"x"}""")
             }
 
-            val body = client.get("/queue").bodyAsText()
-            body shouldContain "\"size\":1"
-            body shouldContain "\"waiting\":1"
-            body shouldContain "\"processing\":false"
+            parseJson.decodeFromString(QueueSizeResponse.serializer(), client.get("/queue").bodyAsText()) shouldBe
+                QueueSizeResponse(size = 1, waiting = 1, processing = false)
         }
     }
 })
