@@ -1,0 +1,9 @@
+# Copy to auth.txt (git-ignored) before running deploy.sh, OR let deploy.sh
+# generate it on first run when absent. The app must use the same user/password
+# (the app's password is injected at build time via the `npcImagePassword` gradle
+# property — never committed).
+#
+# Format (deploy.sh reads the `bcrypt:` and `password:` lines):
+user: npc
+password: <plaintext password>
+bcrypt: <caddy hash-password output for that plaintext>

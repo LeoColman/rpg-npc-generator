@@ -1,0 +1,38 @@
+# RPG NPC portrait renderer.
+#   queue  - public Ktor FIFO proxy (submit/status), exposed via caddy at npc-fast.colman.com.br
+#   fastsd - FastSD CPU (OpenVINO/LCM) renderer, internal only; queue forwards to it one at a time
+# TEMPLATE: deploy.sh substitutes __BCRYPT__ (with $ doubled) -> docker-compose.rendered.yml.
+services:
+  queue:
+    image: rpg-npc-queue:latest
+    environment:
+      - FASTSD_URL=http://fastsd:8000/api/generate
+    deploy:
+      replicas: 1
+      restart_policy: { condition: any, delay: 10s }
+      labels:
+        caddy: "npc-fast.colman.com.br"
+        caddy.reverse_proxy: "{{upstreams 9000}}"
+        caddy.basic_auth.npc: "__BCRYPT__"
+    networks: [default, caddy]
+
+  fastsd:
+    image: rpg-npc-fastsd:openvino
+    command: ["python", "src/app.py", "--api"]
+    environment:
+      - HF_HOME=/data/huggingface
+      - DEVICE=cpu
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - /root/manual-stacks/rpg-npc-fastsd/hf:/data/huggingface
+    deploy:
+      replicas: 1
+      restart_policy: { condition: any, delay: 10s }
+      resources:
+        limits: { memory: 8G }
+    networks: [default]
+
+networks:
+  default:
+  caddy:
+    external: true

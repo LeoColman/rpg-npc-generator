@@ -1,0 +1,21 @@
+# Secrets — never commit
+auth.txt
+docker-compose.rendered.yml
+
+# Model cache (huge, regenerated on first render)
+hf/
+
+# Test / deploy artifacts
+*.log
+*.json
+*.png
+
+# Ad-hoc smoke-test scripts (they inline the basic-auth password)
+gen10*.sh
+runtest.sh
+lcmtest.sh
+*_results.txt
+
+# Ktor queue module build output
+queue/build/
+queue/.gradle/
