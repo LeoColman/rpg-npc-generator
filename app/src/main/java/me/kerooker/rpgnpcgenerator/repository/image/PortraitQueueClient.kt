@@ -120,10 +120,15 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         @SerialName("lcm_lora") val lcmLora: LcmLora = LcmLora(),
         @SerialName("use_tiny_auto_encoder") val useTinyAutoEncoder: Boolean = true,
         @SerialName("inference_steps") val inferenceSteps: Int = 4,
-        @SerialName("guidance_scale") val guidanceScale: Float = 1.0f,
+        // >1 so the hardened negative prompt (anti-nudity) actually takes effect; at 1.0 the negative
+        // pass is skipped. 1.5 keeps LCM quality while roughly doubling render time vs cfg=1.0.
+        @SerialName("guidance_scale") val guidanceScale: Float = 1.5f,
         @SerialName("diffusion_task") val diffusionTask: String = "text_to_image",
         @SerialName("number_of_images") val numberOfImages: Int = 1,
-        @SerialName("use_seed") val useSeed: Boolean = false
+        @SerialName("use_seed") val useSeed: Boolean = false,
+        // Server-side NSFW filter (diffusers safety checker): blanks out unsafe renders as a last line
+        // of defense beyond the prompt. Essential for an ad-supported app that also renders child NPCs.
+        @SerialName("use_safety_checker") val useSafetyChecker: Boolean = true
     )
 
     // DreamShaper-8: fantasy-tuned SD 1.5, CreativeML OpenRAIL-M (commercial-safe), LCM-LoRA compatible.

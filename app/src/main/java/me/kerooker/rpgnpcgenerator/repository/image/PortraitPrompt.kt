@@ -9,11 +9,22 @@ import me.kerooker.rpgnpcgenerator.data.Npc
  */
 object PortraitPrompt {
 
-    private const val STYLE = "fantasy character portrait, head and shoulders, detailed face, " +
-        "dramatic lighting, painterly, dungeons and dragons, digital painting, artstation, highly detailed"
+    private const val STYLE = "fantasy character portrait, head and shoulders, fully clothed, " +
+        "wearing clothing, modest, detailed face, dramatic lighting, painterly, dungeons and dragons, " +
+        "digital painting, artstation, highly detailed, safe for work"
 
+    // Negative prompt hardened against nudity/sexualization. NOTE: this only has any effect when
+    // guidance_scale > 1 (at cfg=1.0 the negative pass is skipped entirely) — see PortraitQueueClient.
     private const val NEGATIVE = "lowres, bad anatomy, bad hands, extra fingers, extra limbs, " +
-        "deformed, disfigured, mutation, text, watermark, signature, blurry, cropped, nsfw"
+        "deformed, disfigured, mutation, text, watermark, signature, blurry, cropped, " +
+        "nsfw, nude, nudity, naked, topless, bare chest, exposed breasts, cleavage, underwear, " +
+        "lingerie, bikini, swimsuit, sexualized, suggestive, provocative, erotic, revealing clothing"
+
+    // Extra guardrails for child NPCs: reinforce a wholesome, fully-clothed portrait on top of the
+    // base SFW style so a child portrait can never drift toward anything inappropriate.
+    private const val CHILD_SAFETY = "wholesome, innocent, fully clothed, child-appropriate, modest"
+
+    private val CHILD_AGE_KEYWORDS = listOf("child", "criança", "crianca")
 
     /**
      * SD 1.5 (even fantasy finetunes) barely knows D&D race names, and the low-CFG LCM path follows
@@ -56,10 +67,17 @@ object PortraitPrompt {
             npc.personalityTraits.filter { it.isNotBlank() }.take(2).forEach { add(it) }
         }.filter { it.isNotBlank() }.joinToString(", ")
 
+        val style = if (isChild(npc.age)) "$STYLE, $CHILD_SAFETY" else STYLE
         return PortraitRequest(
-            prompt = "$descriptors, $STYLE",
+            prompt = "$descriptors, $style",
             negativePrompt = NEGATIVE
         )
+    }
+
+    /** Child NPCs get the extra [CHILD_SAFETY] clause; matches the localized age string (en + pt). */
+    private fun isChild(age: String): Boolean {
+        val normalized = age.lowercase()
+        return CHILD_AGE_KEYWORDS.any { it in normalized }
     }
 
     /** Appends concrete physical features for the matched fantasy race; humans/unknowns pass through. */

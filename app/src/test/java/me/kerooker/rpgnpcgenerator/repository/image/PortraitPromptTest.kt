@@ -7,11 +7,14 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import me.kerooker.rpgnpcgenerator.data.Npc
 
-private const val STYLE = "fantasy character portrait, head and shoulders, detailed face, " +
-    "dramatic lighting, painterly, dungeons and dragons, digital painting, artstation, highly detailed"
+private const val STYLE = "fantasy character portrait, head and shoulders, fully clothed, " +
+    "wearing clothing, modest, detailed face, dramatic lighting, painterly, dungeons and dragons, " +
+    "digital painting, artstation, highly detailed, safe for work"
 
 private const val NEGATIVE_PROMPT = "lowres, bad anatomy, bad hands, extra fingers, extra limbs, " +
-    "deformed, disfigured, mutation, text, watermark, signature, blurry, cropped, nsfw"
+    "deformed, disfigured, mutation, text, watermark, signature, blurry, cropped, " +
+    "nsfw, nude, nudity, naked, topless, bare chest, exposed breasts, cleavage, underwear, " +
+    "lingerie, bikini, swimsuit, sexualized, suggestive, provocative, erotic, revealing clothing"
 
 private fun npc(
     age: String = "Adult",
@@ -154,5 +157,19 @@ class PortraitPromptTest : FunSpec({
         val request = PortraitPrompt.forNpc(npc(personalityTraits = emptyList()))
 
         request.prompt shouldBe "Adult, Female, Human, Blacksmith, Neutral Good alignment, $STYLE"
+    }
+
+    test("child NPCs get the extra wholesome, fully-clothed safety clause") {
+        val request = PortraitPrompt.forNpc(npc(age = "Child"))
+
+        request.prompt shouldContain "wholesome, innocent, fully clothed, child-appropriate, modest"
+    }
+
+    test("the child safety clause matches the Portuguese age string too") {
+        PortraitPrompt.forNpc(npc(age = "Criança")).prompt shouldContain "child-appropriate"
+    }
+
+    test("non-child NPCs do not get the child safety clause") {
+        PortraitPrompt.forNpc(npc(age = "Adult")).prompt shouldNotContain "child-appropriate"
     }
 })
