@@ -29,9 +29,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +43,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
@@ -250,19 +254,39 @@ private fun PortraitCaption(state: PortraitUiState) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error
         )
-        state.isGenerating && state.queueNumber != null -> Text(
-            text = stringResource(
-                R.string.random_npc_portrait_queue,
-                state.queueNumber,
-                formatEta(state.etaSeconds)
-            ),
-            style = MaterialTheme.typography.bodySmall
-        )
+        state.isGenerating && state.queueNumber != null ->
+            QueueCaption(queueNumber = state.queueNumber, etaSeconds = state.etaSeconds)
         state.isGenerating -> Text(
             text = stringResource(R.string.random_npc_portrait_generating),
             style = MaterialTheme.typography.bodySmall
         )
     }
+}
+
+/**
+ * The queue/ETA line. At queue position 0 the render is running now, so the ETA becomes a live
+ * one-second countdown; if it overruns the estimate we drop the misleading number and just say it's
+ * generating. For positions ahead in line it stays a static estimate.
+ */
+@Composable
+private fun QueueCaption(queueNumber: Int, etaSeconds: Int?) {
+    val text = if (queueNumber == 0 && etaSeconds != null) {
+        var remaining by remember(etaSeconds) { mutableIntStateOf(etaSeconds) }
+        LaunchedEffect(etaSeconds) {
+            while (remaining > 0) {
+                delay(COUNTDOWN_TICK_MS)
+                remaining -= 1
+            }
+        }
+        if (remaining > 0) {
+            stringResource(R.string.random_npc_portrait_queue, queueNumber, formatEta(remaining))
+        } else {
+            stringResource(R.string.random_npc_portrait_generating)
+        }
+    } else {
+        stringResource(R.string.random_npc_portrait_queue, queueNumber, formatEta(etaSeconds))
+    }
+    Text(text = text, style = MaterialTheme.typography.bodySmall)
 }
 
 private fun formatEta(seconds: Int?): String {
@@ -278,3 +302,4 @@ private val PORTRAIT_WIDTH = 200.dp
 private const val PORTRAIT_ASPECT = 512f / 640f
 private const val SCRIM_ALPHA = 0.35f
 private const val SECONDS_IN_MINUTE = 60
+private const val COUNTDOWN_TICK_MS = 1_000L
