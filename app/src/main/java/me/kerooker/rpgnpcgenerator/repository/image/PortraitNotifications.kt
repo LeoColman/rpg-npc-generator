@@ -33,11 +33,11 @@ class PortraitNotifications(private val context: Context) {
             .build()
 
     fun notifyProgress(npcId: Long, name: String, text: String) {
-        safeNotify(npcId) { it.notify(npcId.toInt(), progress(name, text)) }
+        safeNotify { it.notify(npcId.toInt(), progress(name, text)) }
     }
 
     fun notifyReady(npcId: Long, name: String) {
-        safeNotify(npcId) {
+        safeNotify {
             it.notify(
                 npcId.toInt(),
                 base(name).setContentText(context.getString(R.string.portrait_notification_ready))
@@ -48,7 +48,7 @@ class PortraitNotifications(private val context: Context) {
     }
 
     fun notifyFailed(npcId: Long, name: String) {
-        safeNotify(npcId) {
+        safeNotify {
             it.notify(
                 npcId.toInt(),
                 base(name).setContentText(context.getString(R.string.portrait_notification_failed))
@@ -76,7 +76,7 @@ class PortraitNotifications(private val context: Context) {
 
     // POST_NOTIFICATIONS may be denied on API 33+; posting then throws SecurityException — ignore,
     // the portrait still lands in the DB and appears when the user reopens the NPC.
-    private inline fun safeNotify(npcId: Long, block: (NotificationManagerCompat) -> Unit) {
+    private inline fun safeNotify(block: (NotificationManagerCompat) -> Unit) {
         runCatching { block(NotificationManagerCompat.from(context)) }
     }
 

@@ -4,6 +4,7 @@ import android.util.Base64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -31,14 +32,14 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
             SubmitBody.serializer(),
             SubmitBody(
                 prompt = request.prompt,
-                negative_prompt = request.negativePrompt,
-                image_width = request.width,
-                image_height = request.height
+                negativePrompt = request.negativePrompt,
+                imageWidth = request.width,
+                imageHeight = request.height
             )
         )
         val payload = post("/submit", body)
         val res = json.decodeFromString(SubmitResponse.serializer(), payload)
-        Submitted(jobId = res.job_id, ahead = res.ahead)
+        Submitted(jobId = res.jobId, ahead = res.ahead)
     }
 
     suspend fun status(jobId: String): JobStatus = withContext(Dispatchers.IO) {
@@ -101,30 +102,30 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
     @Serializable
     private data class SubmitBody(
         val prompt: String,
-        val negative_prompt: String,
-        val image_width: Int,
-        val image_height: Int,
-        val use_openvino: Boolean = false,
-        val use_lcm_lora: Boolean = true,
-        val lcm_lora: LcmLora = LcmLora(),
-        val use_tiny_auto_encoder: Boolean = true,
-        val inference_steps: Int = 4,
-        val guidance_scale: Float = 1.0f,
-        val diffusion_task: String = "text_to_image",
-        val number_of_images: Int = 1,
-        val use_seed: Boolean = false
+        @SerialName("negative_prompt") val negativePrompt: String,
+        @SerialName("image_width") val imageWidth: Int,
+        @SerialName("image_height") val imageHeight: Int,
+        @SerialName("use_openvino") val useOpenvino: Boolean = false,
+        @SerialName("use_lcm_lora") val useLcmLora: Boolean = true,
+        @SerialName("lcm_lora") val lcmLora: LcmLora = LcmLora(),
+        @SerialName("use_tiny_auto_encoder") val useTinyAutoEncoder: Boolean = true,
+        @SerialName("inference_steps") val inferenceSteps: Int = 4,
+        @SerialName("guidance_scale") val guidanceScale: Float = 1.0f,
+        @SerialName("diffusion_task") val diffusionTask: String = "text_to_image",
+        @SerialName("number_of_images") val numberOfImages: Int = 1,
+        @SerialName("use_seed") val useSeed: Boolean = false
     )
 
     // DreamShaper-8: fantasy-tuned SD 1.5, CreativeML OpenRAIL-M (commercial-safe), LCM-LoRA compatible.
     // Knows D&D races far better than vanilla SD 1.5; stays ~20s because it's still SD 1.5 + LCM.
     @Serializable
     private data class LcmLora(
-        val base_model_id: String = "Lykon/dreamshaper-8",
-        val lcm_lora_id: String = "latent-consistency/lcm-lora-sdv1-5"
+        @SerialName("base_model_id") val baseModelId: String = "Lykon/dreamshaper-8",
+        @SerialName("lcm_lora_id") val lcmLoraId: String = "latent-consistency/lcm-lora-sdv1-5"
     )
 
     @Serializable
-    private data class SubmitResponse(val job_id: String, val ahead: Int = 0)
+    private data class SubmitResponse(@SerialName("job_id") val jobId: String, val ahead: Int = 0)
 
     @Serializable
     private data class StatusResponse(

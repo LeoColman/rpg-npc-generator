@@ -49,19 +49,15 @@ class GeneratePortraitWorker(
 
     override suspend fun doWork(): Result {
         val npcId = inputData.getLong(KEY_NPC_ID, -1L)
-        if (npcId < 0) return Result.failure()
-        val npc = npcRepository.get(npcId).firstOrNull() ?: return Result.failure()
+        val npc = if (npcId >= 0) npcRepository.get(npcId).firstOrNull() else null
+        if (npc == null) return Result.failure()
         val request = PortraitPrompt.forNpc(npc)
 
         notifications.ensureChannel()
         notifications.notifyProgress(npcId, npc.fullName, str(R.string.portrait_notification_queued))
 
-        if (!queueClient.enabled) {
-            notifications.notifyFailed(npcId, npc.fullName)
-            return Result.failure()
-        }
-
-        val path = runCatching { renderRemote(npcId, npc.fullName, request) }.getOrNull()
+        val path = if (!queueClient.enabled) null
+        else runCatching { renderRemote(npcId, npc.fullName, request) }.getOrNull()
         if (path == null) {
             notifications.notifyFailed(npcId, npc.fullName)
             return Result.failure()
