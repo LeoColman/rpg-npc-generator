@@ -1,0 +1,1 @@
+NPC portraits now factor in the character's personality traits and your saved notes for a closer likeness, and the estimated wait time counts down live while a portrait is rendering.
