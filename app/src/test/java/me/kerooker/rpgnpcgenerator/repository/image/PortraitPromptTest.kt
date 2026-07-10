@@ -5,7 +5,10 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.string.shouldStartWith
 import me.kerooker.rpgnpcgenerator.data.Npc
+
+private const val SFW = "safe for work, fully clothed"
 
 private const val STYLE = "fantasy character portrait, head and shoulders, fully clothed, " +
     "wearing clothing, modest, detailed face, dramatic lighting, painterly, dungeons and dragons, " +
@@ -22,7 +25,8 @@ private fun npc(
     race: String = "Human",
     profession: String = "Blacksmith",
     alignment: String = "Neutral Good",
-    personalityTraits: List<String> = listOf("Brave", "Curious")
+    personalityTraits: List<String> = listOf("Brave", "Curious"),
+    notes: String = ""
 ) = Npc(
     id = 0,
     fullName = "Aria Nightsong",
@@ -37,7 +41,7 @@ private fun npc(
     personalityTraits = personalityTraits,
     languages = listOf("Common"),
     imagePath = null,
-    notes = "Met in the tavern"
+    notes = notes
 )
 
 class PortraitPromptTest : FunSpec({
@@ -45,7 +49,11 @@ class PortraitPromptTest : FunSpec({
     test("forNpc assembles descriptors from age, gender, race, profession, alignment and traits") {
         val request = PortraitPrompt.forNpc(npc())
 
-        request.prompt shouldBe "Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+    }
+
+    test("every prompt begins with the safe-for-work anchor so it survives token truncation") {
+        PortraitPrompt.forNpc(npc()).prompt shouldStartWith SFW
     }
 
     test("forNpc always sets the fixed negative prompt") {
@@ -118,45 +126,44 @@ class PortraitPromptTest : FunSpec({
     test("human race passes through unchanged with no anatomy tokens appended") {
         val request = PortraitPrompt.forNpc(npc(race = "Human"))
 
-        request.prompt shouldBe "Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
     }
 
     test("unknown race passes through unchanged with no anatomy tokens appended") {
         val request = PortraitPrompt.forNpc(npc(race = "Automaton"))
 
-        request.prompt shouldBe "Adult, Female, Automaton, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Automaton, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
     }
 
     test("blank race is filtered out of descriptors without leaving an empty token") {
         val request = PortraitPrompt.forNpc(npc(race = ""))
 
-        request.prompt shouldBe "Adult, Female, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
     }
 
     test("blank alignment is omitted entirely, no dangling alignment suffix") {
         val request = PortraitPrompt.forNpc(npc(alignment = ""))
 
-        request.prompt shouldBe "Adult, Female, Human, Blacksmith, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Brave, Curious, $STYLE"
     }
 
-    test("only the first two non-blank personality traits are included") {
+    test("only the first three non-blank personality traits are included") {
         val request = PortraitPrompt.forNpc(npc(personalityTraits = listOf("Brave", "Curious", "Loyal", "Greedy")))
 
-        request.prompt shouldContain "Brave, Curious"
-        request.prompt shouldNotContain "Loyal"
+        request.prompt shouldContain "Brave, Curious, Loyal"
         request.prompt shouldNotContain "Greedy"
     }
 
-    test("blank personality traits are filtered out before taking the first two") {
+    test("blank personality traits are filtered out before taking the first three") {
         val request = PortraitPrompt.forNpc(npc(personalityTraits = listOf("", "Brave", "", "Curious")))
 
-        request.prompt shouldBe "Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
     }
 
     test("empty personality traits list produces no trait descriptors") {
         val request = PortraitPrompt.forNpc(npc(personalityTraits = emptyList()))
 
-        request.prompt shouldBe "Adult, Female, Human, Blacksmith, Neutral Good alignment, $STYLE"
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Neutral Good alignment, $STYLE"
     }
 
     test("child NPCs get the extra wholesome, fully-clothed safety clause") {
@@ -171,5 +178,30 @@ class PortraitPromptTest : FunSpec({
 
     test("non-child NPCs do not get the child safety clause") {
         PortraitPrompt.forNpc(npc(age = "Adult")).prompt shouldNotContain "child-appropriate"
+    }
+
+    test("user notes are woven into the prompt for a saved NPC") {
+        val request = PortraitPrompt.forNpc(npc(notes = "long scar across the left cheek, red hooded cloak"))
+
+        request.prompt shouldContain "long scar across the left cheek, red hooded cloak"
+    }
+
+    test("blank notes contribute nothing to the prompt") {
+        val request = PortraitPrompt.forNpc(npc(notes = ""))
+
+        request.prompt shouldBe "$SFW, Adult, Female, Human, Blacksmith, Neutral Good alignment, Brave, Curious, $STYLE"
+    }
+
+    test("long notes are truncated so they cannot blow the token budget") {
+        val request = PortraitPrompt.forNpc(npc(notes = "x".repeat(500)))
+
+        request.prompt shouldContain "x".repeat(200)
+        request.prompt shouldNotContain "x".repeat(201)
+    }
+
+    test("multi-line notes are flattened to a single line") {
+        val request = PortraitPrompt.forNpc(npc(notes = "scarred face\nmissing an eye"))
+
+        request.prompt shouldContain "scarred face missing an eye"
     }
 })

@@ -26,6 +26,12 @@ object PortraitPrompt {
 
     private val CHILD_AGE_KEYWORDS = listOf("child", "criança", "crianca")
 
+    // Redundant with STYLE's "fully clothed, safe for work", but placed at the FRONT of the prompt so
+    // the safety intent survives CLIP's 77-token truncation when user notes push the tail out.
+    private const val SFW_PREFIX = "safe for work, fully clothed"
+    private const val MAX_TRAITS = 3
+    private const val MAX_NOTE_CHARS = 200
+
     /**
      * SD 1.5 (even fantasy finetunes) barely knows D&D race names, and the low-CFG LCM path follows
      * uncommon tokens weakly, so every race otherwise collapses to a plain human face. We append
@@ -59,12 +65,16 @@ object PortraitPrompt {
 
     fun forNpc(npc: Npc): PortraitRequest {
         val descriptors = buildList {
+            // Safety anchor first, so it survives CLIP's 77-token truncation even when notes are long.
+            add(SFW_PREFIX)
             add(npc.age)
             add(npc.gender)
             add(raceWithAnatomy(npc.race))
             add(npc.profession)
             if (npc.alignment.isNotBlank()) add("${npc.alignment} alignment")
-            npc.personalityTraits.filter { it.isNotBlank() }.take(2).forEach { add(it) }
+            npc.personalityTraits.filter { it.isNotBlank() }.take(MAX_TRAITS).forEach { add(it) }
+            // Free-text notes (saved NPCs only) — often hold appearance details; excerpted to stay in budget.
+            add(noteExcerpt(npc.notes))
         }.filter { it.isNotBlank() }.joinToString(", ")
 
         val style = if (isChild(npc.age)) "$STYLE, $CHILD_SAFETY" else STYLE
@@ -79,6 +89,13 @@ object PortraitPrompt {
         val normalized = age.lowercase()
         return CHILD_AGE_KEYWORDS.any { it in normalized }
     }
+
+    /**
+     * A short, single-line excerpt of the user's free-text notes (empty for unsaved NPCs). Newlines
+     * are flattened and the text is hard-capped so multi-paragraph lore can't blow the token budget.
+     */
+    private fun noteExcerpt(notes: String): String =
+        notes.trim().replace('\n', ' ').take(MAX_NOTE_CHARS).trim()
 
     /** Appends concrete physical features for the matched fantasy race; humans/unknowns pass through. */
     private fun raceWithAnatomy(race: String): String {
