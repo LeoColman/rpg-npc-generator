@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Server-side portrait rendering (FastSD on ritalee); the app is otherwise offline. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- "Portrait ready" notification for the fire-and-forget generation flow (Android 13+). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".RpgNpcGeneratorApplication"
         android:allowBackup="true"

@@ -1,24 +1,32 @@
 package me.kerooker.rpgnpcgenerator.ui.mynpcs.individual
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -30,6 +38,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,11 +54,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +85,8 @@ fun NpcDetailScreen(
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // The editable working copy. Reset to the persisted value whenever we are not editing.
+    // The editable working copy. Reset to the persisted value whenever we are not editing. A portrait
+    // generated in the background lands on the persisted NPC, so it flows in here via [npc].
     var draft by remember { mutableStateOf<Npc?>(null) }
     LaunchedEffect(npc, isEditing) {
         if (!isEditing) draft = npc
@@ -124,6 +134,7 @@ fun NpcDetailScreen(
                 draft = editing,
                 isEditing = isEditing,
                 contentPadding = padding,
+                onGeneratePortrait = viewModel::generatePortrait,
                 onDraftChange = { draft = it }
             )
         }
@@ -163,6 +174,7 @@ private fun NpcDetailContent(
     draft: Npc,
     isEditing: Boolean,
     contentPadding: PaddingValues,
+    onGeneratePortrait: () -> Unit,
     onDraftChange: (Npc) -> Unit
 ) {
     val context = LocalContext.current
@@ -174,6 +186,19 @@ private fun NpcDetailContent(
                 if (path != null) onDraftChange(draft.copy(imagePath = path))
             }
         }
+    }
+    val notificationPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val queuedMessage = stringResource(R.string.portrait_queued_toast)
+    val queuePortrait: () -> Unit = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        onGeneratePortrait()
+        Toast.makeText(context, queuedMessage, Toast.LENGTH_LONG).show()
     }
 
     Column(
@@ -188,10 +213,22 @@ private fun NpcDetailContent(
         Portrait(
             imagePath = draft.imagePath,
             editable = isEditing,
-            onClick = {
+            onPick = {
                 pickPortrait.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
         )
+
+        // Fire-and-forget: renders on the server queue and notifies when ready. View mode only,
+        // since the result attaches to the saved NPC (the user can leave and come back).
+        if (!isEditing) {
+            OutlinedButton(onClick = queuePortrait) {
+                Icon(Icons.Filled.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
+                Text(
+                    text = stringResource(R.string.individual_npc_generate_portrait),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
 
         NpcField(
             label = stringResource(R.string.random_npc_full_name_hint),
@@ -292,43 +329,52 @@ private fun NpcDetailContent(
 }
 
 @Composable
-private fun Portrait(imagePath: String?, editable: Boolean, onClick: () -> Unit) {
-    var boxModifier = Modifier
-        .size(160.dp)
-        .clip(CircleShape)
-        .background(MaterialTheme.colorScheme.secondaryContainer)
-    if (editable) boxModifier = boxModifier.clickable(onClick = onClick)
-
-    Box(modifier = boxModifier, contentAlignment = Alignment.Center) {
-        if (imagePath != null) {
-            AsyncImage(
-                model = File(imagePath),
-                contentDescription = stringResource(R.string.cd_npc_portrait),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = stringResource(R.string.cd_npc_portrait),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(72.dp)
-            )
+private fun Portrait(imagePath: String?, editable: Boolean, onPick: () -> Unit) {
+    // Rounded portrait card sized to the generated art's aspect, so the whole figure shows uncropped.
+    Box(modifier = Modifier.width(PORTRAIT_WIDTH).aspectRatio(PORTRAIT_ASPECT)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            if (imagePath != null) {
+                AsyncImage(
+                    model = File(imagePath),
+                    contentDescription = stringResource(R.string.cd_npc_portrait),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = stringResource(R.string.cd_npc_portrait),
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(72.dp)
+                )
+            }
         }
         if (editable) {
-            Box(
+            IconButton(
+                onClick = onPick,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.25f)),
-                contentAlignment = Alignment.Center
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 8.dp, y = 8.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
                     contentDescription = stringResource(R.string.cd_change_portrait),
-                    tint = Color.White,
-                    modifier = Modifier.size(36.dp)
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
     }
 }
+
+private val PORTRAIT_WIDTH = 200.dp
+private const val PORTRAIT_ASPECT = 512f / 640f

@@ -17,14 +17,36 @@ object ImageStore {
 
     fun persistPortrait(context: Context, uri: Uri): String? = runCatching {
         val bitmap = decodeScaledBitmap(context, uri) ?: return null
+        val path = writeJpeg(context, bitmap)
+        bitmap.recycle()
+        path
+    }.getOrNull()
+
+    /** Persists an in-memory bitmap (e.g. a generated portrait) to app storage. */
+    fun persistBitmap(context: Context, bitmap: Bitmap): String? =
+        runCatching { writeJpeg(context, bitmap) }.getOrNull()
+
+    /**
+     * Deletes a portrait file that is no longer referenced (replaced or its NPC deleted). Guarded to
+     * only touch files inside our own portraits directory, so a stray/foreign path can't delete
+     * anything unexpected.
+     */
+    fun deletePortrait(context: Context, path: String) {
+        val directory = File(context.filesDir, DIRECTORY)
+        val file = File(path)
+        if (file.absolutePath.startsWith(directory.absolutePath)) {
+            runCatching { file.delete() }
+        }
+    }
+
+    private fun writeJpeg(context: Context, bitmap: Bitmap): String {
         val directory = File(context.filesDir, DIRECTORY).apply { mkdirs() }
         val destination = File(directory, "${UUID.randomUUID()}.jpg")
         destination.outputStream().use { output ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, output)
         }
-        bitmap.recycle()
-        destination.absolutePath
-    }.getOrNull()
+        return destination.absolutePath
+    }
 
     private fun decodeScaledBitmap(context: Context, uri: Uri): Bitmap? {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
