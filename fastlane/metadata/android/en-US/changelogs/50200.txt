@@ -1,0 +1,1 @@
+NPC portraits now generate automatically as you roll a character on the Randomize screen, with a live queue position and ETA while each portrait renders. Re-rolling cancels the previous request, and saving an NPC keeps its generated portrait.
