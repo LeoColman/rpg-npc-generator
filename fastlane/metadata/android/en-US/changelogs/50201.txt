@@ -1,0 +1,1 @@
+Portrait generation now guards against inappropriate or explicit content, with extra safeguards for portraits of women and children. The generation queue also shows a more accurate wait-time estimate.
