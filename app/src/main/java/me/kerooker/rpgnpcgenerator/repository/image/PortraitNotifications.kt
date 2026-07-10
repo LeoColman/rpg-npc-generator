@@ -1,14 +1,18 @@
 package me.kerooker.rpgnpcgenerator.repository.image
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.pm.PackageManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.Manifest
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import me.kerooker.rpgnpcgenerator.R
 
 /** Progress + completion notifications for background portrait generation. One per NPC id. */
@@ -76,7 +80,15 @@ class PortraitNotifications(private val context: Context) {
 
     // POST_NOTIFICATIONS may be denied on API 33+; posting then throws SecurityException — ignore,
     // the portrait still lands in the DB and appears when the user reopens the NPC.
+    @SuppressLint("MissingPermission")
     private inline fun safeNotify(block: (NotificationManagerCompat) -> Unit) {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         runCatching { block(NotificationManagerCompat.from(context)) }
     }
 
