@@ -28,25 +28,38 @@ class IndividualNpcViewModel(
     private val _editState = MutableStateFlow(EditState.VIEW)
     val editState: StateFlow<EditState> = _editState.asStateFlow()
 
+    // The portrait shown when the user entered edit mode. Lets saveEdit tell a portrait the user
+    // actually picked apart from one a background render produced while they were editing.
+    private var editing = false
+    private var imageWhenEditingStarted: String? = null
+
     fun enableEdit() {
+        imageWhenEditingStarted = npc.value?.imagePath
+        editing = true
         _editState.value = EditState.EDIT
     }
 
     fun cancelEdit() {
+        editing = false
         _editState.value = EditState.VIEW
     }
 
     fun saveEdit(edited: Npc) {
-        val initialImage = npc.value?.imagePath
+        // "Changed" only if the user re-picked the portrait during an edit session; a stale draft value
+        // that still matches the pre-edit image is NOT a change (a background render may have replaced it).
+        val userChangedPortrait = editing && edited.imagePath != imageWhenEditingStarted
+        editing = false
         _editState.value = EditState.VIEW
         viewModelScope.launch(Dispatchers.IO) {
             val latest = npcRepository.get(npcId).firstOrNull() ?: return@launch
-            val mergedImage = if (edited.imagePath == initialImage) latest.imagePath else edited.imagePath
-            val merged = edited.copy(id = npcId, imagePath = mergedImage)
+            // Honor the user's pick if they changed the portrait; otherwise keep whatever the DB has
+            // now, so a portrait generated in the background isn't clobbered by the stale draft value.
+            val finalImage = if (userChangedPortrait) edited.imagePath else latest.imagePath
+            val merged = edited.copy(id = npcId, imagePath = finalImage)
 
             npcRepository.update(merged)
-            // If the edit replaced the latest portrait, the previous file is now orphaned — remove it.
-            if (!latest.imagePath.isNullOrBlank() && latest.imagePath != merged.imagePath) {
+            // If the previous portrait is no longer referenced, remove the now-orphaned file.
+            if (!latest.imagePath.isNullOrBlank() && latest.imagePath != finalImage) {
                 ImageStore.deletePortrait(appContext, latest.imagePath)
             }
         }
