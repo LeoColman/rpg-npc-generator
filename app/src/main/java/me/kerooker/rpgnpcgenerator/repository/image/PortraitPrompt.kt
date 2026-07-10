@@ -9,9 +9,11 @@ import me.kerooker.rpgnpcgenerator.data.Npc
  */
 object PortraitPrompt {
 
-    private const val STYLE = "fantasy character portrait, head and shoulders, fully clothed, " +
-        "wearing clothing, modest, detailed face, dramatic lighting, painterly, dungeons and dragons, " +
-        "digital painting, artstation, highly detailed, safe for work"
+    // Trimmed to the essential look — clothing/SFW words live in SFW_PREFIX (front) + CHILD_SAFETY, and
+    // redundant boosters (painterly/artstation/safe for work) were dropped to free CLIP token budget
+    // for the descriptors and notes, so less gets truncated at 77 tokens.
+    private const val STYLE = "fantasy character portrait, head and shoulders, detailed face, " +
+        "dramatic lighting, dungeons and dragons, digital painting, highly detailed"
 
     // Negative prompt hardened against nudity/sexualization. NOTE: this only has any effect when
     // guidance_scale > 1 (at cfg=1.0 the negative pass is skipped entirely) — see PortraitQueueClient.

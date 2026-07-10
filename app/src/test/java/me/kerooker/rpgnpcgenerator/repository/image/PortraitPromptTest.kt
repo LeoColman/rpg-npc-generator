@@ -10,9 +10,8 @@ import me.kerooker.rpgnpcgenerator.data.Npc
 
 private const val SFW = "safe for work, fully clothed"
 
-private const val STYLE = "fantasy character portrait, head and shoulders, fully clothed, " +
-    "wearing clothing, modest, detailed face, dramatic lighting, painterly, dungeons and dragons, " +
-    "digital painting, artstation, highly detailed, safe for work"
+private const val STYLE = "fantasy character portrait, head and shoulders, detailed face, " +
+    "dramatic lighting, dungeons and dragons, digital painting, highly detailed"
 
 private const val NEGATIVE_PROMPT = "lowres, bad anatomy, bad hands, extra fingers, extra limbs, " +
     "deformed, disfigured, mutation, text, watermark, signature, blurry, cropped, " +
