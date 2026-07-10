@@ -6,6 +6,7 @@ import io.kotest.matchers.string.shouldContain
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -67,6 +68,36 @@ class QueueRoutesTest : FunSpec({
 
             response.status shouldBe HttpStatusCode.NotFound
             response.bodyAsText() shouldContain "\"state\":\"unknown\""
+        }
+    }
+
+    test("DELETE /jobs cancels a queued job so it no longer occupies the line") {
+        testApplication {
+            application { queueModule(QueueService(idleClient(), "http://fastsd/api"), startWorker = false) }
+
+            val submit = client.post("/submit") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"prompt":"x"}""")
+            }.bodyAsText()
+            val jid = jobIdOf(submit)
+
+            val cancel = client.delete("/jobs/$jid")
+
+            cancel.status shouldBe HttpStatusCode.OK
+            cancel.bodyAsText() shouldContain "\"cancelled\":true"
+            client.get("/status/$jid").status shouldBe HttpStatusCode.NotFound
+            client.get("/").bodyAsText() shouldContain "\"waiting\":0"
+        }
+    }
+
+    test("DELETE /jobs of an unknown job is 404 with cancelled false") {
+        testApplication {
+            application { queueModule(QueueService(idleClient(), "http://fastsd/api"), startWorker = false) }
+
+            val response = client.delete("/jobs/does-not-exist")
+
+            response.status shouldBe HttpStatusCode.NotFound
+            response.bodyAsText() shouldContain "\"cancelled\":false"
         }
     }
 

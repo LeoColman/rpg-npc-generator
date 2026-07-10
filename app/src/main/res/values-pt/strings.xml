@@ -22,6 +22,9 @@
     <string name="portrait_notification_in_queue">Na fila — %1$d à frente</string>
     <string name="portrait_notification_ready">Retrato pronto! Toque para abrir o app.</string>
     <string name="portrait_notification_failed">Não foi possível gerar o retrato.</string>
+    <string name="random_npc_portrait_generating">Gerando retrato…</string>
+    <string name="random_npc_portrait_queue">Posição na fila: %1$d · Estimativa: %2$s</string>
+    <string name="random_npc_portrait_failed">Não foi possível gerar o retrato — sorteie de novo</string>
     <string name="my_npcs_empty_title">Nenhum NPC salvo ainda</string>
     <string name="my_npcs_empty_subtitle">Gere um personagem na aba Aleatório e toque em Salvar para guardá-lo aqui.</string>
     <string name="delete_npc_confirm_title">Excluir NPC?</string>

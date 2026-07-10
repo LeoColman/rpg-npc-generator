@@ -17,6 +17,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receiveText
 import io.ktor.server.response.respond
+import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
@@ -60,6 +61,9 @@ data class StatusResponse(
 
 @Serializable
 data class RootResponse(val ok: Boolean, val waiting: Int, val processing: Boolean)
+
+@Serializable
+data class CancelResponse(val cancelled: Boolean)
 
 @Serializable
 data class UnknownResponse(val state: String = "unknown")
@@ -120,6 +124,19 @@ class QueueService(
 
     suspend fun snapshot(): RootResponse = lock.withLock {
         RootResponse(ok = true, waiting = waiting.size, processing = current != null)
+    }
+
+    /**
+     * Drops a job so it stops occupying the line. A still-[waiting] job is removed before it ever
+     * renders; a finished job is just forgotten. A job already rendering ([current]) can't be
+     * interrupted mid-FastSD-call, so it is left to finish and the client discards the result.
+     * Returns true if the job existed and was removed, false if unknown or currently rendering.
+     */
+    suspend fun cancel(jid: String): Boolean = lock.withLock {
+        pruneLocked()
+        if (jid == current || jobs.remove(jid) == null) return@withLock false
+        waiting.remove(jid)
+        true
     }
 
     /** Drains the FIFO forever: forward each body to FastSD one at a time, store the image or error. */
@@ -228,6 +245,13 @@ fun Application.queueModule(service: QueueService, startWorker: Boolean = true) 
             } else {
                 call.respond(response)
             }
+        }
+
+        // Lets the app interrupt a submission (e.g. the user re-rolled the NPC) so it frees the line.
+        delete("/jobs/{jid}") {
+            val cancelled = service.cancel(call.parameters["jid"].orEmpty())
+            val status = if (cancelled) HttpStatusCode.OK else HttpStatusCode.NotFound
+            call.respond(status, CancelResponse(cancelled))
         }
 
         get("/") {

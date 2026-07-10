@@ -121,6 +121,33 @@ class QueueServiceTest : FunSpec({
         service.status("does-not-exist").shouldBeNull()
     }
 
+    test("cancel removes a queued job and frees the line for the rest") {
+        val service = QueueService(clientReturning(DONE_BODY), "http://fastsd/api")
+        val first = service.submit("""{"n":1}""").jobId
+        val second = service.submit("""{"n":2}""").jobId
+
+        service.cancel(first) shouldBe true
+
+        service.status(first).shouldBeNull()
+        service.status(second)!!.ahead shouldBe 0 // was 1; now first in line
+        service.snapshot().waiting shouldBe 1
+    }
+
+    test("cancel of an unknown job returns false") {
+        val service = QueueService(clientReturning(DONE_BODY), "http://fastsd/api")
+        service.cancel("does-not-exist") shouldBe false
+    }
+
+    test("cancel forgets a finished job") {
+        val service = QueueService(clientReturning(DONE_BODY), "http://fastsd/api")
+        val id = service.submit("{}").jobId
+        service.processNext()
+        service.status(id)!!.state shouldBe "done"
+
+        service.cancel(id) shouldBe true
+        service.status(id).shouldBeNull()
+    }
+
     test("finished jobs are pruned after the TTL elapses") {
         var clock = 1_000L
         val service = QueueService(

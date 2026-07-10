@@ -53,6 +53,16 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         return Base64.decode(raw, Base64.DEFAULT)
     }
 
+    /** Best-effort: drops a still-queued job server-side so it won't render after we've moved on. */
+    suspend fun cancel(jobId: String): Unit = withContext(Dispatchers.IO) {
+        val c = open("/jobs/$jobId").apply { requestMethod = "DELETE" }
+        try {
+            c.responseCode // fire the DELETE; a 404 (already gone) is fine, so we ignore the code
+        } finally {
+            c.disconnect()
+        }
+    }
+
     private fun open(path: String): HttpURLConnection =
         (URL("${config.baseUrl.trimEnd('/')}$path").openConnection() as HttpURLConnection).apply {
             connectTimeout = CONNECT_TIMEOUT_MS
