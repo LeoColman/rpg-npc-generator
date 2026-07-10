@@ -19,6 +19,10 @@ Android app ──HTTPS+basicauth──> caddy ──> queue (Ktor FIFO) ──>
   - `POST /submit` → `{ job_id, ahead }`
   - `GET /status/{job_id}` → `{ state, ahead, queue_length, image, error }`
     (`state` = `queued | processing | done | error`; `image` is base64 PNG when done)
+  - `DELETE /jobs/{job_id}` → `{ cancelled }` (drops a still-waiting job)
+  - `GET /queue` → `{ size, waiting, processing }` — **public, no auth** (`size` =
+    `waiting` + the one rendering). Caddy carves this one path out of basic auth so a
+    status page can read the line length; every other route stays behind `npc` auth.
   - Built with the project's shared version catalog (same Kotlin/coroutines/serialization
     as the app). `queue/Dockerfile` builds the Ktor fat jar via `./gradlew
     :portrait-queue:buildFatJar` — its build context is the **repo root**, and it swaps in

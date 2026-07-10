@@ -63,6 +63,9 @@ data class StatusResponse(
 data class RootResponse(val ok: Boolean, val waiting: Int, val processing: Boolean)
 
 @Serializable
+data class QueueSizeResponse(val size: Int, val waiting: Int, val processing: Boolean)
+
+@Serializable
 data class CancelResponse(val cancelled: Boolean)
 
 @Serializable
@@ -124,6 +127,16 @@ class QueueService(
 
     suspend fun snapshot(): RootResponse = lock.withLock {
         RootResponse(ok = true, waiting = waiting.size, processing = current != null)
+    }
+
+    /** Total jobs in front of a new submission: those waiting plus the one rendering, if any. */
+    suspend fun size(): QueueSizeResponse = lock.withLock {
+        val processing = current != null
+        QueueSizeResponse(
+            size = waiting.size + if (processing) 1 else 0,
+            waiting = waiting.size,
+            processing = processing,
+        )
     }
 
     /**
@@ -256,6 +269,11 @@ fun Application.queueModule(service: QueueService, startWorker: Boolean = true) 
 
         get("/") {
             call.respond(service.snapshot())
+        }
+
+        // Public queue size (carved out of basic_auth in caddy) so clients can show line length.
+        get("/queue") {
+            call.respond(service.size())
         }
     }
 }

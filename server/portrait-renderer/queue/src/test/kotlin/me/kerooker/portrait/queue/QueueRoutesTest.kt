@@ -126,4 +126,24 @@ class QueueRoutesTest : FunSpec({
             body shouldContain "\"waiting\":0"
         }
     }
+
+    test("GET /queue reports the queue size and counts queued jobs") {
+        testApplication {
+            application { queueModule(QueueService(idleClient(), "http://fastsd/api"), startWorker = false) }
+
+            val empty = client.get("/queue")
+            empty.status shouldBe HttpStatusCode.OK
+            empty.bodyAsText() shouldContain "\"size\":0"
+
+            client.post("/submit") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"prompt":"x"}""")
+            }
+
+            val body = client.get("/queue").bodyAsText()
+            body shouldContain "\"size\":1"
+            body shouldContain "\"waiting\":1"
+            body shouldContain "\"processing\":false"
+        }
+    }
 })

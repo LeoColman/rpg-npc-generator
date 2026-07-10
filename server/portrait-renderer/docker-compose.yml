@@ -13,6 +13,9 @@ services:
       labels:
         caddy: "npc-fast.colman.com.br"
         caddy.reverse_proxy: "{{upstreams 9000}}"
+        # /queue (public queue size) is exempt from auth; /submit /status /jobs stay protected.
+        caddy.@protected.not: "path /queue"
+        caddy.basic_auth: "@protected"
         caddy.basic_auth.npc: "__BCRYPT__"
     networks: [default, caddy]
 
