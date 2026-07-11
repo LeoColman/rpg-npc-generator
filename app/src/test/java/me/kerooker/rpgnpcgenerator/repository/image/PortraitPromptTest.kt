@@ -40,7 +40,16 @@ private fun npc(
     personalityTraits = personalityTraits,
     languages = listOf("Common"),
     imagePath = null,
-    notes = notes
+    notes = notes,
+    strength = null,
+    dexterity = null,
+    constitution = null,
+    intelligence = null,
+    wisdom = null,
+    charisma = null,
+    armorClass = null,
+    hitPoints = null,
+    challengeRating = null
 )
 
 class PortraitPromptTest : FunSpec({

@@ -11,7 +11,8 @@ data class GeneratedNpc(
     val motivation: String,
     val alignment: Alignment,
     val personalityTraits: List<String>,
-    val languages: List<Language>
+    val languages: List<Language>,
+    val combat: CombatStats
 )
 
 data class GeneratedNpcData(
@@ -25,5 +26,6 @@ data class GeneratedNpcData(
     val motivation: String,
     val alignment: String,
     val personalityTraits: List<String>,
-    val languages: List<String>
+    val languages: List<String>,
+    val combat: CombatStats? = null
 )

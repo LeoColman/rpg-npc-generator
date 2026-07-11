@@ -292,10 +292,14 @@ class RandomNpcViewModel(
             motivation = motivation,
             alignment = context.getString(alignment.nameResource),
             personalityTraits = personalityTraits,
-            languages = languages.map { context.getString(it.nameResource) }
+            languages = languages.map { context.getString(it.nameResource) },
+            combat = combat
         )
     }
 
+    // NOTE: PortraitPrompt.forNpc ignores the combat columns, so threading them into the row here does
+    // NOT change the built PortraitRequest — distinctUntilChanged still collapses combat-only edits and
+    // no portrait re-render is triggered.
     private fun GeneratedNpcData.toNpc() = Npc(
         id = 0,
         fullName = name,
@@ -310,7 +314,16 @@ class RandomNpcViewModel(
         personalityTraits = personalityTraits,
         languages = languages,
         imagePath = null,
-        notes = ""
+        notes = "",
+        strength = combat?.strength?.toLong(),
+        dexterity = combat?.dexterity?.toLong(),
+        constitution = combat?.constitution?.toLong(),
+        intelligence = combat?.intelligence?.toLong(),
+        wisdom = combat?.wisdom?.toLong(),
+        charisma = combat?.charisma?.toLong(),
+        armorClass = combat?.armorClass?.toLong(),
+        hitPoints = combat?.hitPoints?.toLong(),
+        challengeRating = combat?.challengeRating
     )
 
     private companion object {

@@ -66,6 +66,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.data.Npc
+import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
+import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsUi
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
@@ -317,6 +319,16 @@ private fun NpcDetailContent(
             onAdd = { onDraftChange(draft.copy(personalityTraits = draft.personalityTraits + "")) }
         )
 
+        // Optional D&D 5e combat block. Hidden in view mode for NPCs saved before this existed, but
+        // always shown while editing so stats can be filled in.
+        if (isEditing || draft.hasCombatStats()) {
+            CombatStatsSection(
+                stats = draft.toCombatStatsUi(),
+                editable = isEditing,
+                onStatsChange = { onDraftChange(draft.withCombatStats(it)) }
+            )
+        }
+
         OutlinedTextField(
             value = draft.notes,
             onValueChange = { onDraftChange(draft.copy(notes = it)) },
@@ -375,6 +387,37 @@ private fun Portrait(imagePath: String?, editable: Boolean, onPick: () -> Unit) 
         }
     }
 }
+
+/** Reads the row's nullable combat columns as editable-text UI values (blank when unset). */
+private fun Npc.toCombatStatsUi() = CombatStatsUi(
+    strength = strength?.toString().orEmpty(),
+    dexterity = dexterity?.toString().orEmpty(),
+    constitution = constitution?.toString().orEmpty(),
+    intelligence = intelligence?.toString().orEmpty(),
+    wisdom = wisdom?.toString().orEmpty(),
+    charisma = charisma?.toString().orEmpty(),
+    armorClass = armorClass?.toString().orEmpty(),
+    hitPoints = hitPoints?.toString().orEmpty(),
+    challengeRating = challengeRating.orEmpty()
+)
+
+/** Folds edited combat text back into the row; blank fields become null so they stay "unset". */
+private fun Npc.withCombatStats(ui: CombatStatsUi) = copy(
+    strength = ui.strength.toLongOrNull(),
+    dexterity = ui.dexterity.toLongOrNull(),
+    constitution = ui.constitution.toLongOrNull(),
+    intelligence = ui.intelligence.toLongOrNull(),
+    wisdom = ui.wisdom.toLongOrNull(),
+    charisma = ui.charisma.toLongOrNull(),
+    armorClass = ui.armorClass.toLongOrNull(),
+    hitPoints = ui.hitPoints.toLongOrNull(),
+    challengeRating = ui.challengeRating.ifBlank { null }
+)
+
+/** True when this NPC carries any combat stat (older NPCs predate the block and carry none). */
+private fun Npc.hasCombatStats(): Boolean =
+    listOf(strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints)
+        .any { it != null } || !challengeRating.isNullOrBlank()
 
 private val PORTRAIT_WIDTH = 200.dp
 private const val PORTRAIT_ASPECT = 512f / 640f

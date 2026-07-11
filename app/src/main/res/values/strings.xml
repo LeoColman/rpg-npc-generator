@@ -32,4 +32,16 @@
     <string name="cancel">Cancel</string>
     <string name="npc_saved">NPC saved</string>
     <string name="settings_version">Version %1$s</string>
+
+    <!-- D&D 5e combat stat block -->
+    <string name="combat_stats_label">Combat stats</string>
+    <string name="combat_strength">STR</string>
+    <string name="combat_dexterity">DEX</string>
+    <string name="combat_constitution">CON</string>
+    <string name="combat_intelligence">INT</string>
+    <string name="combat_wisdom">WIS</string>
+    <string name="combat_charisma">CHA</string>
+    <string name="combat_armor_class">AC</string>
+    <string name="combat_hit_points">HP</string>
+    <string name="combat_challenge_rating">Challenge Rating</string>
 </resources>

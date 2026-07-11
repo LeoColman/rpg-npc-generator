@@ -26,7 +26,16 @@ private fun sampleNpc(
     personalityTraits = traits,
     languages = languages,
     imagePath = null,
-    notes = "Met in the tavern"
+    notes = "Met in the tavern",
+    strength = null,
+    dexterity = null,
+    constitution = null,
+    intelligence = null,
+    wisdom = null,
+    charisma = null,
+    armorClass = null,
+    hitPoints = null,
+    challengeRating = null
 )
 
 class NpcRepositoryTest : FunSpec({

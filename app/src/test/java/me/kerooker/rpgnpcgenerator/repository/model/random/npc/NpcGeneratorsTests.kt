@@ -23,7 +23,7 @@ private fun completeGenerator(): CompleteNpcGenerator {
         MotivationGenerator(rawLines("npc_motivations.txt")),
         PersonalityTraitGenerator(rawLines("npc_personality_trait.txt"))
     )
-    return CompleteNpcGenerator(dataGenerator)
+    return CompleteNpcGenerator(dataGenerator, CombatStatsGenerator())
 }
 
 class CompleteNpcGeneratorTest : FunSpec() {
