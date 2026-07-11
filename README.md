@@ -1,5 +1,12 @@
 # RPG NPC Generator
 
+[![License](https://img.shields.io/github/license/LeoColman/rpg-npc-generator)](https://github.com/LeoColman/rpg-npc-generator/blob/master/LICENSE)
+[![Android CI](https://github.com/LeoColman/rpg-npc-generator/actions/workflows/android-test.yml/badge.svg)](https://github.com/LeoColman/rpg-npc-generator/actions/workflows/android-test.yml)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84)](https://www.android.com/)
+[![Kotlin](https://img.shields.io/badge/kotlin-100%25-7F52FF)](https://kotlinlang.org/)
+[![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack%20Compose-4285F4)](https://developer.android.com/jetpack/compose)
+[![minSdk](https://img.shields.io/badge/minSdk-26-blue)](https://developer.android.com/studio/releases/platforms)
+
 **RPG NPC Generator** is an Android app that helps Dungeon Masters create
 non-player characters for their tabletop campaigns — rolling up a believable NPC
 in seconds, saving the ones worth keeping, and even generating a portrait to go
