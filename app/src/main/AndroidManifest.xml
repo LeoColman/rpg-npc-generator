@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- "Portrait ready" notification for the fire-and-forget generation flow (Android 13+). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- AdMob reads the Advertising ID for ad personalization/measurement (Android 13+). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:name=".RpgNpcGeneratorApplication"
@@ -25,6 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- AdMob application id (per build type via the ${admobAppId} manifest placeholder). -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+        <!-- We call MobileAds.initialize() ourselves after UMP consent, not at content-provider time. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
 
         <!-- Shares the generated NPC "share card" PNG (see NpcCardSharer) via the system share sheet.
              Authority is derived from the applicationId so the debug variant (.debug suffix) and the

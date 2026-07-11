@@ -1,6 +1,7 @@
 package me.kerooker.rpgnpcgenerator
 
 import android.app.Application
+import me.kerooker.rpgnpcgenerator.ads.adsModule
 import me.kerooker.rpgnpcgenerator.data.databaseModule
 import me.kerooker.rpgnpcgenerator.repository.image.imageGenModule
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.npcGeneratorsModule
@@ -15,7 +16,7 @@ class RpgNpcGeneratorApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@RpgNpcGeneratorApplication)
-            modules(randomNpcModule, databaseModule, viewModelsModule, npcGeneratorsModule, imageGenModule)
+            modules(randomNpcModule, databaseModule, viewModelsModule, npcGeneratorsModule, imageGenModule, adsModule)
         }
     }
 }
