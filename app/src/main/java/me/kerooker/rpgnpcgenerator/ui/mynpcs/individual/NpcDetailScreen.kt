@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,6 +69,7 @@ import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
+import me.kerooker.rpgnpcgenerator.ui.share.NpcShareCardCapture
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.IndividualNpcViewModel
@@ -84,6 +86,7 @@ fun NpcDetailScreen(
     val editState by viewModel.editState.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var shareRequested by remember { mutableStateOf(false) }
 
     // The editable working copy. Reset to the persisted value whenever we are not editing. A portrait
     // generated in the background lands on the persisted NPC, so it flows in here via [npc].
@@ -113,6 +116,9 @@ fun NpcDetailScreen(
                             Icon(Icons.Filled.Check, contentDescription = stringResource(R.string.individual_npc_save))
                         }
                     } else {
+                        IconButton(onClick = { if (npc != null) shareRequested = true }) {
+                            Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.share_npc))
+                        }
                         IconButton(onClick = viewModel::enableEdit) {
                             Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.individual_npc_edit))
                         }
@@ -138,6 +144,13 @@ fun NpcDetailScreen(
                 onDraftChange = { draft = it }
             )
         }
+
+        // Off-screen: renders the share card and fires the share sheet, then resets. Draws nothing
+        // visible, so it can live alongside the detail content in the Scaffold's content slot.
+        NpcShareCardCapture(
+            request = npc?.takeIf { shareRequested },
+            onFinished = { shareRequested = false }
+        )
     }
 
     if (showDeleteDialog) {

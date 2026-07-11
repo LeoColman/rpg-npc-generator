@@ -32,4 +32,13 @@
     <string name="cancel">Cancel</string>
     <string name="npc_saved">NPC saved</string>
     <string name="settings_version">Version %1$s</string>
+
+    <string name="share_npc">Share</string>
+    <string name="share_npc_chooser">Share NPC</string>
+    <string name="share_npc_error">Couldn\'t create the share image</string>
+    <string name="share_card_watermark">Created with %1$s</string>
+    <string name="share_card_profession">Profession</string>
+    <string name="share_card_alignment">Alignment</string>
+    <string name="share_card_motivation">Motivation</string>
+    <string name="share_card_personality">Personality</string>
 </resources>
