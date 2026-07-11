@@ -1,0 +1,1 @@
+Faster NPC portrait generation: portraits now render about 2-3x faster.
