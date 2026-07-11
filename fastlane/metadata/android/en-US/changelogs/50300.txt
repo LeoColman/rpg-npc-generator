@@ -1,0 +1,3 @@
+• Combat stats: NPCs now come with D&D 5e ability scores, AC, HP and challenge rating — rolled automatically and fully editable.
+• Share an NPC: send any NPC as an image card straight from its detail screen.
+• Organize your roster: search by name, race or profession, group NPCs by campaign, and sort your list.
