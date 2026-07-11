@@ -33,6 +33,17 @@
     <string name="npc_saved">NPC saved</string>
     <string name="settings_version">Version %1$s</string>
 
+    <!-- Roster backup: export / import -->
+    <string name="settings_data_title">Data</string>
+    <string name="settings_export_title">Export NPCs</string>
+    <string name="settings_export_summary">Save all your saved NPCs to a backup file</string>
+    <string name="settings_import_title">Import NPCs</string>
+    <string name="settings_import_summary">Add NPCs from a backup file</string>
+    <string name="export_success">Exported %1$d NPCs</string>
+    <string name="export_error">Couldn\'t export your NPCs</string>
+    <string name="import_success">Imported %1$d NPCs</string>
+    <string name="import_error">Couldn\'t import that file</string>
+
     <!-- D&D 5e combat stat block -->
     <string name="combat_stats_label">Combat stats</string>
     <string name="combat_strength">STR</string>

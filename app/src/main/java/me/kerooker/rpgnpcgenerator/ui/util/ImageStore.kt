@@ -27,6 +27,18 @@ object ImageStore {
         runCatching { writeJpeg(context, bitmap) }.getOrNull()
 
     /**
+     * Persists already-encoded JPEG [bytes] (e.g. a portrait restored from a backup) into the portraits
+     * directory verbatim, returning the new file's absolute path. Bytes are trusted to be a JPEG; a
+     * broken image simply fails to load later rather than crashing here.
+     */
+    fun persistJpegBytes(context: Context, bytes: ByteArray): String? = runCatching {
+        val directory = File(context.filesDir, DIRECTORY).apply { mkdirs() }
+        val destination = File(directory, "${UUID.randomUUID()}.jpg")
+        destination.writeBytes(bytes)
+        destination.absolutePath
+    }.getOrNull()
+
+    /**
      * Deletes a portrait file that is no longer referenced (replaced or its NPC deleted). Guarded to
      * only touch files inside our own portraits directory, so a stray/foreign path can't delete
      * anything unexpected.

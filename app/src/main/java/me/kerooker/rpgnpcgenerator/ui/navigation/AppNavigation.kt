@@ -123,7 +123,7 @@ fun AppRoot() {
                 )
             }
             composable<SettingsRoute> {
-                SettingsScreen()
+                SettingsScreen(viewModel = koinViewModel())
             }
             composable<NpcDetailRoute> { entry ->
                 val route = entry.toRoute<NpcDetailRoute>()
