@@ -25,6 +25,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Shares the generated NPC "share card" PNG (see NpcCardSharer) via the system share sheet.
+             Authority is derived from the applicationId so the debug variant (.debug suffix) and the
+             release build each get a distinct, collision-free authority. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
     <!-- Some Chromebooks don't support touch. Although not essential,

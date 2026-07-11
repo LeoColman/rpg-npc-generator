@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Roots the FileProvider is allowed to share. We only ever expose the generated share-card PNGs,
+     which live in cacheDir/shared_images (see NpcCardSharer). -->
+<paths>
+    <cache-path
+        name="shared_images"
+        path="shared_images/" />
+</paths>
