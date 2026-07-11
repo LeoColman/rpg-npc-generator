@@ -17,6 +17,18 @@ matters and enrich their players' experience.
 
 <a href='https://play.google.com/store/apps/details?id=me.kerooker.rpgcharactergenerator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center" width="20%"><img src="docs/screenshots/randomize.png" width="160" alt="Roll a random NPC with an AI portrait"><br><sub><b>Roll &amp; portrait</b></sub></td>
+    <td align="center" width="20%"><img src="docs/screenshots/roster.png" width="160" alt="Browse your saved roster"><br><sub><b>Your roster</b></sub></td>
+    <td align="center" width="20%"><img src="docs/screenshots/detail.png" width="160" alt="An NPC's full sheet with its portrait"><br><sub><b>NPC detail</b></sub></td>
+    <td align="center" width="20%"><img src="docs/screenshots/combat.png" width="160" alt="Optional D&amp;D 5e combat stat block"><br><sub><b>Combat stats</b></sub></td>
+    <td align="center" width="20%"><img src="docs/screenshots/backup.png" width="160" alt="Export and import your roster"><br><sub><b>Backup &amp; restore</b></sub></td>
+  </tr>
+</table>
+
 ## Features
 
 - **Randomize an NPC** — roll a complete D&D-flavoured character: race, age,
@@ -25,8 +37,13 @@ matters and enrich their players' experience.
 - **AI portraits** — generate a fantasy portrait from the NPC's own traits,
   rendered on a self-hosted server and delivered in the background
   (see [`server/portrait-renderer`](server/portrait-renderer/README.md)).
-- **Save & browse** — keep the NPCs you like and revisit them any time; each
-  retains its attributes and portrait.
+- **Save & browse** — keep the NPCs you like and revisit them any time; search
+  your roster by name, nickname, profession or race, sort it, and group NPCs by
+  campaign. Each NPC keeps its attributes, notes and portrait.
+- **Combat stats** — attach an optional D&D 5e stat block to any NPC: the six
+  ability scores (with modifiers), armor class, hit points and challenge rating.
+- **Backup & restore** — export your whole roster to a single file — portraits
+  included — and import it back on any device.
 - **Offline-first** — attribute generation and your saved roster work with no
   network; only portrait rendering reaches out.
 - **Localised** — available in English and Portuguese.
