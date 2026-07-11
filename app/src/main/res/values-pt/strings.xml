@@ -33,6 +33,17 @@
     <string name="npc_saved">NPC salvo</string>
     <string name="settings_version">Versão %1$s</string>
 
+    <!-- Backup do roster: exportar / importar -->
+    <string name="settings_data_title">Dados</string>
+    <string name="settings_export_title">Exportar NPCs</string>
+    <string name="settings_export_summary">Salve todos os seus NPCs em um arquivo de backup</string>
+    <string name="settings_import_title">Importar NPCs</string>
+    <string name="settings_import_summary">Adicione NPCs a partir de um arquivo de backup</string>
+    <string name="export_success">%1$d NPCs exportados</string>
+    <string name="export_error">Não foi possível exportar seus NPCs</string>
+    <string name="import_success">%1$d NPCs importados</string>
+    <string name="import_error">Não foi possível importar esse arquivo</string>
+
     <!-- Bloco de estatísticas de combate de D&D 5e -->
     <string name="combat_stats_label">Estatísticas de combate</string>
     <string name="combat_strength">FOR</string>
