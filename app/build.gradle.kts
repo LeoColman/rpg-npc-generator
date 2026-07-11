@@ -17,6 +17,14 @@ val appVersionCode: Int = versionProps.getProperty("version.major").toInt() * 10
     versionProps.getProperty("version.minor").toInt() * 100 +
     versionProps.getProperty("version.patch").toInt()
 
+// AdMob test unit IDs (Google's public samples). Always used by debug builds, and the safe fallback
+// for release builds that don't inject the real IDs via gradle properties (admobAppId /
+// admobBannerUnitId / admobRewardedUnitId, e.g. in ~/.gradle/gradle.properties). Never knowingly
+// serve these to production traffic.
+val admobTestAppId = "ca-app-pub-3940256099942544~3347511713"
+val admobTestBannerUnitId = "ca-app-pub-3940256099942544/6300978111"
+val admobTestRewardedUnitId = "ca-app-pub-3940256099942544/5224354917"
+
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
@@ -42,6 +50,9 @@ android {
             "NPC_IMAGE_PASSWORD",
             "\"${providers.gradleProperty("npcImagePassword").getOrElse("")}\""
         )
+
+        // Fallback AdMob app id so manifest placeholder resolution never fails; overridden per build type.
+        manifestPlaceholders["admobAppId"] = admobTestAppId
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,9 +81,29 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")
+
+            // Real AdMob IDs come from gradle properties (never committed); fall back to Google's test
+            // IDs so a release without them still builds and can't rack up invalid-traffic strikes.
+            manifestPlaceholders["admobAppId"] =
+                providers.gradleProperty("admobAppId").getOrElse(admobTestAppId)
+            buildConfigField(
+                "String",
+                "ADMOB_BANNER_UNIT_ID",
+                "\"${providers.gradleProperty("admobBannerUnitId").getOrElse(admobTestBannerUnitId)}\""
+            )
+            buildConfigField(
+                "String",
+                "ADMOB_REWARDED_UNIT_ID",
+                "\"${providers.gradleProperty("admobRewardedUnitId").getOrElse(admobTestRewardedUnitId)}\""
+            )
         }
         debug {
             applicationIdSuffix = ".debug"
+
+            // Debug always uses Google's test ad units — never real inventory.
+            manifestPlaceholders["admobAppId"] = admobTestAppId
+            buildConfigField("String", "ADMOB_BANNER_UNIT_ID", "\"$admobTestBannerUnitId\"")
+            buildConfigField("String", "ADMOB_REWARDED_UNIT_ID", "\"$admobTestRewardedUnitId\"")
         }
     }
 
@@ -164,6 +195,11 @@ dependencies {
     // Persistence (SQLDelight)
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines.extensions)
+
+    // Ads (AdMob) — bundles the UMP consent SDK (com.google.android.ump) — and DataStore for the
+    // ad-free entitlement.
+    implementation(libs.play.services.ads)
+    implementation(libs.androidx.datastore.preferences)
 
     // Detekt formatting (ktlint rules)
     detektPlugins(libs.detekt.formatting)

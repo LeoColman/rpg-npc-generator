@@ -2,6 +2,7 @@ package me.kerooker.rpgnpcgenerator.ui.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.ads.AdBanner
 import me.kerooker.rpgnpcgenerator.ui.mynpcs.MyNpcsScreen
 import me.kerooker.rpgnpcgenerator.ui.mynpcs.individual.NpcDetailScreen
 import me.kerooker.rpgnpcgenerator.ui.random.RandomNpcScreen
@@ -108,30 +110,34 @@ fun AppRoot() {
             }
         }
     ) { padding ->
-        NavHost(
-            navController = navController,
-            startDestination = RandomNpcRoute,
-            modifier = Modifier.padding(padding)
-        ) {
-            composable<RandomNpcRoute> {
-                RandomNpcScreen(viewModel = koinViewModel())
+        Column(modifier = Modifier.padding(padding)) {
+            NavHost(
+                navController = navController,
+                startDestination = RandomNpcRoute,
+                modifier = Modifier.weight(1f)
+            ) {
+                composable<RandomNpcRoute> {
+                    RandomNpcScreen(viewModel = koinViewModel())
+                }
+                composable<MyNpcsRoute> {
+                    MyNpcsScreen(
+                        viewModel = koinViewModel(),
+                        onNpcClick = { id -> navController.navigate(NpcDetailRoute(id)) }
+                    )
+                }
+                composable<SettingsRoute> {
+                    SettingsScreen(viewModel = koinViewModel())
+                }
+                composable<NpcDetailRoute> { entry ->
+                    val route = entry.toRoute<NpcDetailRoute>()
+                    NpcDetailScreen(
+                        viewModel = koinViewModel { parametersOf(route.id) },
+                        onBack = { navController.popBackStack() }
+                    )
+                }
             }
-            composable<MyNpcsRoute> {
-                MyNpcsScreen(
-                    viewModel = koinViewModel(),
-                    onNpcClick = { id -> navController.navigate(NpcDetailRoute(id)) }
-                )
-            }
-            composable<SettingsRoute> {
-                SettingsScreen(viewModel = koinViewModel())
-            }
-            composable<NpcDetailRoute> { entry ->
-                val route = entry.toRoute<NpcDetailRoute>()
-                NpcDetailScreen(
-                    viewModel = koinViewModel { parametersOf(route.id) },
-                    onBack = { navController.popBackStack() }
-                )
-            }
+            // Global bottom banner (self-hides while the user's ad-free week is active).
+            AdBanner()
         }
     }
 }

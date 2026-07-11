@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
 import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.FieldGroup
@@ -76,6 +77,7 @@ fun RandomNpcScreen(
                 title = { Text(stringResource(R.string.nav_bar_random_npc)) },
                 windowInsets = WindowInsets(0),
                 actions = {
+                    RemoveAdsAction(snackbarHostState)
                     RerollButton(
                         contentDescription = stringResource(R.string.randomize_all),
                         onClick = viewModel::randomizeAll

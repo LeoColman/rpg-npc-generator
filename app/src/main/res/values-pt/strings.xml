@@ -64,4 +64,14 @@
     <string name="share_card_alignment">Alinhamento</string>
     <string name="share_card_motivation">Motivação</string>
     <string name="share_card_personality">Personalidade</string>
+
+    <!-- Anúncios: ação de assistir anúncio recompensado para remover anúncios -->
+    <string name="remove_ads_action">Remover anúncios</string>
+    <string name="remove_ads_dialog_title">Remover anúncios por uma semana?</string>
+    <string name="remove_ads_dialog_body">Assista a um vídeo curto para remover os anúncios por 7 dias.</string>
+    <string name="remove_ads_dialog_confirm">Assistir vídeo</string>
+    <string name="remove_ads_dialog_dismiss">Agora não</string>
+    <string name="remove_ads_success">Anúncios removidos por 7 dias</string>
+    <string name="remove_ads_unavailable">O anúncio ainda não está pronto — tente novamente em instantes</string>
+    <string name="remove_ads_remaining">Sem anúncios por mais %1$d dias</string>
 </resources>

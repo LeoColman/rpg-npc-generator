@@ -10,4 +10,4 @@ Features:
 - Clean Material 3 interface with light and dark themes.
 - Available in English and Portuguese.
 
-100% open source. No ads.
+100% open source. Supported by ads — remove them for a week anytime by watching a short video.

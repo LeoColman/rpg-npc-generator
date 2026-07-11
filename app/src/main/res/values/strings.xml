@@ -64,4 +64,14 @@
     <string name="share_card_alignment">Alignment</string>
     <string name="share_card_motivation">Motivation</string>
     <string name="share_card_personality">Personality</string>
+
+    <!-- Ads: watch-a-rewarded-ad-to-remove-ads action -->
+    <string name="remove_ads_action">Remove ads</string>
+    <string name="remove_ads_dialog_title">Remove ads for a week?</string>
+    <string name="remove_ads_dialog_body">Watch a short video to remove ads for 7 days.</string>
+    <string name="remove_ads_dialog_confirm">Watch video</string>
+    <string name="remove_ads_dialog_dismiss">Not now</string>
+    <string name="remove_ads_success">Ads removed for 7 days</string>
+    <string name="remove_ads_unavailable">Ad isn\'t ready yet — try again shortly</string>
+    <string name="remove_ads_remaining">Ad-free for %1$d more days</string>
 </resources>

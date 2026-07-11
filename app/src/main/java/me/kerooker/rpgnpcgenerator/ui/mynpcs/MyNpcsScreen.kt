@@ -38,6 +38,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -56,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
 import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.MyNpcsViewModel
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.NpcSortOrder
@@ -70,14 +73,17 @@ fun MyNpcsScreen(
 ) {
     val ui by viewModel.uiState.collectAsStateWithLifecycle()
     var npcPendingDeletion by remember { mutableStateOf<Npc?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.nav_bar_my_npcs)) },
                 windowInsets = WindowInsets(0),
                 actions = {
+                    RemoveAdsAction(snackbarHostState)
                     if (ui.hasNpcs) {
                         SortMenuAction(current = ui.filter.sortOrder, onSelect = viewModel::setSortOrder)
                         GroupToggleAction(

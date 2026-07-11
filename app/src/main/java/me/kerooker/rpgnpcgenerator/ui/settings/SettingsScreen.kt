@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.BuildConfig
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
 import me.kerooker.rpgnpcgenerator.viewmodel.settings.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.io.IOException
@@ -80,7 +81,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.nav_bar_settings)) },
-                windowInsets = WindowInsets(0)
+                windowInsets = WindowInsets(0),
+                actions = { RemoveAdsAction(snackbarHostState) }
             )
         }
     ) { padding ->
