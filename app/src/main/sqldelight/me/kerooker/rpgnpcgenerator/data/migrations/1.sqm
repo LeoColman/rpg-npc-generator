@@ -1,0 +1,2 @@
+-- Roster organization: free-text campaign name per NPC (nullable so existing rows stay valid).
+ALTER TABLE npc ADD COLUMN campaign TEXT;

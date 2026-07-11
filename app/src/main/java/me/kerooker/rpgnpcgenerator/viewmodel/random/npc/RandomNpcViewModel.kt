@@ -310,7 +310,8 @@ class RandomNpcViewModel(
         personalityTraits = personalityTraits,
         languages = languages,
         imagePath = null,
-        notes = ""
+        notes = "",
+        campaign = null
     )
 
     private companion object {

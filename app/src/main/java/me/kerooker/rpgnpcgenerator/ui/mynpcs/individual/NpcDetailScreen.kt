@@ -66,6 +66,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.data.Npc
+import me.kerooker.rpgnpcgenerator.ui.components.CampaignField
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
@@ -82,6 +83,7 @@ fun NpcDetailScreen(
 ) {
     val npc by viewModel.npc.collectAsStateWithLifecycle()
     val editState by viewModel.editState.collectAsStateWithLifecycle()
+    val campaignSuggestions by viewModel.campaignSuggestions.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -133,6 +135,7 @@ fun NpcDetailScreen(
             NpcDetailContent(
                 draft = editing,
                 isEditing = isEditing,
+                campaignSuggestions = campaignSuggestions,
                 contentPadding = padding,
                 onGeneratePortrait = viewModel::generatePortrait,
                 onDraftChange = { draft = it }
@@ -173,6 +176,7 @@ private fun DeleteDialog(npcName: String, onConfirm: () -> Unit, onDismiss: () -
 private fun NpcDetailContent(
     draft: Npc,
     isEditing: Boolean,
+    campaignSuggestions: List<String>,
     contentPadding: PaddingValues,
     onGeneratePortrait: () -> Unit,
     onDraftChange: (Npc) -> Unit
@@ -283,6 +287,13 @@ private fun NpcDetailContent(
             value = draft.motivation,
             editable = isEditing,
             onValueChange = { onDraftChange(draft.copy(motivation = it)) }
+        )
+        CampaignField(
+            label = stringResource(R.string.individual_npc_campaign_hint),
+            value = draft.campaign.orEmpty(),
+            suggestions = campaignSuggestions,
+            editable = isEditing,
+            onValueChange = { onDraftChange(draft.copy(campaign = it.ifBlank { null })) }
         )
 
         EditableListSection(

@@ -41,7 +41,8 @@ private const val VERIFY_TIMEOUT_MS = 2_000L
 private fun sampleNpc(
     id: Long = NPC_ID,
     fullName: String = "Aria Nightsong",
-    imagePath: String? = null
+    imagePath: String? = null,
+    campaign: String? = null
 ) = Npc(
     id = id,
     fullName = fullName,
@@ -56,7 +57,8 @@ private fun sampleNpc(
     personalityTraits = listOf("Brave", "Curious"),
     languages = listOf("Common", "Elvish"),
     imagePath = imagePath,
-    notes = "Met in the tavern"
+    notes = "Met in the tavern",
+    campaign = campaign
 )
 
 // Real in-memory repository (same setup as NpcRepositoryTest). Used by the delete tests because
@@ -97,6 +99,7 @@ class IndividualNpcViewModelTest : FunSpec({
         val repository = mockk<NpcRepository>()
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
         val context = mockk<Context>(relaxed = true)
 
         val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
@@ -116,6 +119,7 @@ class IndividualNpcViewModelTest : FunSpec({
         val repository = mockk<NpcRepository>()
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -146,6 +150,7 @@ class IndividualNpcViewModelTest : FunSpec({
         val repository = mockk<NpcRepository>()
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -176,6 +181,7 @@ class IndividualNpcViewModelTest : FunSpec({
         val repository = mockk<NpcRepository>()
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -259,6 +265,7 @@ class IndividualNpcViewModelTest : FunSpec({
     test("generatePortrait enqueues a portrait render for this npc") {
         val repository = mockk<NpcRepository>()
         every { repository.get(NPC_ID) } returns MutableStateFlow<Npc?>(null)
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
         val context = mockk<Context>(relaxed = true)
         mockkObject(GeneratePortraitWorker.Companion)
         every { GeneratePortraitWorker.enqueue(any(), any()) } just Runs

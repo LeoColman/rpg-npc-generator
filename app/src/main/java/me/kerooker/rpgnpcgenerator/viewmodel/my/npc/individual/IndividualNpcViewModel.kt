@@ -25,6 +25,10 @@ class IndividualNpcViewModel(
     val npc: StateFlow<Npc?> = npcRepository.get(npcId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
+    /** Existing distinct campaign names, offered as autocomplete when editing this NPC's campaign. */
+    val campaignSuggestions: StateFlow<List<String>> = npcRepository.distinctCampaigns()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), emptyList())
+
     private val _editState = MutableStateFlow(EditState.VIEW)
     val editState: StateFlow<EditState> = _editState.asStateFlow()
 
