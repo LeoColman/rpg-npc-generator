@@ -24,7 +24,8 @@ CREATE TABLE npc (
     charisma INTEGER,
     armorClass INTEGER,
     hitPoints INTEGER,
-    challengeRating TEXT
+    challengeRating TEXT,
+    campaign TEXT
 );
 
 selectAll:
@@ -33,17 +34,22 @@ SELECT * FROM npc ORDER BY id;
 selectById:
 SELECT * FROM npc WHERE id = ?;
 
+selectDistinctCampaigns:
+SELECT DISTINCT campaign FROM npc
+WHERE campaign IS NOT NULL AND trim(campaign) != ''
+ORDER BY campaign COLLATE NOCASE;
+
 insert:
-INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating, campaign)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 insertWithId:
-INSERT INTO npc(id, fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO npc(id, fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating, campaign)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE npc
-SET fullName = ?, nickname = ?, gender = ?, sexuality = ?, race = ?, age = ?, profession = ?, motivation = ?, alignment = ?, personalityTraits = ?, languages = ?, imagePath = ?, notes = ?, strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, armorClass = ?, hitPoints = ?, challengeRating = ?
+SET fullName = ?, nickname = ?, gender = ?, sexuality = ?, race = ?, age = ?, profession = ?, motivation = ?, alignment = ?, personalityTraits = ?, languages = ?, imagePath = ?, notes = ?, strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, armorClass = ?, hitPoints = ?, challengeRating = ?, campaign = ?
 WHERE id = ?;
 
 deleteById:

@@ -323,7 +323,8 @@ class RandomNpcViewModel(
         charisma = combat?.charisma?.toLong(),
         armorClass = combat?.armorClass?.toLong(),
         hitPoints = combat?.hitPoints?.toLong(),
-        challengeRating = combat?.challengeRating
+        challengeRating = combat?.challengeRating,
+        campaign = null
     )
 
     private companion object {

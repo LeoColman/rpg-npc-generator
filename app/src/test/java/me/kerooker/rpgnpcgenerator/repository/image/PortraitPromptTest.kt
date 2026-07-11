@@ -49,7 +49,8 @@ private fun npc(
     charisma = null,
     armorClass = null,
     hitPoints = null,
-    challengeRating = null
+    challengeRating = null,
+    campaign = null
 )
 
 class PortraitPromptTest : FunSpec({

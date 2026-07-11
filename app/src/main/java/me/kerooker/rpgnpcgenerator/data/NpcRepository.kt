@@ -6,6 +6,7 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class NpcRepository(
     private val database: NpcDatabase,
@@ -17,6 +18,10 @@ class NpcRepository(
     fun all(): Flow<List<Npc>> = queries.selectAll().asFlow().mapToList(dispatcher)
 
     fun get(id: Long): Flow<Npc?> = queries.selectById(id).asFlow().mapToOneOrNull(dispatcher)
+
+    /** Distinct, non-blank campaign names currently in use, ordered case-insensitively. */
+    fun distinctCampaigns(): Flow<List<String>> =
+        queries.selectDistinctCampaigns().asFlow().mapToList(dispatcher).map { it.filterNotNull() }
 
     fun insert(npc: Npc): Long = database.transactionWithResult {
         queries.insert(
@@ -41,7 +46,8 @@ class NpcRepository(
             charisma = npc.charisma,
             armorClass = npc.armorClass,
             hitPoints = npc.hitPoints,
-            challengeRating = npc.challengeRating
+            challengeRating = npc.challengeRating,
+            campaign = npc.campaign
         )
         queries.lastInsertRowId().executeAsOne()
     }
@@ -70,7 +76,8 @@ class NpcRepository(
             charisma = npc.charisma,
             armorClass = npc.armorClass,
             hitPoints = npc.hitPoints,
-            challengeRating = npc.challengeRating
+            challengeRating = npc.challengeRating,
+            campaign = npc.campaign
         )
     }
 
@@ -98,6 +105,7 @@ class NpcRepository(
             armorClass = npc.armorClass,
             hitPoints = npc.hitPoints,
             challengeRating = npc.challengeRating,
+            campaign = npc.campaign,
             id = npc.id
         )
     }

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="delete">Delete</string>
+    <string name="my_npcs_search_hint">Search by name, nickname, profession or race</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="my_npcs_sort">Sort</string>
+    <string name="my_npcs_sort_name">Name (A–Z)</string>
+    <string name="my_npcs_sort_recent">Recently added</string>
+    <string name="my_npcs_group_by_campaign">Group by campaign</string>
+    <string name="my_npcs_campaign_all">All</string>
+    <string name="my_npcs_no_campaign">No campaign</string>
+    <string name="my_npcs_no_results">No NPCs match your filters</string>
 </resources>

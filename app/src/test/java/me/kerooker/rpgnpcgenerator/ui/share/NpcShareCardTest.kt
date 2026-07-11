@@ -44,7 +44,17 @@ class NpcShareCardTest {
         personalityTraits = personalityTraits,
         languages = listOf("Common"),
         imagePath = null,
-        notes = ""
+        notes = "",
+        strength = null,
+        dexterity = null,
+        constitution = null,
+        intelligence = null,
+        wisdom = null,
+        charisma = null,
+        armorClass = null,
+        hitPoints = null,
+        challengeRating = null,
+        campaign = null
     )
 
     @Test

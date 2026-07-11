@@ -11,7 +11,8 @@ private fun sampleNpc(
     id: Long = 0,
     fullName: String = "Aria Nightsong",
     languages: List<String> = listOf("Common", "Elvish"),
-    traits: List<String> = listOf("Brave", "Curious")
+    traits: List<String> = listOf("Brave", "Curious"),
+    campaign: String? = null
 ) = Npc(
     id = id,
     fullName = fullName,
@@ -35,7 +36,8 @@ private fun sampleNpc(
     charisma = null,
     armorClass = null,
     hitPoints = null,
-    challengeRating = null
+    challengeRating = null,
+    campaign = campaign
 )
 
 class NpcRepositoryTest : FunSpec({
@@ -94,5 +96,27 @@ class NpcRepositoryTest : FunSpec({
         repository.delete(id)
 
         repository.all().first() shouldBe emptyList()
+    }
+
+    test("campaign round-trips through insert and update") {
+        val repository = newRepository()
+        val id = repository.insert(sampleNpc(campaign = "Waterdeep"))
+
+        repository.get(id).first()!!.campaign shouldBe "Waterdeep"
+
+        repository.update(repository.get(id).first()!!.copy(campaign = null))
+        repository.get(id).first()!!.campaign shouldBe null
+    }
+
+    test("distinctCampaigns returns non-blank campaigns once each, ordered case-insensitively") {
+        val repository = newRepository()
+        repository.insert(sampleNpc(fullName = "A", campaign = "Waterdeep"))
+        repository.insert(sampleNpc(fullName = "B", campaign = "Waterdeep"))
+        repository.insert(sampleNpc(fullName = "C", campaign = "avernus"))
+        repository.insert(sampleNpc(fullName = "D", campaign = "Baldur's Gate"))
+        repository.insert(sampleNpc(fullName = "E", campaign = null))
+        repository.insert(sampleNpc(fullName = "F", campaign = "   "))
+
+        repository.distinctCampaigns().first() shouldContainExactly listOf("avernus", "Baldur's Gate", "Waterdeep")
     }
 })

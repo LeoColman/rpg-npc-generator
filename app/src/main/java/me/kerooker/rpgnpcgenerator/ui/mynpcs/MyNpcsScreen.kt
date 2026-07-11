@@ -13,19 +13,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,6 +58,8 @@ import coil3.compose.AsyncImage
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.MyNpcsViewModel
+import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.NpcSortOrder
+import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.RosterSection
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +68,7 @@ fun MyNpcsScreen(
     viewModel: MyNpcsViewModel,
     onNpcClick: (Long) -> Unit
 ) {
-    val npcs by viewModel.npcsToDisplay.collectAsStateWithLifecycle()
+    val ui by viewModel.uiState.collectAsStateWithLifecycle()
     var npcPendingDeletion by remember { mutableStateOf<Npc?>(null) }
 
     Scaffold(
@@ -63,24 +76,40 @@ fun MyNpcsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.nav_bar_my_npcs)) },
-                windowInsets = WindowInsets(0)
+                windowInsets = WindowInsets(0),
+                actions = {
+                    if (ui.hasNpcs) {
+                        SortMenuAction(current = ui.filter.sortOrder, onSelect = viewModel::setSortOrder)
+                        GroupToggleAction(
+                            grouped = ui.filter.groupByCampaign,
+                            onToggle = { viewModel.setGroupByCampaign(!ui.filter.groupByCampaign) }
+                        )
+                    }
+                }
             )
         }
     ) { padding ->
-        if (npcs.isEmpty()) {
+        if (!ui.hasNpcs) {
             EmptyMyNpcsContent(modifier = Modifier.padding(padding))
         } else {
-            LazyColumn(
-                modifier = Modifier.padding(padding),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(npcs, key = { it.id }) { npc ->
-                    NpcRow(
-                        npc = npc,
-                        onClick = { onNpcClick(npc.id) },
-                        onDeleteClick = { npcPendingDeletion = npc }
+            Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+                SearchField(query = ui.filter.query, onQueryChange = viewModel::setQuery)
+                if (ui.availableCampaigns.isNotEmpty()) {
+                    CampaignFilterRow(
+                        campaigns = ui.availableCampaigns,
+                        selected = ui.filter.campaign,
+                        onSelect = viewModel::setCampaignFilter
                     )
+                }
+                if (ui.hasResults) {
+                    RosterList(
+                        sections = ui.sections,
+                        grouped = ui.filter.groupByCampaign,
+                        onNpcClick = onNpcClick,
+                        onNpcDelete = { npcPendingDeletion = it }
+                    )
+                } else {
+                    NoResultsContent(modifier = Modifier.fillMaxSize())
                 }
             }
         }
@@ -106,6 +135,165 @@ fun MyNpcsScreen(
                     Text(stringResource(R.string.cancel))
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun SearchField(query: String, onQueryChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        singleLine = true,
+        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_clear_search))
+                }
+            }
+        },
+        placeholder = { Text(stringResource(R.string.my_npcs_search_hint)) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun CampaignFilterRow(campaigns: List<String>, selected: String?, onSelect: (String?) -> Unit) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            FilterChip(
+                selected = selected == null,
+                onClick = { onSelect(null) },
+                label = { Text(stringResource(R.string.my_npcs_campaign_all)) }
+            )
+        }
+        items(campaigns, key = { it }) { campaign ->
+            FilterChip(
+                selected = selected == campaign,
+                onClick = { onSelect(campaign) },
+                label = { Text(campaign) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun SortMenuAction(current: NpcSortOrder, onSelect: (NpcSortOrder) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = stringResource(R.string.my_npcs_sort))
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            SortMenuItem(
+                label = stringResource(R.string.my_npcs_sort_name),
+                order = NpcSortOrder.NAME_ASC,
+                current = current,
+                onSelect = { onSelect(it); expanded = false }
+            )
+            SortMenuItem(
+                label = stringResource(R.string.my_npcs_sort_recent),
+                order = NpcSortOrder.RECENTLY_ADDED,
+                current = current,
+                onSelect = { onSelect(it); expanded = false }
+            )
+        }
+    }
+}
+
+@Composable
+private fun SortMenuItem(
+    label: String,
+    order: NpcSortOrder,
+    current: NpcSortOrder,
+    onSelect: (NpcSortOrder) -> Unit
+) {
+    DropdownMenuItem(
+        text = { Text(label) },
+        onClick = { onSelect(order) },
+        leadingIcon = {
+            if (order == current) Icon(Icons.Filled.Check, contentDescription = null)
+        }
+    )
+}
+
+@Composable
+private fun GroupToggleAction(grouped: Boolean, onToggle: () -> Unit) {
+    IconButton(onClick = onToggle) {
+        Icon(
+            imageVector = Icons.Filled.Category,
+            contentDescription = stringResource(R.string.my_npcs_group_by_campaign),
+            tint = if (grouped) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun RosterList(
+    sections: List<RosterSection>,
+    grouped: Boolean,
+    onNpcClick: (Long) -> Unit,
+    onNpcDelete: (Npc) -> Unit
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        sections.forEach { section ->
+            if (grouped) {
+                item(key = "header:${section.campaign ?: NO_CAMPAIGN_KEY}") {
+                    CampaignHeader(section.campaign)
+                }
+            }
+            items(section.npcs, key = { it.id }) { npc ->
+                NpcRow(
+                    npc = npc,
+                    onClick = { onNpcClick(npc.id) },
+                    onDeleteClick = { onNpcDelete(npc) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CampaignHeader(campaign: String?) {
+    Text(
+        text = campaign ?: stringResource(R.string.my_npcs_no_campaign),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, top = 8.dp, bottom = 2.dp)
+    )
+}
+
+@Composable
+private fun NoResultsContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.SearchOff,
+            contentDescription = null,
+            modifier = Modifier.size(72.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(R.string.my_npcs_no_results),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp)
         )
     }
 }
@@ -209,3 +397,5 @@ private fun NpcAvatar(imagePath: String?) {
         }
     }
 }
+
+private const val NO_CAMPAIGN_KEY = "__no_campaign__"

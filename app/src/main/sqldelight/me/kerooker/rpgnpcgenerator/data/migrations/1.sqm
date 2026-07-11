@@ -9,3 +9,6 @@ ALTER TABLE npc ADD COLUMN charisma INTEGER;
 ALTER TABLE npc ADD COLUMN armorClass INTEGER;
 ALTER TABLE npc ADD COLUMN hitPoints INTEGER;
 ALTER TABLE npc ADD COLUMN challengeRating TEXT;
+
+-- Roster organization: free-text campaign name per NPC (nullable so existing rows stay valid).
+ALTER TABLE npc ADD COLUMN campaign TEXT;

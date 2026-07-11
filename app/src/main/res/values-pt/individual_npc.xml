@@ -19,5 +19,6 @@
     <string name="individual_npc_save">Salvar</string>
     <string name="individual_npc_cancel">Cancelar</string>
     <string name="individual_npc_notes_hint">Anotações</string>
+    <string name="individual_npc_campaign_hint">Campanha</string>
 
 </resources>

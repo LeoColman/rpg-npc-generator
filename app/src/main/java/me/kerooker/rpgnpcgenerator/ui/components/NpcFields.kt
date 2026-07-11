@@ -12,15 +12,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -99,6 +104,68 @@ fun NpcField(
         },
         modifier = modifier.fillMaxWidth()
     )
+}
+
+/**
+ * A single-line campaign field with autocomplete. While [editable], the field shows a dropdown of
+ * existing [suggestions] whose text contains what the user has typed (an exact match is hidden, so
+ * the menu never just echoes the current value). Picking a suggestion fills the field; the user can
+ * also type a brand-new campaign name or clear it. Read-only mode renders as a plain [NpcField].
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CampaignField(
+    label: String,
+    value: String,
+    suggestions: List<String>,
+    editable: Boolean,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (!editable) {
+        NpcField(label = label, value = value, editable = false, onValueChange = {}, modifier = modifier)
+        return
+    }
+
+    var expanded by remember { mutableStateOf(false) }
+    val typed = value.trim()
+    val matches = remember(value, suggestions) {
+        suggestions.filter { it.contains(typed, ignoreCase = true) && !it.equals(typed, ignoreCase = true) }
+    }
+    val menuVisible = expanded && matches.isNotEmpty()
+
+    ExposedDropdownMenuBox(
+        expanded = menuVisible,
+        onExpandedChange = { expanded = it },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = {
+                onValueChange(it)
+                expanded = true
+            },
+            label = { Text(label) },
+            singleLine = true,
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable)
+                .fillMaxWidth()
+        )
+        ExposedDropdownMenu(
+            expanded = menuVisible,
+            onDismissRequest = { expanded = false }
+        ) {
+            matches.forEach { suggestion ->
+                DropdownMenuItem(
+                    text = { Text(suggestion) },
+                    onClick = {
+                        onValueChange(suggestion)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 /**
