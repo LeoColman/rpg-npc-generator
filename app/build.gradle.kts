@@ -25,6 +25,12 @@ val admobTestAppId = "ca-app-pub-3940256099942544~3347511713"
 val admobTestBannerUnitId = "ca-app-pub-3940256099942544/6300978111"
 val admobTestRewardedUnitId = "ca-app-pub-3940256099942544/5224354917"
 
+// Real AdMob IDs (publisher pub-9745951044027822). Ad unit IDs are not secret — they ship inside the
+// released APK — so they live in the repo for release builds. Debug always uses the test IDs above.
+val admobRealAppId = "ca-app-pub-9745951044027822~3070790547"
+val admobRealBannerUnitId = "ca-app-pub-9745951044027822/1209924287"
+val admobRealRewardedUnitId = "ca-app-pub-9745951044027822/9457069649"
+
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
@@ -85,16 +91,16 @@ android {
             // Real AdMob IDs come from gradle properties (never committed); fall back to Google's test
             // IDs so a release without them still builds and can't rack up invalid-traffic strikes.
             manifestPlaceholders["admobAppId"] =
-                providers.gradleProperty("admobAppId").getOrElse(admobTestAppId)
+                providers.gradleProperty("admobAppId").getOrElse(admobRealAppId)
             buildConfigField(
                 "String",
                 "ADMOB_BANNER_UNIT_ID",
-                "\"${providers.gradleProperty("admobBannerUnitId").getOrElse(admobTestBannerUnitId)}\""
+                "\"${providers.gradleProperty("admobBannerUnitId").getOrElse(admobRealBannerUnitId)}\""
             )
             buildConfigField(
                 "String",
                 "ADMOB_REWARDED_UNIT_ID",
-                "\"${providers.gradleProperty("admobRewardedUnitId").getOrElse(admobTestRewardedUnitId)}\""
+                "\"${providers.gradleProperty("admobRewardedUnitId").getOrElse(admobRealRewardedUnitId)}\""
             )
         }
         debug {
