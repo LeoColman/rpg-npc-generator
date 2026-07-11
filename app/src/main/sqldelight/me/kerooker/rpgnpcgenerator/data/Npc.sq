@@ -15,7 +15,16 @@ CREATE TABLE npc (
     personalityTraits TEXT AS List<String> NOT NULL,
     languages TEXT AS List<String> NOT NULL,
     imagePath TEXT,
-    notes TEXT NOT NULL DEFAULT ''
+    notes TEXT NOT NULL DEFAULT '',
+    strength INTEGER,
+    dexterity INTEGER,
+    constitution INTEGER,
+    intelligence INTEGER,
+    wisdom INTEGER,
+    charisma INTEGER,
+    armorClass INTEGER,
+    hitPoints INTEGER,
+    challengeRating TEXT
 );
 
 selectAll:
@@ -25,16 +34,16 @@ selectById:
 SELECT * FROM npc WHERE id = ?;
 
 insert:
-INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 insertWithId:
-INSERT INTO npc(id, fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO npc(id, fullName, nickname, gender, sexuality, race, age, profession, motivation, alignment, personalityTraits, languages, imagePath, notes, strength, dexterity, constitution, intelligence, wisdom, charisma, armorClass, hitPoints, challengeRating)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE npc
-SET fullName = ?, nickname = ?, gender = ?, sexuality = ?, race = ?, age = ?, profession = ?, motivation = ?, alignment = ?, personalityTraits = ?, languages = ?, imagePath = ?, notes = ?
+SET fullName = ?, nickname = ?, gender = ?, sexuality = ?, race = ?, age = ?, profession = ?, motivation = ?, alignment = ?, personalityTraits = ?, languages = ?, imagePath = ?, notes = ?, strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, armorClass = ?, hitPoints = ?, challengeRating = ?
 WHERE id = ?;
 
 deleteById:

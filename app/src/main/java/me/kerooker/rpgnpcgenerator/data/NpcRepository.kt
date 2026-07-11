@@ -32,7 +32,16 @@ class NpcRepository(
             personalityTraits = npc.personalityTraits,
             languages = npc.languages,
             imagePath = npc.imagePath,
-            notes = npc.notes
+            notes = npc.notes,
+            strength = npc.strength,
+            dexterity = npc.dexterity,
+            constitution = npc.constitution,
+            intelligence = npc.intelligence,
+            wisdom = npc.wisdom,
+            charisma = npc.charisma,
+            armorClass = npc.armorClass,
+            hitPoints = npc.hitPoints,
+            challengeRating = npc.challengeRating
         )
         queries.lastInsertRowId().executeAsOne()
     }
@@ -52,7 +61,16 @@ class NpcRepository(
             personalityTraits = npc.personalityTraits,
             languages = npc.languages,
             imagePath = npc.imagePath,
-            notes = npc.notes
+            notes = npc.notes,
+            strength = npc.strength,
+            dexterity = npc.dexterity,
+            constitution = npc.constitution,
+            intelligence = npc.intelligence,
+            wisdom = npc.wisdom,
+            charisma = npc.charisma,
+            armorClass = npc.armorClass,
+            hitPoints = npc.hitPoints,
+            challengeRating = npc.challengeRating
         )
     }
 
@@ -71,6 +89,15 @@ class NpcRepository(
             languages = npc.languages,
             imagePath = npc.imagePath,
             notes = npc.notes,
+            strength = npc.strength,
+            dexterity = npc.dexterity,
+            constitution = npc.constitution,
+            intelligence = npc.intelligence,
+            wisdom = npc.wisdom,
+            charisma = npc.charisma,
+            armorClass = npc.armorClass,
+            hitPoints = npc.hitPoints,
+            challengeRating = npc.challengeRating,
             id = npc.id
         )
     }

@@ -46,10 +46,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.FieldGroup
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.components.RerollButton
+import me.kerooker.rpgnpcgenerator.ui.components.toUi
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.PortraitUiState
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.RandomNpcViewModel
 
@@ -194,6 +196,10 @@ fun RandomNpcScreen(
                 onAdd = { viewModel.randomizePersonality(npc.personalityTraits.size) },
                 onRerollAll = viewModel::randomizeAllPersonalities
             )
+
+            // Display-only here: combat values are not part of the portrait prompt, so showing them
+            // read-only keeps them off the reactive portrait-request/debounce path entirely.
+            npc.combat?.let { CombatStatsSection(stats = it.toUi(), editable = false) }
         }
     }
 }

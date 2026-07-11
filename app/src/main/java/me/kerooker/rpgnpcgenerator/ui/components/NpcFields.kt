@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -27,8 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CombatStats
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.abilityModifier
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.formatAbilityModifier
 
 /** A twenty-sided die button that spins each time it is pressed. */
 @Composable
@@ -166,5 +171,151 @@ fun EditableListSection(
                 )
             }
         }
+    }
+}
+
+/** The nine combat values as editable text, so the same section serves both view and edit modes. */
+data class CombatStatsUi(
+    val strength: String = "",
+    val dexterity: String = "",
+    val constitution: String = "",
+    val intelligence: String = "",
+    val wisdom: String = "",
+    val charisma: String = "",
+    val armorClass: String = "",
+    val hitPoints: String = "",
+    val challengeRating: String = ""
+)
+
+/** Presents a generated [CombatStats] block as editable-text UI values. */
+fun CombatStats.toUi(): CombatStatsUi = CombatStatsUi(
+    strength = strength.toString(),
+    dexterity = dexterity.toString(),
+    constitution = constitution.toString(),
+    intelligence = intelligence.toString(),
+    wisdom = wisdom.toString(),
+    charisma = charisma.toString(),
+    armorClass = armorClass.toString(),
+    hitPoints = hitPoints.toString(),
+    challengeRating = challengeRating
+)
+
+/** A labelled, digits-only numeric attribute (Armor Class, Hit Points). */
+@Composable
+private fun NumericField(
+    label: String,
+    value: String,
+    editable: Boolean,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it.filter(Char::isDigit)) },
+        label = { Text(label) },
+        readOnly = !editable,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = modifier.fillMaxWidth()
+    )
+}
+
+/**
+ * An ability score with its D&D 5e modifier baked into the label (e.g. "STR (+2)"). The modifier
+ * recomputes live as the score is edited via floor((score - 10) / 2); a blank/invalid score shows
+ * just the label.
+ */
+@Composable
+fun AbilityScoreField(
+    label: String,
+    value: String,
+    editable: Boolean,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val score = value.toIntOrNull()
+    val fullLabel = if (score != null) "$label (${formatAbilityModifier(abilityModifier(score))})" else label
+    NumericField(fullLabel, value, editable, onValueChange, modifier)
+}
+
+/**
+ * The "Combat stats" block: six ability scores (each showing its modifier), Armor Class, Hit Points
+ * and a text Challenge Rating. Read-only when [editable] is false. Combat values are plain data and
+ * never feed the portrait prompt, so editing here does not trigger a portrait re-render.
+ */
+@Composable
+fun CombatStatsSection(
+    stats: CombatStatsUi,
+    editable: Boolean,
+    modifier: Modifier = Modifier,
+    onStatsChange: (CombatStatsUi) -> Unit = {}
+) {
+    FieldGroup(title = stringResource(R.string.combat_stats_label), modifier = modifier) {
+        AbilityRow(
+            leftLabel = stringResource(R.string.combat_strength),
+            leftValue = stats.strength,
+            onLeftChange = { onStatsChange(stats.copy(strength = it)) },
+            rightLabel = stringResource(R.string.combat_dexterity),
+            rightValue = stats.dexterity,
+            onRightChange = { onStatsChange(stats.copy(dexterity = it)) },
+            editable = editable
+        )
+        AbilityRow(
+            leftLabel = stringResource(R.string.combat_constitution),
+            leftValue = stats.constitution,
+            onLeftChange = { onStatsChange(stats.copy(constitution = it)) },
+            rightLabel = stringResource(R.string.combat_intelligence),
+            rightValue = stats.intelligence,
+            onRightChange = { onStatsChange(stats.copy(intelligence = it)) },
+            editable = editable
+        )
+        AbilityRow(
+            leftLabel = stringResource(R.string.combat_wisdom),
+            leftValue = stats.wisdom,
+            onLeftChange = { onStatsChange(stats.copy(wisdom = it)) },
+            rightLabel = stringResource(R.string.combat_charisma),
+            rightValue = stats.charisma,
+            onRightChange = { onStatsChange(stats.copy(charisma = it)) },
+            editable = editable
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            NumericField(
+                label = stringResource(R.string.combat_armor_class),
+                value = stats.armorClass,
+                editable = editable,
+                onValueChange = { onStatsChange(stats.copy(armorClass = it)) },
+                modifier = Modifier.weight(1f)
+            )
+            NumericField(
+                label = stringResource(R.string.combat_hit_points),
+                value = stats.hitPoints,
+                editable = editable,
+                onValueChange = { onStatsChange(stats.copy(hitPoints = it)) },
+                modifier = Modifier.weight(1f)
+            )
+        }
+        NpcField(
+            label = stringResource(R.string.combat_challenge_rating),
+            value = stats.challengeRating,
+            editable = editable,
+            onValueChange = { onStatsChange(stats.copy(challengeRating = it)) }
+        )
+    }
+}
+
+/** Two ability scores side by side, keeping the stat block compact. */
+@Composable
+private fun AbilityRow(
+    leftLabel: String,
+    leftValue: String,
+    onLeftChange: (String) -> Unit,
+    rightLabel: String,
+    rightValue: String,
+    onRightChange: (String) -> Unit,
+    editable: Boolean
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        AbilityScoreField(leftLabel, leftValue, editable, onLeftChange, Modifier.weight(1f))
+        AbilityScoreField(rightLabel, rightValue, editable, onRightChange, Modifier.weight(1f))
     }
 }

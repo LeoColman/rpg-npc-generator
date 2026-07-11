@@ -52,7 +52,8 @@ class NpcDataGenerator(
 }
 
 class CompleteNpcGenerator(
-    private val npcDataGenerator: NpcDataGenerator
+    private val npcDataGenerator: NpcDataGenerator,
+    private val combatStatsGenerator: CombatStatsGenerator
 ) {
 
     fun generate(): GeneratedNpc {
@@ -67,6 +68,7 @@ class CompleteNpcGenerator(
         val alignment = generateAlignment()
         val personalityTraits = generatePersonalityTraits()
         val languages = generateLanguages(race.racialLanguage)
+        val combat = combatStatsGenerator.generate()
 
         return GeneratedNpc(
             name,
@@ -79,7 +81,8 @@ class CompleteNpcGenerator(
             motivation,
             alignment,
             personalityTraits,
-            languages
+            languages,
+            combat
         )
     }
 

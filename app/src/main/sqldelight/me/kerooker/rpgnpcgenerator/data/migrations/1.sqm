@@ -1,0 +1,11 @@
+-- Adds the optional D&D 5e combat stat block. Existing users keep every prior column; these are
+-- nullable so rows created before this migration simply have no combat stats until edited.
+ALTER TABLE npc ADD COLUMN strength INTEGER;
+ALTER TABLE npc ADD COLUMN dexterity INTEGER;
+ALTER TABLE npc ADD COLUMN constitution INTEGER;
+ALTER TABLE npc ADD COLUMN intelligence INTEGER;
+ALTER TABLE npc ADD COLUMN wisdom INTEGER;
+ALTER TABLE npc ADD COLUMN charisma INTEGER;
+ALTER TABLE npc ADD COLUMN armorClass INTEGER;
+ALTER TABLE npc ADD COLUMN hitPoints INTEGER;
+ALTER TABLE npc ADD COLUMN challengeRating TEXT;

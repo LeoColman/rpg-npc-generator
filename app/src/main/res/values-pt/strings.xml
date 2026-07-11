@@ -32,4 +32,16 @@
     <string name="cancel">Cancelar</string>
     <string name="npc_saved">NPC salvo</string>
     <string name="settings_version">Versão %1$s</string>
+
+    <!-- Bloco de estatísticas de combate de D&D 5e -->
+    <string name="combat_stats_label">Estatísticas de combate</string>
+    <string name="combat_strength">FOR</string>
+    <string name="combat_dexterity">DES</string>
+    <string name="combat_constitution">CON</string>
+    <string name="combat_intelligence">INT</string>
+    <string name="combat_wisdom">SAB</string>
+    <string name="combat_charisma">CAR</string>
+    <string name="combat_armor_class">CA</string>
+    <string name="combat_hit_points">PV</string>
+    <string name="combat_challenge_rating">Nível de Desafio</string>
 </resources>

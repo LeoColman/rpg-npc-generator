@@ -14,7 +14,8 @@ val randomNpcModule = module {
     single { PersonalityTraitGenerator(linesFromRaw(R.raw.npc_personality_trait, androidContext())) }
 
     single { NpcDataGenerator(get(), get(), get(), get(), get()) }
-    single { CompleteNpcGenerator(get()) }
+    single { CombatStatsGenerator() }
+    single { CompleteNpcGenerator(get(), get()) }
 
     single { TemporaryRandomNpcRepository() }
 }
