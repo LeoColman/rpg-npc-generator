@@ -1,0 +1,1 @@
+New: the app is now fully translated to Spanish - interface, generated professions, motivations, personality traits, nicknames and items.
