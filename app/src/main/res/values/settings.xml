@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+    <!-- Appearance / theme -->
+    <string name="settings_appearance_title">Appearance</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_follow_system">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+
     <string name="preferences_about_title">About</string>
     <string name="preferences_open_source_libs_title">Open Source Libraries</string>
     <string name="preferences_open_source_libs_summary">List of all the open source libraries that were used in this app</string>

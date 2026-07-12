@@ -1,6 +1,7 @@
 <resources>
-    <!-- Base theme applied to the window before Compose takes over. -->
+    <!-- Base theme applied to the window before Compose takes over. The window background matches the
+         Compose light surface so there is no flash on launch; values-night supplies the dark variant. -->
     <style name="Theme.RpgNpcGenerator" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
 </resources>

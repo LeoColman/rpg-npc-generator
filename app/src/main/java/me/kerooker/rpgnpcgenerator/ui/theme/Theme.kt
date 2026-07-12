@@ -1,5 +1,6 @@
 package me.kerooker.rpgnpcgenerator.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,7 +9,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
     primary = LightPrimary,
@@ -76,6 +80,20 @@ fun RpgNpcGeneratorTheme(
         darkTheme -> DarkColors
         else -> LightColors
     }
+
+    // Keep the system bar icons legible against the resolved theme. This must react to [darkTheme]
+    // rather than the OS setting, so a manual Light/Dark override (differing from the system) still
+    // gets the right icon contrast on the edge-to-edge status/navigation bars.
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            val controller = WindowCompat.getInsetsController(window, view)
+            controller.isAppearanceLightStatusBars = !darkTheme
+            controller.isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = AppTypography,

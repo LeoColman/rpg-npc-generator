@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pre-Compose window background in night mode. Matches DarkBackground in ui/theme/Color.kt. -->
+    <color name="window_background">#FF1A1C1E</color>
+</resources>
