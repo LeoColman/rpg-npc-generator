@@ -1,0 +1,1 @@
+New: field locks on the Randomize screen - pin the traits you like (race, profession, name...) and re-roll everything else around them.
