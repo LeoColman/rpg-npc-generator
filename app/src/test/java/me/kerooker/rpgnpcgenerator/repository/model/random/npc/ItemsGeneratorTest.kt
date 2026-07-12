@@ -13,21 +13,24 @@ private const val SAMPLE_SIZE = 20_000
 
 class ItemsGeneratorTest : FunSpec({
 
-    val english = ItemsGenerator(portuguese = false, random = Random(seed = 20250712))
-    val portuguese = ItemsGenerator(portuguese = true, random = Random(seed = 20250712))
+    val english = ItemsGenerator(ItemLocale.ENGLISH, random = Random(seed = 20250712))
+    val portuguese = ItemsGenerator(ItemLocale.PORTUGUESE, random = Random(seed = 20250712))
+    val spanish = ItemsGenerator(ItemLocale.SPANISH, random = Random(seed = 20250712))
 
     fun ItemsGenerator.rollMany(profession: String) = List(SAMPLE_SIZE) { generate(profession) }
 
-    test("every roll holds between 2 and 5 items (English and Portuguese)") {
+    test("every roll holds between 2 and 5 items (English, Portuguese and Spanish)") {
         english.rollMany("Blacksmith").forAll { it.size shouldBeInRange (2..5) }
         portuguese.rollMany("Ferreiro").forAll { it.size shouldBeInRange (2..5) }
+        spanish.rollMany("Herrero").forAll { it.size shouldBeInRange (2..5) }
     }
 
-    test("the coin pouch is always present and always first (English and Portuguese)") {
+    test("the coin pouch is always present and always first (English, Portuguese and Spanish)") {
         // An unknown profession is the worst case: no trade tool, so the pouch could be alone if the
         // 2-item floor didn't hold. It always leads the list.
         english.rollMany("Wanderer").forAll { it.first() shouldStartWith ItemsGenerator.COIN_PURSE_PREFIX_EN }
         portuguese.rollMany("Andarilho").forAll { it.first() shouldStartWith ItemsGenerator.COIN_PURSE_PREFIX_PT }
+        spanish.rollMany("Trotamundos").forAll { it.first() shouldStartWith ItemsGenerator.COIN_PURSE_PREFIX_ES }
     }
 
     test("a known trade always contributes its profession tool, in each locale") {
@@ -40,6 +43,11 @@ class ItemsGeneratorTest : FunSpec({
         portuguese.rollMany("Alquimista").forAll { it shouldContain "Uma bolsa de reagentes alquímicos" }
         portuguese.rollMany("Mercador").forAll { it shouldContain "Um livro-caixa de dívidas" }
         portuguese.rollMany("Bardo").forAll { it shouldContain "Um alaúde muito estimado" }
+
+        spanish.rollMany("Herrero").forAll { it shouldContain "Un juego de herramientas de herrero" }
+        spanish.rollMany("Alquimista").forAll { it shouldContain "Una bolsa de reactivos alquímicos" }
+        spanish.rollMany("Mercader").forAll { it shouldContain "Un libro de cuentas de deudas" }
+        spanish.rollMany("Bardo").forAll { it shouldContain "Un laúd muy querido" }
     }
 
     test("an unrecognised profession never yields a trade tool") {

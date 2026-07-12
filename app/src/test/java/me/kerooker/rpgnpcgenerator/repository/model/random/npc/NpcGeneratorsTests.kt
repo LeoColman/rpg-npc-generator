@@ -24,7 +24,7 @@ private fun completeGenerator(): CompleteNpcGenerator {
         MotivationGenerator(rawLines("npc_motivations.txt")),
         PersonalityTraitGenerator(rawLines("npc_personality_trait.txt"))
     )
-    return CompleteNpcGenerator(dataGenerator, CombatStatsGenerator(), ItemsGenerator(portuguese = false))
+    return CompleteNpcGenerator(dataGenerator, CombatStatsGenerator(), ItemsGenerator(ItemLocale.ENGLISH))
 }
 
 class CompleteNpcGeneratorTest : FunSpec() {

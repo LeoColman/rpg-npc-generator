@@ -26,7 +26,7 @@ object PortraitPrompt {
     // base SFW style so a child portrait can never drift toward anything inappropriate.
     private const val CHILD_SAFETY = "wholesome, innocent, fully clothed, child-appropriate, modest"
 
-    private val CHILD_AGE_KEYWORDS = listOf("child", "criança", "crianca")
+    private val CHILD_AGE_KEYWORDS = listOf("child", "criança", "crianca", "niño", "nino", "niña", "nina")
 
     // Redundant with STYLE's "fully clothed, safe for work", but placed at the FRONT of the prompt so
     // the safety intent survives CLIP's 77-token truncation when user notes push the tail out.
@@ -37,25 +37,25 @@ object PortraitPrompt {
     /**
      * SD 1.5 (even fantasy finetunes) barely knows D&D race names, and the low-CFG LCM path follows
      * uncommon tokens weakly, so every race otherwise collapses to a plain human face. We append
-     * concrete anatomical anchors the model *does* understand. Keyed by substring so it matches both
-     * the English and Portuguese localized race strings and free-typed edits; order matters — more
-     * specific first (drow before elf, half-orc before orc, half-elf before elf).
+     * concrete anatomical anchors the model *does* understand. Keyed by substring so it matches the
+     * English, Portuguese and Spanish localized race strings and free-typed edits; order matters — more
+     * specific first (drow before elf, half-orc/semiorco before orc, half-elf/semielfo before elf).
      */
     private val RACE_ANATOMY: List<Pair<List<String>, String>> = listOf(
-        listOf("dragonborn", "draconato") to
+        listOf("dragonborn", "draconato", "dracónido", "draconido") to
             "draconic reptilian humanoid, scaled dragon snout, colored scales covering the face, " +
             "no human skin, horned frill",
-        listOf("tiefling") to
+        listOf("tiefling", "tiflin") to
             "curved ram horns, deep red skin, glowing solid-color eyes, pointed ears, long tail",
-        listOf("drow", "elfo negro") to
+        listOf("drow", "elfo negro", "elfo oscuro") to
             "dark elf, obsidian black-grey skin, stark white hair, long pointed ears, angular features",
-        listOf("half-orc", "meio-orc", "meio orc") to
+        listOf("half-orc", "meio-orc", "meio orc", "semiorco", "medio orco") to
             "grey-green skin, protruding lower tusks, heavy jutting brow, broad muscular build",
-        listOf("half-elf", "meio-elfo", "meio elfo") to
+        listOf("half-elf", "meio-elfo", "meio elfo", "semielfo", "medio elfo") to
             "subtly pointed ears, refined half-human half-elf features",
-        listOf("dwarf", "anão", "anao") to
+        listOf("dwarf", "anão", "anao", "enano") to
             "short and stocky, broad build, thick braided beard, weathered face",
-        listOf("halfling", "halfing") to
+        listOf("halfling", "halfing", "mediano") to
             "small childlike stature, round friendly face, curly hair",
         listOf("gnome", "gnomo") to
             "very small stature, oversized curious eyes, pointed ears, wild hair",

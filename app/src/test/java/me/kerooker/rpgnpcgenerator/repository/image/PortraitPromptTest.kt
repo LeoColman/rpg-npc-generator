@@ -114,6 +114,21 @@ class PortraitPromptTest : FunSpec({
         PortraitPrompt.forNpc(npc(race = "Meio-Orc")).prompt shouldContain "grey-green skin"
     }
 
+    test("Spanish localized race strings map to the correct anatomy") {
+        PortraitPrompt.forNpc(npc(race = "Elfo Oscuro (Drow)")).prompt shouldContain "obsidian black-grey skin"
+        PortraitPrompt.forNpc(npc(race = "Enano de las Colinas")).prompt shouldContain "thick braided beard"
+        PortraitPrompt.forNpc(npc(race = "Semiorco")).prompt shouldContain "grey-green skin"
+        PortraitPrompt.forNpc(npc(race = "Semielfo")).prompt shouldContain "half-human half-elf features"
+        PortraitPrompt.forNpc(npc(race = "Dracónido")).prompt shouldContain "draconic reptilian humanoid"
+        PortraitPrompt.forNpc(npc(race = "Tiflin")).prompt shouldContain "curved ram horns"
+        PortraitPrompt.forNpc(npc(race = "Mediano Fornido")).prompt shouldContain "small childlike stature"
+    }
+
+    test("Spanish half-races take precedence over their base race anatomy") {
+        PortraitPrompt.forNpc(npc(race = "Semiorco")).prompt shouldNotContain "savage muscular build"
+        PortraitPrompt.forNpc(npc(race = "Semielfo")).prompt shouldNotContain "slender angular ethereal features"
+    }
+
     test("race anatomy is matched for every supported race, more specific races taking precedence") {
         val cases = listOf(
             "Dragonborn" to "draconic reptilian humanoid",
@@ -184,6 +199,10 @@ class PortraitPromptTest : FunSpec({
 
     test("the child safety clause matches the Portuguese age string too") {
         PortraitPrompt.forNpc(npc(age = "Criança")).prompt shouldContain "child-appropriate"
+    }
+
+    test("the child safety clause matches the Spanish age string too") {
+        PortraitPrompt.forNpc(npc(age = "Niño")).prompt shouldContain "child-appropriate"
     }
 
     test("non-child NPCs do not get the child safety clause") {

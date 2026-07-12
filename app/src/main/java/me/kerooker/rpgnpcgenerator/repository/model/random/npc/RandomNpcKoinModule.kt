@@ -17,12 +17,12 @@ val randomNpcModule = module {
     single { CombatStatsGenerator() }
     // Item flavour tables live in code (see ItemsGenerator); the locale is resolved here — once, the
     // same lifetime a FileGenerator loads its locale's raw file — so item strings match the app language.
-    single { ItemsGenerator(portuguese = androidContext().isPortugueseLocale()) }
+    single { ItemsGenerator(locale = androidContext().itemLocale()) }
     single { CompleteNpcGenerator(get(), get(), get()) }
 
     single { TemporaryRandomNpcRepository() }
 }
 
-/** True when the device's primary locale is Portuguese, so item rolls should emit their pt variants. */
-private fun android.content.Context.isPortugueseLocale(): Boolean =
-    resources.configuration.locales[0].language == "pt"
+/** The item table locale for the device's primary language, so item rolls match the app language. */
+private fun android.content.Context.itemLocale(): ItemLocale =
+    ItemLocale.fromLanguage(resources.configuration.locales[0].language)
