@@ -14,6 +14,7 @@ import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -88,6 +89,7 @@ private fun inMemoryRepository(): NpcRepository {
     return NpcRepository(database, dispatcher = Dispatchers.Unconfined)
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class IndividualNpcViewModelTest : FunSpec({
 
     beforeSpec {
