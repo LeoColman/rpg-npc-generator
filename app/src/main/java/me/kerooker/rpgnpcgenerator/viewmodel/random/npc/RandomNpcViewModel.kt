@@ -58,6 +58,19 @@ class RandomNpcViewModel(
     /** The portrait for the NPC currently on screen: spinner, queue position/ETA, and the result. */
     val portrait: StateFlow<PortraitUiState> = _portrait.asStateFlow()
 
+    private val _lockedFields = MutableStateFlow<Set<LockableField>>(emptySet())
+
+    /**
+     * The fields the user has pinned with the padlock: [randomizeAll] keeps these at their current
+     * value and only re-rolls the rest. In-memory only — locks reset when the app restarts.
+     */
+    val lockedFields: StateFlow<Set<LockableField>> = _lockedFields.asStateFlow()
+
+    /** Flips the padlock on a field. A locked field is shielded from [randomizeAll] only. */
+    fun toggleLock(field: LockableField) = _lockedFields.update { locks ->
+        if (field in locks) locks - field else locks + field
+    }
+
     init {
         if (temporaryRandomNpcRepository.generatedNpcData.value == null) {
             temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
@@ -95,8 +108,11 @@ class RandomNpcViewModel(
 
     fun randomizeAge() {
         val age = npcDataGenerator.generateAge()
-        if (age.isNotSameGroupAsCurrentAge()) {
-            randomizeProfession() // A newly generated age may have an incompatible profession.
+        // A newly generated age may have an incompatible profession, so re-roll it to match — unless
+        // the user has locked the profession, in which case their explicit choice wins over the
+        // consistency side-effect (the same locked profession randomizeAll would also preserve).
+        if (age.isNotSameGroupAsCurrentAge() && LockableField.PROFESSION !in _lockedFields.value) {
+            randomizeProfession()
         }
         setAge(context.getString(age.nameResource))
     }
@@ -118,18 +134,19 @@ class RandomNpcViewModel(
 
     fun setGender(gender: String) = temporaryRandomNpcRepository.setGender(gender)
 
-    fun randomizeProfession() {
-        val profession = if (currentAgeIsChild()) {
-            npcDataGenerator.generateProfession(Age.Child)
-        } else {
-            npcDataGenerator.generateProfession(Age.Adult)
-        }
-        setProfession(profession)
+    fun randomizeProfession() = setProfession(generateProfessionForAge(data.value.age))
+
+    /** Rolls a profession from the pool matching [age]'s group, so children never get adult jobs. */
+    private fun generateProfessionForAge(age: String): String {
+        val group = if (ageIsChild(age)) Age.Child else Age.Adult
+        return npcDataGenerator.generateProfession(group)
     }
 
-    private fun currentAgeIsChild(): Boolean {
+    private fun currentAgeIsChild(): Boolean = ageIsChild(data.value.age)
+
+    private fun ageIsChild(age: String): Boolean {
         val childResource = context.getString(Age.Child.nameResource)
-        return data.value.age.equals(childResource, true)
+        return age.equals(childResource, true)
     }
 
     fun setProfession(profession: String) = temporaryRandomNpcRepository.setProfession(profession)
@@ -187,7 +204,44 @@ class RandomNpcViewModel(
 
     fun randomizeAll() {
         analytics.capture(AnalyticsEvents.NPC_RANDOMIZED)
-        temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
+        temporaryRandomNpcRepository.setNpc(rollRespectingLocks())
+    }
+
+    /**
+     * Rolls a full fresh NPC, then puts every locked field back to its current value. Nothing is
+     * locked in the common case, so the merged row equals the freshly generated one.
+     *
+     * The age↔profession consistency rule needs care: a fresh NPC's profession matches its fresh
+     * age group. If age is locked but profession isn't, that fresh profession could be wrong for the
+     * kept age (an adult job on a locked Child), so we re-roll the profession against the locked age
+     * group instead. A locked profession is always kept verbatim, whatever the age.
+     */
+    private fun rollRespectingLocks(): GeneratedNpcData {
+        val locks = _lockedFields.value
+        val current = data.value
+        val fresh = completeNpcGenerator.generate().toNpcData()
+        fun <T> pick(field: LockableField, kept: T, rolled: T) = if (field in locks) kept else rolled
+
+        val age = pick(LockableField.AGE, current.age, fresh.age)
+        val profession = when {
+            LockableField.PROFESSION in locks -> current.profession
+            LockableField.AGE !in locks -> fresh.profession // already matches the fresh age group
+            else -> generateProfessionForAge(current.age) // age kept — match the profession to it
+        }
+        return fresh.copy(
+            name = pick(LockableField.NAME, current.name, fresh.name),
+            nickname = pick(LockableField.NICKNAME, current.nickname, fresh.nickname),
+            race = pick(LockableField.RACE, current.race, fresh.race),
+            age = age,
+            gender = pick(LockableField.GENDER, current.gender, fresh.gender),
+            sexuality = pick(LockableField.SEXUALITY, current.sexuality, fresh.sexuality),
+            profession = profession,
+            alignment = pick(LockableField.ALIGNMENT, current.alignment, fresh.alignment),
+            motivation = pick(LockableField.MOTIVATION, current.motivation, fresh.motivation),
+            personalityTraits = pick(LockableField.PERSONALITY, current.personalityTraits, fresh.personalityTraits),
+            languages = pick(LockableField.LANGUAGES, current.languages, fresh.languages),
+            combat = pick(LockableField.COMBAT, current.combat, fresh.combat)
+        )
     }
 
     fun saveCurrentNpc() {
@@ -376,6 +430,25 @@ class RandomNpcViewModel(
         // cfg 1.0 / 2 steps (safety_checker handles NSFW, so no doubled negative pass).
         private const val SECONDS_PER_RENDER = 15
     }
+}
+
+/**
+ * A field (or whole section) that can be padlocked so [RandomNpcViewModel.randomizeAll] leaves it
+ * untouched. [LANGUAGES], [PERSONALITY] and [COMBAT] lock their entire section at once.
+ */
+enum class LockableField {
+    NAME,
+    NICKNAME,
+    RACE,
+    AGE,
+    GENDER,
+    SEXUALITY,
+    PROFESSION,
+    ALIGNMENT,
+    MOTIVATION,
+    LANGUAGES,
+    PERSONALITY,
+    COMBAT
 }
 
 /** UI state for the Randomize screen's portrait: the render result plus live queue progress. */
