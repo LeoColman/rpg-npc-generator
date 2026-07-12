@@ -262,6 +262,11 @@ dependencies {
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.robolectric)
+    // Robolectric requires the JUnit4 runner (@RunWith(RobolectricTestRunner::class)); Kotest has no
+    // first-class Robolectric support (the community kotest-extensions-robolectric artifact pins
+    // kotest-framework-api 4.6.3 / robolectric 4.6.1, well behind this project's Kotest 5.9.1 /
+    // Robolectric 4.15.1, and was evaluated and rejected). junit-vintage-engine is what lets those
+    // JUnit4 specs keep running under the JUnit Platform alongside the Kotest suite.
     testRuntimeOnly(libs.junit.vintage.engine)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
