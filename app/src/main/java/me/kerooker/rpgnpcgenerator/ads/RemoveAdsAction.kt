@@ -19,6 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.analytics.Analytics
+import me.kerooker.rpgnpcgenerator.analytics.AnalyticsEvents
 import org.koin.compose.koinInject
 
 /**
@@ -32,6 +34,7 @@ fun RemoveAdsAction(snackbarHostState: SnackbarHostState) {
     if (!adsEnabled) return
 
     val rewardedAdController = koinInject<RewardedAdController>()
+    val analytics = koinInject<Analytics>()
     val activity = LocalActivity.current ?: return
     val scope = rememberCoroutineScope()
     var showDialog by remember { mutableStateOf(false) }
@@ -54,6 +57,7 @@ fun RemoveAdsAction(snackbarHostState: SnackbarHostState) {
                     rewardedAdController.show(
                         activity,
                         onReward = {
+                            analytics.capture(AnalyticsEvents.AD_FREE_WEEK_GRANTED)
                             scope.launch {
                                 adFreeStore.grantAdFreeWeek()
                                 snackbarHostState.showSnackbar(successMessage)

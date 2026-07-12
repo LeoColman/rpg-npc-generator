@@ -26,3 +26,4 @@ fastlane/google-play.json
 .gitsecret/keys/*~
 .gitsecret/keys/random_seed
 !*.secret
+.claude/

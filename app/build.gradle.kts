@@ -31,6 +31,11 @@ val admobRealAppId = "ca-app-pub-9745951044027822~3070790547"
 val admobRealBannerUnitId = "ca-app-pub-9745951044027822/1209924287"
 val admobRealRewardedUnitId = "ca-app-pub-9745951044027822/9457069649"
 
+// PostHog project API key (client-side write-only token — it ships in the APK, like the AdMob IDs).
+// Debug builds get no key so dev/emulator sessions never pollute production analytics; override via
+// the posthogApiKey gradle property to test ingestion locally.
+val posthogRealApiKey = "phc_vo4WK3ZPZDvYCmXDvvBgD9Ur5FTs3XDrMAaMBvixaRuU"
+
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
@@ -102,6 +107,11 @@ android {
                 "ADMOB_REWARDED_UNIT_ID",
                 "\"${providers.gradleProperty("admobRewardedUnitId").getOrElse(admobRealRewardedUnitId)}\""
             )
+            buildConfigField(
+                "String",
+                "POSTHOG_API_KEY",
+                "\"${providers.gradleProperty("posthogApiKey").getOrElse(posthogRealApiKey)}\""
+            )
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -110,6 +120,13 @@ android {
             manifestPlaceholders["admobAppId"] = admobTestAppId
             buildConfigField("String", "ADMOB_BANNER_UNIT_ID", "\"$admobTestBannerUnitId\"")
             buildConfigField("String", "ADMOB_REWARDED_UNIT_ID", "\"$admobTestRewardedUnitId\"")
+
+            // Blank key = analytics fully disabled (see AnalyticsModule).
+            buildConfigField(
+                "String",
+                "POSTHOG_API_KEY",
+                "\"${providers.gradleProperty("posthogApiKey").getOrElse("")}\""
+            )
         }
     }
 
@@ -206,6 +223,9 @@ dependencies {
     // ad-free entitlement.
     implementation(libs.play.services.ads)
     implementation(libs.androidx.datastore.preferences)
+
+    // Product analytics (PostHog)
+    implementation(libs.posthog.android)
 
     // Detekt formatting (ktlint rules)
     detektPlugins(libs.detekt.formatting)

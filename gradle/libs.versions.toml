@@ -24,6 +24,7 @@ ktor = "3.1.2"
 logback = "1.5.6"
 playServicesAds = "25.4.0"
 datastore = "1.1.7"
+posthog = "3.53.6"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -46,6 +47,8 @@ androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
+
+posthog-android = { module = "com.posthog:posthog-android", version.ref = "posthog" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }

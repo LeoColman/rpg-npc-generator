@@ -12,11 +12,14 @@ import androidx.work.workDataOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.analytics.Analytics
+import me.kerooker.rpgnpcgenerator.analytics.AnalyticsEvents
 import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Generates an NPC portrait in the background so the user can leave and come back. Submits to the
@@ -33,6 +36,7 @@ class GeneratePortraitWorker(
     private val npcRepository: NpcRepository by inject()
     private val queueClient: PortraitQueueClient by inject()
     private val notifications: PortraitNotifications by inject()
+    private val analytics: Analytics by inject()
 
     // Keeps the render alive when the app is backgrounded. On API < 31 expedited work runs as a
     // short-lived foreground service using this notification; on API 31+ it's an expedited job.
@@ -59,7 +63,29 @@ class GeneratePortraitWorker(
         val path = if (!queueClient.enabled) {
             null
         } else {
-            runCatching { renderRemote(npcId, npc.fullName, request) }.getOrNull()
+            analytics.capture(
+                AnalyticsEvents.PORTRAIT_REQUESTED,
+                mapOf(AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_SAVED_NPC)
+            )
+            runCatching { renderRemote(npcId, npc.fullName, request) }
+                .onSuccess {
+                    analytics.capture(
+                        AnalyticsEvents.PORTRAIT_GENERATED,
+                        mapOf(AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_SAVED_NPC)
+                    )
+                }
+                .onFailure {
+                    // A cancelled worker (user or system) is not a render failure — let it propagate.
+                    if (it is CancellationException) throw it
+                    analytics.capture(
+                        AnalyticsEvents.PORTRAIT_FAILED,
+                        mapOf(
+                            AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_SAVED_NPC,
+                            AnalyticsEvents.PROP_REASON to (it::class.simpleName ?: "unknown")
+                        )
+                    )
+                }
+                .getOrNull()
         }
         if (path == null) {
             notifications.notifyFailed(npcId, npc.fullName)

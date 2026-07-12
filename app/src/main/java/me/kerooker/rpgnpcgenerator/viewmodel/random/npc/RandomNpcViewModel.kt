@@ -3,6 +3,7 @@ package me.kerooker.rpgnpcgenerator.viewmodel.random.npc
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,6 +24,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.kerooker.rpgnpcgenerator.analytics.Analytics
+import me.kerooker.rpgnpcgenerator.analytics.AnalyticsEvents
 import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitPrompt
@@ -46,7 +49,8 @@ class RandomNpcViewModel(
     private val npcDataGenerator: NpcDataGenerator,
     private val temporaryRandomNpcRepository: TemporaryRandomNpcRepository,
     private val npcRepository: NpcRepository,
-    private val queueClient: PortraitQueueClient
+    private val queueClient: PortraitQueueClient,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _portrait = MutableStateFlow(PortraitUiState())
@@ -174,12 +178,17 @@ class RandomNpcViewModel(
     }
 
     fun randomizeAll() {
+        analytics.capture(AnalyticsEvents.NPC_RANDOMIZED)
         temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())
     }
 
     fun saveCurrentNpc() {
         val npc = data.value.toNpc()
         val portrait = _portrait.value.bitmap
+        analytics.capture(
+            AnalyticsEvents.NPC_SAVED,
+            mapOf(AnalyticsEvents.PROP_HAS_PORTRAIT to (portrait != null))
+        )
         viewModelScope.launch(Dispatchers.IO) {
             // Keep the portrait generated while rolling: persist the bitmap and store its path.
             val imagePath = portrait?.let { ImageStore.persistBitmap(context, it) }
@@ -207,6 +216,11 @@ class RandomNpcViewModel(
 
     private suspend fun generatePortrait(request: PortraitRequest) {
         _portrait.update { it.copy(isGenerating = true, failed = false, queueNumber = null, etaSeconds = null) }
+        analytics.capture(
+            AnalyticsEvents.PORTRAIT_REQUESTED,
+            mapOf(AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE)
+        )
+        val startedAtMs = SystemClock.elapsedRealtime()
         // Catch narrowly (not CancellationException): a re-roll cancels this via collectLatest, and
         // that must propagate so the next render takes over instead of showing a false failure.
         var jobId: String? = null
@@ -216,6 +230,14 @@ class RandomNpcViewModel(
             publishQueue(submitted.ahead)
             val bitmap = awaitRender(submitted.jobId)
             jobId = null // finished — there's nothing left to cancel
+            analytics.capture(
+                AnalyticsEvents.PORTRAIT_GENERATED,
+                mapOf(
+                    AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE,
+                    AnalyticsEvents.PROP_QUEUE_AHEAD to submitted.ahead,
+                    AnalyticsEvents.PROP_WAIT_SECONDS to (SystemClock.elapsedRealtime() - startedAtMs) / MS_PER_SECOND
+                )
+            )
             _portrait.update {
                 it.copy(isGenerating = false, failed = false, bitmap = bitmap, queueNumber = null, etaSeconds = null)
             }
@@ -236,6 +258,13 @@ class RandomNpcViewModel(
 
     private fun failPortrait(cause: Exception) {
         Log.w(TAG, "Portrait generation failed", cause)
+        analytics.capture(
+            AnalyticsEvents.PORTRAIT_FAILED,
+            mapOf(
+                AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE,
+                AnalyticsEvents.PROP_REASON to (cause::class.simpleName ?: "unknown")
+            )
+        )
         _portrait.update { it.copy(isGenerating = false, failed = true, queueNumber = null, etaSeconds = null) }
     }
 
@@ -333,6 +362,7 @@ class RandomNpcViewModel(
         private const val PORTRAIT_POLL_INTERVAL_MS = 2_000L
         private const val PORTRAIT_MAX_WAIT_MS = 9 * 60_000L
         private const val PORTRAIT_MAX_POLL_ERRORS = 5
+        private const val MS_PER_SECOND = 1_000L
 
         // Warm per-render wall time on the server, used only for the ETA estimate. ~15s reflects
         // cfg 1.0 / 2 steps (safety_checker handles NSFW, so no doubled negative pass).
