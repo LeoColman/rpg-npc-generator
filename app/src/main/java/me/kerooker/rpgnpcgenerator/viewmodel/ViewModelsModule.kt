@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
     viewModel { RandomNpcViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { MyNpcsViewModel(get()) }
+    viewModel { MyNpcsViewModel(get(), get()) }
     viewModel { (npcId: Long) -> IndividualNpcViewModel(npcId, get(), androidContext()) }
     viewModel { SettingsViewModel(get(), androidContext(), get()) }
 }

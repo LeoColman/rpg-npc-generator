@@ -72,6 +72,7 @@ import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
 import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsUi
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
+import me.kerooker.rpgnpcgenerator.ui.components.TagsSection
 import me.kerooker.rpgnpcgenerator.ui.share.NpcExportFormat
 import me.kerooker.rpgnpcgenerator.ui.share.NpcExportRequest
 import me.kerooker.rpgnpcgenerator.ui.share.NpcShareCardCapture
@@ -90,6 +91,8 @@ fun NpcDetailScreen(
     val npc by viewModel.npc.collectAsStateWithLifecycle()
     val editState by viewModel.editState.collectAsStateWithLifecycle()
     val campaignSuggestions by viewModel.campaignSuggestions.collectAsStateWithLifecycle()
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val tagSuggestions by viewModel.tagSuggestions.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
@@ -101,6 +104,12 @@ fun NpcDetailScreen(
     var draft by remember { mutableStateOf<Npc?>(null) }
     LaunchedEffect(npc, isEditing) {
         if (!isEditing) draft = npc
+    }
+
+    // Editable tags working copy, likewise reset from the persisted tags whenever we are not editing.
+    var draftTags by remember { mutableStateOf<List<String>>(emptyList()) }
+    LaunchedEffect(tags, isEditing) {
+        if (!isEditing) draftTags = tags
     }
 
     Scaffold(
@@ -120,7 +129,7 @@ fun NpcDetailScreen(
                         IconButton(onClick = viewModel::cancelEdit) {
                             Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.individual_npc_cancel))
                         }
-                        IconButton(onClick = { draft?.let(viewModel::saveEdit) }) {
+                        IconButton(onClick = { draft?.let { viewModel.saveEdit(it, draftTags) } }) {
                             Icon(Icons.Filled.Check, contentDescription = stringResource(R.string.individual_npc_save))
                         }
                     } else {
@@ -148,9 +157,12 @@ fun NpcDetailScreen(
                 draft = editing,
                 isEditing = isEditing,
                 campaignSuggestions = campaignSuggestions,
+                tags = draftTags,
+                tagSuggestions = tagSuggestions,
                 contentPadding = padding,
                 onGeneratePortrait = viewModel::generatePortrait,
-                onDraftChange = { draft = it }
+                onDraftChange = { draft = it },
+                onTagsChange = { draftTags = it }
             )
         }
 
@@ -235,9 +247,12 @@ private fun NpcDetailContent(
     draft: Npc,
     isEditing: Boolean,
     campaignSuggestions: List<String>,
+    tags: List<String>,
+    tagSuggestions: List<String>,
     contentPadding: PaddingValues,
     onGeneratePortrait: () -> Unit,
-    onDraftChange: (Npc) -> Unit
+    onDraftChange: (Npc) -> Unit,
+    onTagsChange: (List<String>) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -352,6 +367,13 @@ private fun NpcDetailContent(
             suggestions = campaignSuggestions,
             editable = isEditing,
             onValueChange = { onDraftChange(draft.copy(campaign = it.ifBlank { null })) }
+        )
+
+        TagsSection(
+            tags = tags,
+            editable = isEditing,
+            suggestions = tagSuggestions,
+            onTagsChange = onTagsChange
         )
 
         EditableListSection(

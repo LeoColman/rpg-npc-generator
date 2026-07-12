@@ -1,0 +1,27 @@
+-- Free-text tags attached to a saved NPC. A separate table (rather than a column on npc) keeps tags
+-- normalized so the roster can search and filter by them, and one NPC can carry many. There is no
+-- foreign-key cascade (AndroidSqliteDriver does not enable PRAGMA foreign_keys), so the repository
+-- deletes an NPC's tags explicitly alongside the row.
+CREATE TABLE npc_tag (
+    npcId INTEGER NOT NULL,
+    tag TEXT NOT NULL
+);
+
+CREATE INDEX npc_tag_npcId ON npc_tag(npcId);
+
+selectAllTags:
+SELECT npcId, tag FROM npc_tag ORDER BY tag COLLATE NOCASE;
+
+selectTagsForNpc:
+SELECT tag FROM npc_tag WHERE npcId = ? ORDER BY tag COLLATE NOCASE;
+
+selectDistinctTags:
+SELECT DISTINCT tag FROM npc_tag
+WHERE trim(tag) != ''
+ORDER BY tag COLLATE NOCASE;
+
+insertTag:
+INSERT INTO npc_tag(npcId, tag) VALUES (?, ?);
+
+deleteTagsForNpc:
+DELETE FROM npc_tag WHERE npcId = ?;

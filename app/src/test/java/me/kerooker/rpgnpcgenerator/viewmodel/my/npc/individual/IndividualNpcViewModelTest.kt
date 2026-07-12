@@ -109,6 +109,8 @@ class IndividualNpcViewModelTest : FunSpec({
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
         every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
         val context = mockk<Context>(relaxed = true)
 
         val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
@@ -129,6 +131,8 @@ class IndividualNpcViewModelTest : FunSpec({
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
         every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -160,6 +164,8 @@ class IndividualNpcViewModelTest : FunSpec({
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
         every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -191,6 +197,8 @@ class IndividualNpcViewModelTest : FunSpec({
         val repositoryFlow = MutableStateFlow<Npc?>(null)
         every { repository.get(NPC_ID) } returns repositoryFlow
         every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
         every { repository.update(any()) } just Runs
         val context = mockk<Context>(relaxed = true)
         mockkObject(ImageStore)
@@ -215,6 +223,35 @@ class IndividualNpcViewModelTest : FunSpec({
                 repository.update(original.copy(id = NPC_ID, fullName = "Edited Name", imagePath = GENERATED_IMAGE_PATH))
             }
             verify(exactly = 0) { ImageStore.deletePortrait(context, GENERATED_IMAGE_PATH) }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    test("saveEdit persists the edited tags when a tag list is provided") {
+        val repository = mockk<NpcRepository>()
+        val repositoryFlow = MutableStateFlow<Npc?>(null)
+        every { repository.get(NPC_ID) } returns repositoryFlow
+        every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
+        every { repository.update(any()) } just Runs
+        every { repository.setTags(any(), any()) } just Runs
+        val context = mockk<Context>(relaxed = true)
+
+        val viewModel = IndividualNpcViewModel(NPC_ID, repository, context)
+
+        viewModel.npc.test {
+            awaitItem() shouldBe null
+            val original = sampleNpc()
+            repositoryFlow.value = original
+            awaitItem() shouldBe original
+
+            viewModel.enableEdit()
+            viewModel.saveEdit(original, tags = listOf("Villain", "Boss"))
+
+            verify(timeout = VERIFY_TIMEOUT_MS) { repository.update(original.copy(id = NPC_ID)) }
+            verify(timeout = VERIFY_TIMEOUT_MS) { repository.setTags(NPC_ID, listOf("Villain", "Boss")) }
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -275,6 +312,8 @@ class IndividualNpcViewModelTest : FunSpec({
         val repository = mockk<NpcRepository>()
         every { repository.get(NPC_ID) } returns MutableStateFlow<Npc?>(null)
         every { repository.distinctCampaigns() } returns MutableStateFlow(emptyList())
+        every { repository.tagsFor(NPC_ID) } returns MutableStateFlow(emptyList())
+        every { repository.distinctTags() } returns MutableStateFlow(emptyList())
         val context = mockk<Context>(relaxed = true)
         mockkObject(GeneratePortraitWorker.Companion)
         every { GeneratePortraitWorker.enqueue(any(), any()) } just Runs

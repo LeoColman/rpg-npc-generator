@@ -5,10 +5,12 @@ import app.cash.turbine.test
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -59,10 +61,14 @@ class MyNpcsViewModelTest : FunSpec({
     beforeSpec { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     afterSpec { Dispatchers.resetMain() }
 
-    fun viewModelWith(npcs: List<Npc>): MyNpcsViewModel {
+    fun viewModelWith(npcs: List<Npc>, tags: Map<Long, List<String>> = emptyMap()): MyNpcsViewModel {
         val repository = mockk<NpcRepository>()
         every { repository.all() } returns MutableStateFlow(npcs)
-        return MyNpcsViewModel(repository)
+        every { repository.allTags() } returns MutableStateFlow(tags)
+        val preferences = mockk<RosterPreferences>()
+        every { preferences.sortOrder } returns flowOf(NpcSortOrder.NAME_ASC)
+        coEvery { preferences.setSortOrder(any()) } returns Unit
+        return MyNpcsViewModel(repository, preferences)
     }
 
     test("uiState reflects the persisted npcs, sorted by name by default") {
@@ -106,6 +112,30 @@ class MyNpcsViewModelTest : FunSpec({
             val grouped = awaitState { it.filter.groupByCampaign }
             grouped.filter.campaign shouldBe null
             grouped.sections.map { it.campaign } shouldContainExactly listOf("Avernus", "Waterdeep")
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    test("tags surface in state and both the query and the tag filter narrow by them") {
+        val viewModel = viewModelWith(
+            npcs = listOf(npc(1, "Zara"), npc(2, "Alba")),
+            tags = mapOf(1L to listOf("Villain"), 2L to listOf("Ally"))
+        )
+
+        viewModel.uiState.test {
+            val initial = awaitState { it.hasNpcs }
+            initial.availableTags shouldContainExactly listOf("Ally", "Villain")
+            initial.tagsByNpc[1L] shouldContainExactly listOf("Villain")
+
+            viewModel.setQuery("villain")
+            awaitState { it.filter.query == "villain" }
+                .sections.single().npcs.map { it.fullName } shouldContainExactly listOf("Zara")
+
+            viewModel.setQuery("")
+            viewModel.setTagFilter("Ally")
+            awaitState { it.filter.tag == "Ally" }
+                .sections.single().npcs.map { it.fullName } shouldContainExactly listOf("Alba")
 
             cancelAndIgnoreRemainingEvents()
         }
