@@ -1,11 +1,13 @@
 package me.kerooker.rpgnpcgenerator.viewmodel.random.npc
 
 import android.content.Context
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -15,10 +17,17 @@ import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitPrompt
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitQueueClient
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Age
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Alignment
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CombatStats
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CommonLanguage
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CompleteNpcGenerator
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Gender
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpc
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpcData
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.NpcDataGenerator
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Race
+import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Sexuality
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.TemporaryRandomNpcRepository
 
 private val ORIGINAL_COMBAT = CombatStats(
@@ -59,6 +68,54 @@ private fun sampleNpcData(combat: CombatStats?) = GeneratedNpcData(
     languages = listOf("Common"),
     combat = combat
 )
+
+/** The NPC on screen before a "randomize all"; every field is a distinct "Current…" marker. */
+private val CURRENT_DATA = GeneratedNpcData(
+    name = "CurrentName",
+    nickname = "CurrentNick",
+    gender = "CurrentGender",
+    sexuality = "CurrentSexuality",
+    race = "CurrentRace",
+    age = "CurrentAge",
+    profession = "CurrentProfession",
+    motivation = "CurrentMotivation",
+    alignment = "CurrentAlignment",
+    personalityTraits = listOf("CurrentTrait"),
+    languages = listOf("CurrentLang"),
+    combat = ORIGINAL_COMBAT
+)
+
+/** The fresh roll that [CompleteNpcGenerator.generate] is stubbed to return; all "Fresh…" values. */
+private val FRESH_NPC = GeneratedNpc(
+    name = "FreshName",
+    nickname = "FreshNick",
+    gender = Gender.Male,
+    sexuality = Sexuality.Heterosexual,
+    race = Race.Human,
+    age = Age.Adult,
+    profession = "FreshProfession",
+    motivation = "FreshMotivation",
+    alignment = Alignment.Neutral,
+    personalityTraits = listOf("FreshTrait"),
+    languages = listOf(CommonLanguage.Common),
+    combat = REROLLED_COMBAT
+)
+
+/** Reads the on-screen value of a given lockable field, for asserting it survived (or changed). */
+private fun accessorFor(field: LockableField): (GeneratedNpcData) -> Any? = when (field) {
+    LockableField.NAME -> { d -> d.name }
+    LockableField.NICKNAME -> { d -> d.nickname }
+    LockableField.RACE -> { d -> d.race }
+    LockableField.AGE -> { d -> d.age }
+    LockableField.GENDER -> { d -> d.gender }
+    LockableField.SEXUALITY -> { d -> d.sexuality }
+    LockableField.PROFESSION -> { d -> d.profession }
+    LockableField.ALIGNMENT -> { d -> d.alignment }
+    LockableField.MOTIVATION -> { d -> d.motivation }
+    LockableField.LANGUAGES -> { d -> d.languages }
+    LockableField.PERSONALITY -> { d -> d.personalityTraits }
+    LockableField.COMBAT -> { d -> d.combat }
+}
 
 /**
  * Mirrors RandomNpcViewModel's private GeneratedNpcData.toNpc() mapping so the test can build the
@@ -105,10 +162,10 @@ class RandomNpcViewModelTest : FunSpec({
 
     fun buildViewModel(
         repository: TemporaryRandomNpcRepository,
-        completeNpcGenerator: CompleteNpcGenerator
+        completeNpcGenerator: CompleteNpcGenerator,
+        npcDataGenerator: NpcDataGenerator = mockk(),
+        context: Context = mockk(relaxed = true)
     ): RandomNpcViewModel {
-        val context = mockk<Context>(relaxed = true)
-        val npcDataGenerator = mockk<NpcDataGenerator>()
         val npcRepository = mockk<NpcRepository>(relaxed = true)
         // enabled defaults to false on a relaxed mock, so observePortrait's collector never engages
         // the (unmocked) network calls in submit/status/decode.
@@ -155,5 +212,146 @@ class RandomNpcViewModelTest : FunSpec({
         // on RandomNpcViewModel.toNpc() describes.
         val requestAfter = PortraitPrompt.forNpc(viewModel.data.value.toPortraitNpc())
         requestAfter shouldBe requestBefore
+    }
+
+    test("randomizeAll re-rolls every field when nothing is locked") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA)
+        val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+        val context = mockk<Context>(relaxed = true) { every { getString(any()) } returns "generated" }
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, context = context)
+        viewModel.randomizeAll()
+
+        val result = viewModel.data.value
+        // Fields carried straight from the generated NPC.
+        result.name shouldBe "FreshName"
+        result.nickname shouldBe "FreshNick"
+        result.profession shouldBe "FreshProfession"
+        result.motivation shouldBe "FreshMotivation"
+        result.personalityTraits shouldBe listOf("FreshTrait")
+        result.combat shouldBe REROLLED_COMBAT
+        // Enum-backed fields resolved through context.getString.
+        result.gender shouldBe "generated"
+        result.race shouldBe "generated"
+        result.age shouldBe "generated"
+        result.sexuality shouldBe "generated"
+        result.alignment shouldBe "generated"
+        result.languages shouldBe listOf("generated")
+        // Nothing from the previous NPC leaked through.
+        LockableField.values().forEach { field ->
+            accessorFor(field)(result) shouldNotBe accessorFor(field)(CURRENT_DATA)
+        }
+    }
+
+    test("each locked field keeps its current value through randomizeAll") {
+        LockableField.values().forEach { field ->
+            val repository = TemporaryRandomNpcRepository()
+            repository.setNpc(CURRENT_DATA)
+            val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+            // A locked non-child age re-rolls the (unlocked) profession against the Adult pool.
+            val npcDataGenerator = mockk<NpcDataGenerator> { every { generateProfession(any()) } returns "AdultJob" }
+
+            val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator)
+            viewModel.toggleLock(field)
+            viewModel.randomizeAll()
+
+            withClue("locked $field") {
+                accessorFor(field)(viewModel.data.value) shouldBe accessorFor(field)(CURRENT_DATA)
+            }
+        }
+    }
+
+    test("randomizeAll regenerates the profession for a locked child age") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA.copy(age = "Child", profession = "OldChildJob"))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+        val npcDataGenerator = mockk<NpcDataGenerator> {
+            every { generateProfession(Age.Child) } returns "Student"
+            every { generateProfession(Age.Adult) } returns "Blacksmith"
+        }
+        val context = mockk<Context>(relaxed = true) { every { getString(Age.Child.nameResource) } returns "Child" }
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator, context)
+        viewModel.toggleLock(LockableField.AGE)
+        viewModel.randomizeAll()
+
+        val result = viewModel.data.value
+        result.age shouldBe "Child"
+        result.profession shouldBe "Student"
+        verify(exactly = 1) { npcDataGenerator.generateProfession(Age.Child) }
+        verify(exactly = 0) { npcDataGenerator.generateProfession(Age.Adult) }
+    }
+
+    test("randomizeAll regenerates the profession for a locked non-child age") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA.copy(age = "Adult", profession = "OldAdultJob"))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+        val npcDataGenerator = mockk<NpcDataGenerator> {
+            every { generateProfession(Age.Child) } returns "Student"
+            every { generateProfession(Age.Adult) } returns "Blacksmith"
+        }
+        val context = mockk<Context>(relaxed = true) { every { getString(Age.Child.nameResource) } returns "Child" }
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator, context)
+        viewModel.toggleLock(LockableField.AGE)
+        viewModel.randomizeAll()
+
+        val result = viewModel.data.value
+        result.age shouldBe "Adult"
+        result.profession shouldBe "Blacksmith"
+        verify(exactly = 1) { npcDataGenerator.generateProfession(Age.Adult) }
+        verify(exactly = 0) { npcDataGenerator.generateProfession(Age.Child) }
+    }
+
+    test("randomizeAll keeps a locked profession and never regenerates it") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA.copy(profession = "Locksmith"))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+        // Non-relaxed: any generateProfession call would throw, proving a locked profession is untouched.
+        val npcDataGenerator = mockk<NpcDataGenerator>()
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator)
+        viewModel.toggleLock(LockableField.PROFESSION)
+        viewModel.randomizeAll()
+
+        viewModel.data.value.profession shouldBe "Locksmith"
+        verify(exactly = 0) { npcDataGenerator.generateProfession(any()) }
+    }
+
+    test("randomizeAge does not re-roll a locked profession when the age group changes") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA.copy(age = "Adult", profession = "Locksmith"))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator>() // randomizeAll is never called here
+        val npcDataGenerator = mockk<NpcDataGenerator> { every { generateAge() } returns Age.Child }
+        val context = mockk<Context>(relaxed = true) { every { getString(Age.Child.nameResource) } returns "Child" }
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator, context)
+        viewModel.toggleLock(LockableField.PROFESSION)
+        viewModel.randomizeAge()
+
+        viewModel.data.value.age shouldBe "Child"
+        viewModel.data.value.profession shouldBe "Locksmith"
+        verify(exactly = 0) { npcDataGenerator.generateProfession(any()) }
+    }
+
+    test("randomizeAge still re-rolls an unlocked profession when the age group changes") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA.copy(age = "Adult", profession = "Locksmith"))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator>()
+        val npcDataGenerator = mockk<NpcDataGenerator> {
+            every { generateAge() } returns Age.Child
+            // randomizeAge re-rolls the profession before setting the new age, so it reads the
+            // still-current (Adult) group — preserving the app's existing behaviour.
+            every { generateProfession(Age.Adult) } returns "Blacksmith"
+        }
+        val context = mockk<Context>(relaxed = true) { every { getString(Age.Child.nameResource) } returns "Child" }
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator, npcDataGenerator, context)
+        viewModel.randomizeAge()
+
+        viewModel.data.value.age shouldBe "Child"
+        viewModel.data.value.profession shouldBe "Blacksmith"
+        verify(exactly = 1) { npcDataGenerator.generateProfession(Age.Adult) }
     }
 })
