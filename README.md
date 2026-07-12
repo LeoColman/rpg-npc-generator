@@ -21,11 +21,16 @@ matters and enrich their players' experience.
 
 <table>
   <tr>
-    <td align="center" width="20%"><img src="docs/screenshots/randomize.png" width="160" alt="Roll a random NPC with an AI portrait"><br><sub><b>Roll &amp; portrait</b></sub></td>
-    <td align="center" width="20%"><img src="docs/screenshots/roster.png" width="160" alt="Browse your saved roster"><br><sub><b>Your roster</b></sub></td>
-    <td align="center" width="20%"><img src="docs/screenshots/detail.png" width="160" alt="An NPC's full sheet with its portrait"><br><sub><b>NPC detail</b></sub></td>
-    <td align="center" width="20%"><img src="docs/screenshots/combat.png" width="160" alt="Optional D&amp;D 5e combat stat block"><br><sub><b>Combat stats</b></sub></td>
-    <td align="center" width="20%"><img src="docs/screenshots/backup.png" width="160" alt="Export and import your roster"><br><sub><b>Backup &amp; restore</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/randomize.png" width="160" alt="Roll a random NPC with an AI portrait"><br><sub><b>Roll &amp; portrait</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/roster.png" width="160" alt="Search your roster by name, race, profession or tag"><br><sub><b>Search, tags &amp; sort</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/detail.png" width="160" alt="An NPC's full sheet with its portrait"><br><sub><b>NPC detail</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/combat.png" width="160" alt="Optional D&amp;D 5e combat stat block with re-roll"><br><sub><b>Combat stats &amp; re-roll</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><img src="docs/screenshots/export.png" width="160" alt="An exported NPC sheet, ready to share as PNG or PDF"><br><sub><b>PNG/PDF export</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/dark.png" width="160" alt="The roster in dark mode"><br><sub><b>Dark mode</b></sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/backup.png" width="160" alt="Export and import your roster"><br><sub><b>Backup &amp; restore</b></sub></td>
+    <td width="25%"></td>
   </tr>
 </table>
 
@@ -38,10 +43,15 @@ matters and enrich their players' experience.
   rendered on a self-hosted server and delivered in the background
   (see [`server/portrait-renderer`](server/portrait-renderer/README.md)).
 - **Save & browse** — keep the NPCs you like and revisit them any time; search
-  your roster by name, nickname, profession or race, sort it, and group NPCs by
-  campaign. Each NPC keeps its attributes, notes and portrait.
+  your roster by name, nickname, profession, race or tag, sort it your way, tag
+  NPCs with your own labels, and group them by campaign. Each NPC keeps its
+  attributes, notes and portrait.
 - **Combat stats** — attach an optional D&D 5e stat block to any NPC: the six
   ability scores (with modifiers), armor class, hit points and challenge rating.
+  Re-roll the whole block until it fits — without touching the portrait.
+- **Share & export** — turn any saved NPC into a polished sheet and share it as
+  a PNG image or a one-page PDF, portrait and stat block included.
+- **Dark mode** — follow the system theme or force light/dark from Settings.
 - **Backup & restore** — export your whole roster to a single file — portraits
   included — and import it back on any device.
 - **Offline-first** — attribute generation and your saved roster work with no
