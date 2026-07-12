@@ -177,6 +177,14 @@ class RandomNpcViewModel(
         temporaryRandomNpcRepository.setPersonalities(fresh)
     }
 
+    /**
+     * Rolls a fresh combat stats block. Combat columns are not read by [PortraitPrompt.forNpc] (see
+     * the NOTE on [toNpc] below), so this never changes the built [PortraitRequest] and therefore
+     * never triggers a portrait re-render.
+     */
+    fun randomizeCombatStats() =
+        temporaryRandomNpcRepository.setCombat(completeNpcGenerator.generateCombatStats())
+
     fun randomizeAll() {
         analytics.capture(AnalyticsEvents.NPC_RANDOMIZED)
         temporaryRandomNpcRepository.setNpc(completeNpcGenerator.generate().toNpcData())

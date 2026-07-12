@@ -308,16 +308,30 @@ fun AbilityScoreField(
 /**
  * The "Combat stats" block: six ability scores (each showing its modifier), Armor Class, Hit Points
  * and a text Challenge Rating. Read-only when [editable] is false. Combat values are plain data and
- * never feed the portrait prompt, so editing here does not trigger a portrait re-render.
+ * never feed the portrait prompt, so re-rolling or editing here does not trigger a portrait
+ * re-render. When [onReroll] is given, the header shows a die that regenerates the whole block.
  */
 @Composable
 fun CombatStatsSection(
     stats: CombatStatsUi,
     editable: Boolean,
     modifier: Modifier = Modifier,
-    onStatsChange: (CombatStatsUi) -> Unit = {}
+    onStatsChange: (CombatStatsUi) -> Unit = {},
+    onReroll: (() -> Unit)? = null
 ) {
-    FieldGroup(title = stringResource(R.string.combat_stats_label), modifier = modifier) {
+    val title = stringResource(R.string.combat_stats_label)
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.weight(1f)
+            )
+            if (onReroll != null) {
+                RerollButton(contentDescription = stringResource(R.string.cd_reroll_all, title), onClick = onReroll)
+            }
+        }
         AbilityRow(
             leftLabel = stringResource(R.string.combat_strength),
             leftValue = stats.strength,

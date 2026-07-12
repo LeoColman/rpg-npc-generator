@@ -56,6 +56,9 @@ class CompleteNpcGenerator(
     private val combatStatsGenerator: CombatStatsGenerator
 ) {
 
+    /** Rolls a standalone combat stats block, e.g. to re-roll just that section of an existing NPC. */
+    fun generateCombatStats(): CombatStats = combatStatsGenerator.generate()
+
     fun generate(): GeneratedNpc {
         val name = generateFullName()
         val nickname = generateNickname()

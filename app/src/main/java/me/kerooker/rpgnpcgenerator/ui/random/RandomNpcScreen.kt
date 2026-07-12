@@ -199,9 +199,16 @@ fun RandomNpcScreen(
                 onRerollAll = viewModel::randomizeAllPersonalities
             )
 
-            // Display-only here: combat values are not part of the portrait prompt, so showing them
-            // read-only keeps them off the reactive portrait-request/debounce path entirely.
-            npc.combat?.let { CombatStatsSection(stats = it.toUi(), editable = false) }
+            // Fields are read-only here (combat isn't hand-edited on this screen), but the whole
+            // block can be re-rolled at once: combat values are not part of the portrait prompt, so
+            // this never triggers the reactive portrait-request/debounce path.
+            npc.combat?.let {
+                CombatStatsSection(
+                    stats = it.toUi(),
+                    editable = false,
+                    onReroll = viewModel::randomizeCombatStats
+                )
+            }
         }
     }
 }

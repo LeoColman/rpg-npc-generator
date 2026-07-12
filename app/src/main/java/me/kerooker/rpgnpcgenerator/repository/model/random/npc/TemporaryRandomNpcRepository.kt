@@ -61,6 +61,8 @@ class TemporaryRandomNpcRepository {
 
     fun setPersonalities(personalities: List<String>) = update { it.copy(personalityTraits = personalities) }
 
+    fun setCombat(combat: CombatStats) = update { it.copy(combat = combat) }
+
     private inline fun update(block: (GeneratedNpcData) -> GeneratedNpcData) {
         _generatedNpcData.value = block(current)
     }
