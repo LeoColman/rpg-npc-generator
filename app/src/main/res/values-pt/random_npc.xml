@@ -14,6 +14,8 @@
     <string name="random_npc_language_hint">Idioma</string>
     <string name="random_npc_personality_traits_label">Traços de Personalidade</string>
     <string name="random_npc_personality_hint">Traço de Personalidade</string>
+    <string name="random_npc_items_label">Itens</string>
+    <string name="random_npc_item_hint">Item</string>
     <string name="random_npc_add_item">Adicionar Item</string>
     
     <string name="randomize_all">Tudo Aleatório</string>

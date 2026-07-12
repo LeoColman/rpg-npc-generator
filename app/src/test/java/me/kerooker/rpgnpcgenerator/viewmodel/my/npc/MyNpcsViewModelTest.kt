@@ -41,7 +41,8 @@ private fun npc(id: Long, fullName: String, campaign: String? = null) = Npc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = campaign
+    campaign = campaign,
+    items = emptyList()
 )
 
 // stateIn(WhileSubscribed) replays its initial empty seed to a new subscriber before the combined

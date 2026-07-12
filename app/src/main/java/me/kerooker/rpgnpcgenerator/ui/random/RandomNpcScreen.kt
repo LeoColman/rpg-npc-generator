@@ -223,6 +223,23 @@ fun RandomNpcScreen(
                 onToggleLock = { viewModel.toggleLock(LockableField.PERSONALITY) }
             )
 
+            // The NPC's starting inventory. The section die re-rolls a fresh profession-appropriate
+            // set; the padlock shields it from "randomize all" like the other section locks. Items
+            // are not part of the portrait prompt, so nothing here triggers a portrait re-render.
+            EditableListSection(
+                title = stringResource(R.string.random_npc_items_label),
+                itemLabel = stringResource(R.string.random_npc_item_hint),
+                items = npc.items,
+                editable = true,
+                onItemChange = viewModel::setItem,
+                onReroll = viewModel::randomizeItem,
+                onRemove = viewModel::removeItem,
+                onAdd = { viewModel.randomizeItem(npc.items.size) },
+                onRerollAll = viewModel::randomizeAllItems,
+                locked = LockableField.ITEMS in locks,
+                onToggleLock = { viewModel.toggleLock(LockableField.ITEMS) }
+            )
+
             // Fields are read-only here (combat isn't hand-edited on this screen), but the whole
             // block can be re-rolled at once: combat values are not part of the portrait prompt, so
             // this never triggers the reactive portrait-request/debounce path.

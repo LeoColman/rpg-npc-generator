@@ -202,6 +202,17 @@ class RandomNpcViewModel(
     fun randomizeCombatStats() =
         temporaryRandomNpcRepository.setCombat(completeNpcGenerator.generateCombatStats())
 
+    fun setItem(index: Int, item: String) = temporaryRandomNpcRepository.setItem(index, item)
+
+    fun removeItem(index: Int) = temporaryRandomNpcRepository.removeItem(index)
+
+    /** Re-rolls a single item row (or appends one when [index] is past the end). */
+    fun randomizeItem(index: Int) = setItem(index, completeNpcGenerator.generateSingleItem())
+
+    /** Re-rolls the whole Items section as a fresh, profession-appropriate inventory. */
+    fun randomizeAllItems() =
+        temporaryRandomNpcRepository.setItems(completeNpcGenerator.generateItems(data.value.profession))
+
     fun randomizeAll() {
         analytics.capture(AnalyticsEvents.NPC_RANDOMIZED)
         temporaryRandomNpcRepository.setNpc(rollRespectingLocks())
@@ -240,7 +251,8 @@ class RandomNpcViewModel(
             motivation = pick(LockableField.MOTIVATION, current.motivation, fresh.motivation),
             personalityTraits = pick(LockableField.PERSONALITY, current.personalityTraits, fresh.personalityTraits),
             languages = pick(LockableField.LANGUAGES, current.languages, fresh.languages),
-            combat = pick(LockableField.COMBAT, current.combat, fresh.combat)
+            combat = pick(LockableField.COMBAT, current.combat, fresh.combat),
+            items = pick(LockableField.ITEMS, current.items, fresh.items)
         )
     }
 
@@ -384,7 +396,8 @@ class RandomNpcViewModel(
             alignment = context.getString(alignment.nameResource),
             personalityTraits = personalityTraits,
             languages = languages.map { context.getString(it.nameResource) },
-            combat = combat
+            combat = combat,
+            items = items
         )
     }
 
@@ -415,7 +428,8 @@ class RandomNpcViewModel(
         armorClass = combat?.armorClass?.toLong(),
         hitPoints = combat?.hitPoints?.toLong(),
         challengeRating = combat?.challengeRating,
-        campaign = null
+        campaign = null,
+        items = items
     )
 
     private companion object {
@@ -434,7 +448,7 @@ class RandomNpcViewModel(
 
 /**
  * A field (or whole section) that can be padlocked so [RandomNpcViewModel.randomizeAll] leaves it
- * untouched. [LANGUAGES], [PERSONALITY] and [COMBAT] lock their entire section at once.
+ * untouched. [LANGUAGES], [PERSONALITY], [COMBAT] and [ITEMS] lock their entire section at once.
  */
 enum class LockableField {
     NAME,
@@ -448,7 +462,8 @@ enum class LockableField {
     MOTIVATION,
     LANGUAGES,
     PERSONALITY,
-    COMBAT
+    COMBAT,
+    ITEMS
 }
 
 /** UI state for the Randomize screen's portrait: the render result plus live queue progress. */

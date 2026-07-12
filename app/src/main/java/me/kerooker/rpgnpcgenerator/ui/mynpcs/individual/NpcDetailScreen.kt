@@ -408,6 +408,20 @@ private fun NpcDetailContent(
             onAdd = { onDraftChange(draft.copy(personalityTraits = draft.personalityTraits + "")) }
         )
 
+        EditableListSection(
+            title = stringResource(R.string.individual_npc_items_label),
+            itemLabel = stringResource(R.string.individual_npc_item_hint),
+            items = draft.items,
+            editable = isEditing,
+            onItemChange = { index, value ->
+                onDraftChange(draft.copy(items = draft.items.toMutableList().also { it[index] = value }))
+            },
+            onRemove = { index ->
+                onDraftChange(draft.copy(items = draft.items.toMutableList().also { it.removeAt(index) }))
+            },
+            onAdd = { onDraftChange(draft.copy(items = draft.items + "")) }
+        )
+
         // Optional D&D 5e combat block. Hidden in view mode for NPCs saved before this existed, but
         // always shown while editing so stats can be filled in.
         if (isEditing || draft.hasCombatStats()) {

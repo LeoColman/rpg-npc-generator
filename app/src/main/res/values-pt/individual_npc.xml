@@ -11,6 +11,8 @@
     <string name="individual_npc_language_hint">Idioma</string>
     <string name="individual_npc_personality_label">Traços de Personalidade</string>
     <string name="individual_npc_personality_hint">Traço de Personalidade</string>
+    <string name="individual_npc_items_label">Itens</string>
+    <string name="individual_npc_item_hint">Item</string>
     <string name="individual_npc_add_item">Adicionar Item</string>
     <string name="individual_npc_tags_label">Tags</string>
     <string name="individual_npc_tag_hint">Adicionar uma tag</string>

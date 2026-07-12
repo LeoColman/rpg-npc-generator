@@ -67,7 +67,8 @@ private fun sampleNpc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = campaign
+    campaign = campaign,
+    items = emptyList()
 )
 
 // Real in-memory repository (same setup as NpcRepositoryTest). Used by the delete tests because
@@ -80,7 +81,8 @@ private fun inMemoryRepository(): NpcRepository {
         driver = driver,
         npcAdapter = Npc.Adapter(
             personalityTraitsAdapter = ListOfStringsAdapter,
-            languagesAdapter = ListOfStringsAdapter
+            languagesAdapter = ListOfStringsAdapter,
+            itemsAdapter = ListOfStringsAdapter
         )
     )
     return NpcRepository(database, dispatcher = Dispatchers.Unconfined)

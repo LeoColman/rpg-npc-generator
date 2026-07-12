@@ -36,7 +36,8 @@ private fun npc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = campaign
+    campaign = campaign,
+    items = emptyList()
 )
 
 class MyNpcsRosterTest : FunSpec({

@@ -3,6 +3,7 @@ package me.kerooker.rpgnpcgenerator.viewmodel.random.npc
 import android.content.Context
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -54,20 +55,22 @@ private val REROLLED_COMBAT = CombatStats(
     challengeRating = "2"
 )
 
-private fun sampleNpcData(combat: CombatStats?) = GeneratedNpcData(
-    name = "Aria Nightsong",
-    nickname = "The Swift",
-    gender = "Female",
-    sexuality = "Heterosexual",
-    race = "Human",
-    age = "Adult",
-    profession = "Blacksmith",
-    motivation = "Protect the forest",
-    alignment = "Neutral Good",
-    personalityTraits = listOf("Brave", "Curious"),
-    languages = listOf("Common"),
-    combat = combat
-)
+private fun sampleNpcData(combat: CombatStats?, items: List<String> = listOf("Coin pouch (5 copper)")) =
+    GeneratedNpcData(
+        name = "Aria Nightsong",
+        nickname = "The Swift",
+        gender = "Female",
+        sexuality = "Heterosexual",
+        race = "Human",
+        age = "Adult",
+        profession = "Blacksmith",
+        motivation = "Protect the forest",
+        alignment = "Neutral Good",
+        personalityTraits = listOf("Brave", "Curious"),
+        languages = listOf("Common"),
+        combat = combat,
+        items = items
+    )
 
 /** The NPC on screen before a "randomize all"; every field is a distinct "Current…" marker. */
 private val CURRENT_DATA = GeneratedNpcData(
@@ -82,7 +85,8 @@ private val CURRENT_DATA = GeneratedNpcData(
     alignment = "CurrentAlignment",
     personalityTraits = listOf("CurrentTrait"),
     languages = listOf("CurrentLang"),
-    combat = ORIGINAL_COMBAT
+    combat = ORIGINAL_COMBAT,
+    items = listOf("CurrentItem")
 )
 
 /** The fresh roll that [CompleteNpcGenerator.generate] is stubbed to return; all "Fresh…" values. */
@@ -98,7 +102,8 @@ private val FRESH_NPC = GeneratedNpc(
     alignment = Alignment.Neutral,
     personalityTraits = listOf("FreshTrait"),
     languages = listOf(CommonLanguage.Common),
-    combat = REROLLED_COMBAT
+    combat = REROLLED_COMBAT,
+    items = listOf("FreshItem")
 )
 
 /** Reads the on-screen value of a given lockable field, for asserting it survived (or changed). */
@@ -115,6 +120,7 @@ private fun accessorFor(field: LockableField): (GeneratedNpcData) -> Any? = when
     LockableField.LANGUAGES -> { d -> d.languages }
     LockableField.PERSONALITY -> { d -> d.personalityTraits }
     LockableField.COMBAT -> { d -> d.combat }
+    LockableField.ITEMS -> { d -> d.items }
 }
 
 /**
@@ -146,7 +152,8 @@ private fun GeneratedNpcData.toPortraitNpc() = Npc(
     armorClass = combat?.armorClass?.toLong(),
     hitPoints = combat?.hitPoints?.toLong(),
     challengeRating = combat?.challengeRating,
-    campaign = null
+    campaign = null,
+    items = items
 )
 
 class RandomNpcViewModelTest : FunSpec({
@@ -353,5 +360,48 @@ class RandomNpcViewModelTest : FunSpec({
         viewModel.data.value.age shouldBe "Child"
         viewModel.data.value.profession shouldBe "Blacksmith"
         verify(exactly = 1) { npcDataGenerator.generateProfession(Age.Adult) }
+    }
+
+    test("randomizeAllItems replaces the items with a fresh roll for the current profession") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(sampleNpcData(combat = null, items = listOf("Old item")))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator>()
+        every { completeNpcGenerator.generateItems("Blacksmith") } returns listOf("A set of smith's tools")
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator)
+        viewModel.randomizeAllItems()
+
+        viewModel.data.value.items shouldContainExactly listOf("A set of smith's tools")
+        verify { completeNpcGenerator.generateItems("Blacksmith") }
+    }
+
+    test("randomizeItem re-rolls one row in place and appends when the index is past the end") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(sampleNpcData(combat = null, items = listOf("Old item")))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator>()
+        every { completeNpcGenerator.generateSingleItem() } returns "A lucky copper coin"
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator)
+        viewModel.randomizeItem(0)
+        viewModel.data.value.items shouldContainExactly listOf("A lucky copper coin")
+
+        viewModel.randomizeItem(1)
+        viewModel.data.value.items shouldContainExactly listOf("A lucky copper coin", "A lucky copper coin")
+    }
+
+    test("an items-only re-roll does not change the built PortraitRequest, so no re-render would fire") {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(sampleNpcData(combat = null, items = listOf("Old item")))
+        val completeNpcGenerator = mockk<CompleteNpcGenerator>()
+        every { completeNpcGenerator.generateItems(any()) } returns listOf("A completely different item")
+
+        val viewModel = buildViewModel(repository, completeNpcGenerator)
+        val requestBefore = PortraitPrompt.forNpc(viewModel.data.value.toPortraitNpc())
+
+        viewModel.randomizeAllItems()
+
+        // Items did change, but the prompt is identical: distinctUntilChanged collapses it to a no-op.
+        viewModel.data.value.items shouldContainExactly listOf("A completely different item")
+        PortraitPrompt.forNpc(viewModel.data.value.toPortraitNpc()) shouldBe requestBefore
     }
 })
