@@ -26,6 +26,7 @@ class NpcShareCardTest {
         motivation = "Motivation",
         personality = "Personality",
         languages = "Languages",
+        items = "Items",
         combat = CombatSheetLabels(
             title = "Combat stats",
             strength = "STR",
@@ -42,7 +43,8 @@ class NpcShareCardTest {
 
     private fun sampleNpc(
         nickname: String = "The Swift",
-        personalityTraits: List<String> = listOf("Brave", "Curious")
+        personalityTraits: List<String> = listOf("Brave", "Curious"),
+        items: List<String> = emptyList()
     ) = Npc(
         id = 0,
         fullName = "Aria Nightsong",
@@ -67,7 +69,8 @@ class NpcShareCardTest {
         armorClass = null,
         hitPoints = null,
         challengeRating = null,
-        campaign = null
+        campaign = null,
+        items = items
     )
 
     @Test
@@ -130,6 +133,40 @@ class NpcShareCardTest {
 
         // Section titles render uppercased, so the block's presence would show as "COMBAT STATS".
         composeRule.onNodeWithText("COMBAT STATS").assertDoesNotExist()
+    }
+
+    @Test
+    fun `renders the items section as chips when the npc has items`() {
+        composeRule.setContent {
+            MaterialTheme {
+                NpcShareCard(
+                    npc = sampleNpc(items = listOf("A set of smith's tools", "A worn dagger")),
+                    portrait = null,
+                    footer = "Created with RPG NPC Generator",
+                    labels = labels
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("ITEMS").assertExists()
+        composeRule.onNodeWithText("A set of smith's tools").assertExists()
+        composeRule.onNodeWithText("A worn dagger").assertExists()
+    }
+
+    @Test
+    fun `omits the items section when the npc has no items`() {
+        composeRule.setContent {
+            MaterialTheme {
+                NpcShareCard(
+                    npc = sampleNpc(items = emptyList()),
+                    portrait = null,
+                    footer = "Created with RPG NPC Generator",
+                    labels = labels
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("ITEMS").assertDoesNotExist()
     }
 
     @Test

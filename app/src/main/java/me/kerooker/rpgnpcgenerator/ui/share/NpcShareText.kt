@@ -25,6 +25,10 @@ fun npcShareText(npc: Npc, footer: String): String {
             .mapNotNull { it.trimNonBlank() }
             .takeIf { it.isNotEmpty() }
             ?.let { add(it.joinToString(" · ")) }
+        npc.items
+            .mapNotNull { it.trimNonBlank() }
+            .takeIf { it.isNotEmpty() }
+            ?.let { add(it.joinToString(" · ")) }
     }.filter { it.isNotBlank() }
 
     return (lines + listOf("", footer)).joinToString("\n")

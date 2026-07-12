@@ -50,7 +50,8 @@ private fun npc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = null
+    campaign = null,
+    items = emptyList()
 )
 
 class PortraitPromptTest : FunSpec({
@@ -212,5 +213,16 @@ class PortraitPromptTest : FunSpec({
         val request = PortraitPrompt.forNpc(npc(notes = "scarred face\nmissing an eye"))
 
         request.prompt shouldContain "scarred face missing an eye"
+    }
+
+    test("items never leak into the portrait prompt, so re-rolling them cannot trigger a re-render") {
+        // distinctUntilChanged on the built PortraitRequest collapses item-only changes; the built
+        // prompt must be byte-identical whether the NPC carries items or not.
+        val withoutItems = PortraitPrompt.forNpc(npc())
+        val withItems = PortraitPrompt.forNpc(npc().copy(items = listOf("A set of smith's tools", "A worn dagger")))
+
+        withItems.prompt shouldBe withoutItems.prompt
+        withItems.prompt shouldNotContain "smith's tools"
+        withItems.prompt shouldNotContain "dagger"
     }
 })

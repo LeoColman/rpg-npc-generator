@@ -31,7 +31,8 @@ private val sampleNpc = Npc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = null
+    campaign = null,
+    items = emptyList()
 )
 
 class NpcShareTextTest : FunSpec({
@@ -54,6 +55,21 @@ class NpcShareTextTest : FunSpec({
         text shouldContain "Neutral Good"
         text shouldContain "Protect the forest"
         text shouldContain "Brave · Curious"
+    }
+
+    test("includes the items line when the npc carries items, joined by the separator") {
+        val text = npcShareText(
+            sampleNpc.copy(items = listOf("Coin pouch (7 copper)", "A worn dagger")),
+            footer
+        )
+
+        text shouldContain "Coin pouch (7 copper) · A worn dagger"
+    }
+
+    test("omits the items line entirely when the npc has none") {
+        val text = npcShareText(sampleNpc.copy(items = emptyList()), footer)
+
+        text shouldNotContain "copper"
     }
 
     test("skips blank attributes instead of emitting empty lines") {

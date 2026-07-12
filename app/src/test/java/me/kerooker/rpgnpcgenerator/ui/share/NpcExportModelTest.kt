@@ -28,7 +28,8 @@ private val statlessNpc = Npc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = null
+    campaign = null,
+    items = emptyList()
 )
 
 class NpcExportModelTest : FunSpec({

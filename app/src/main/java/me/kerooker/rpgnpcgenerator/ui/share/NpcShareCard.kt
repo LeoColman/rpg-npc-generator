@@ -41,8 +41,8 @@ private const val PORTRAIT_ASPECT = 512f / 640f
 
 /**
  * A self-contained, branded sheet that renders an NPC's full profile for export/sharing: portrait,
- * identity, profession/alignment/motivation, personality traits, languages and — when present — the
- * D&D 5e combat stat block. Pulls every colour from the active Material theme so it matches the app,
+ * identity, profession/alignment/motivation, personality traits, languages, items and — when present —
+ * the D&D 5e combat stat block. Pulls every colour from the active Material theme so it matches the app,
  * and takes a pre-decoded [portrait] bitmap (the capture host loads it synchronously) rather than
  * loading async — a capture must be complete the instant it is snapshotted. Safe to render off-screen:
  * it depends on nothing but its arguments.
@@ -75,6 +75,7 @@ data class NpcShareCardLabels(
     val motivation: String,
     val personality: String,
     val languages: String,
+    val items: String,
     val combat: CombatSheetLabels
 )
 
@@ -174,6 +175,7 @@ private fun Body(npc: Npc, labels: NpcShareCardLabels, colors: ColorScheme) {
         Attribute(labels.motivation, npc.motivation, colors)
         ChipSection(labels.personality, npc.personalityTraits, colors)
         ChipSection(labels.languages, npc.languages, colors)
+        ChipSection(labels.items, npc.items, colors)
         CombatBlock(npc, labels.combat, colors)
     }
 }

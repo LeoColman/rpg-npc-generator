@@ -61,6 +61,7 @@ fun NpcShareCardCapture(
         motivation = stringResource(R.string.share_card_motivation),
         personality = stringResource(R.string.share_card_personality),
         languages = stringResource(R.string.individual_npc_languages_label),
+        items = stringResource(R.string.individual_npc_items_label),
         combat = CombatSheetLabels(
             title = stringResource(R.string.combat_stats_label),
             strength = stringResource(R.string.combat_strength),
