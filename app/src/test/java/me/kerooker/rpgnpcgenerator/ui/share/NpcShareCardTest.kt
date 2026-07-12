@@ -24,7 +24,20 @@ class NpcShareCardTest {
         profession = "Profession",
         alignment = "Alignment",
         motivation = "Motivation",
-        personality = "Personality"
+        personality = "Personality",
+        languages = "Languages",
+        combat = CombatSheetLabels(
+            title = "Combat stats",
+            strength = "STR",
+            dexterity = "DEX",
+            constitution = "CON",
+            intelligence = "INT",
+            wisdom = "WIS",
+            charisma = "CHA",
+            armorClass = "AC",
+            hitPoints = "HP",
+            challengeRating = "Challenge Rating"
+        )
     )
 
     private fun sampleNpc(
@@ -80,7 +93,43 @@ class NpcShareCardTest {
         composeRule.onNodeWithText("Protect the forest").assertExists()
         composeRule.onNodeWithText("Brave").assertExists()
         composeRule.onNodeWithText("Curious").assertExists()
+        composeRule.onNodeWithText("Common").assertExists()
         composeRule.onNodeWithText("Created with RPG NPC Generator").assertExists()
+    }
+
+    @Test
+    fun `renders the combat stat block with ability modifiers when the npc has stats`() {
+        composeRule.setContent {
+            MaterialTheme {
+                NpcShareCard(
+                    npc = sampleNpc().copy(strength = 14, armorClass = 15, challengeRating = "1/4"),
+                    portrait = null,
+                    footer = "Created with RPG NPC Generator",
+                    labels = labels
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("14 (+2)").assertExists()
+        composeRule.onNodeWithText("AC", substring = true).assertExists()
+        composeRule.onNodeWithText("1/4", substring = true).assertExists()
+    }
+
+    @Test
+    fun `omits the combat stat block for a statless npc`() {
+        composeRule.setContent {
+            MaterialTheme {
+                NpcShareCard(
+                    npc = sampleNpc(),
+                    portrait = null,
+                    footer = "Created with RPG NPC Generator",
+                    labels = labels
+                )
+            }
+        }
+
+        // Section titles render uppercased, so the block's presence would show as "COMBAT STATS".
+        composeRule.onNodeWithText("COMBAT STATS").assertDoesNotExist()
     }
 
     @Test

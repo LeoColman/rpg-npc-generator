@@ -64,6 +64,10 @@
     <string name="share_card_alignment">Alignment</string>
     <string name="share_card_motivation">Motivation</string>
     <string name="share_card_personality">Personality</string>
+    <!-- Export NPC sheet as an image or document -->
+    <string name="export_npc">Export</string>
+    <string name="export_format_png">Image (PNG)</string>
+    <string name="export_format_pdf">Document (PDF)</string>
 
     <!-- Ads: watch-a-rewarded-ad-to-remove-ads action -->
     <string name="remove_ads_action">Remove ads</string>

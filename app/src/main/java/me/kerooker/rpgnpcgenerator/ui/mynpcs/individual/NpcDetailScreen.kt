@@ -72,6 +72,8 @@ import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
 import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsUi
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
+import me.kerooker.rpgnpcgenerator.ui.share.NpcExportFormat
+import me.kerooker.rpgnpcgenerator.ui.share.NpcExportRequest
 import me.kerooker.rpgnpcgenerator.ui.share.NpcShareCardCapture
 import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.individual.EditState
@@ -90,7 +92,9 @@ fun NpcDetailScreen(
     val campaignSuggestions by viewModel.campaignSuggestions.collectAsStateWithLifecycle()
     val isEditing = editState == EditState.EDIT
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var shareRequested by remember { mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
+    // The NPC + chosen format currently being rendered off-screen; null when no export is in flight.
+    var exportRequest by remember { mutableStateOf<NpcExportRequest?>(null) }
 
     // The editable working copy. Reset to the persisted value whenever we are not editing. A portrait
     // generated in the background lands on the persisted NPC, so it flows in here via [npc].
@@ -120,8 +124,8 @@ fun NpcDetailScreen(
                             Icon(Icons.Filled.Check, contentDescription = stringResource(R.string.individual_npc_save))
                         }
                     } else {
-                        IconButton(onClick = { if (npc != null) shareRequested = true }) {
-                            Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.share_npc))
+                        IconButton(onClick = { if (npc != null) showExportDialog = true }) {
+                            Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.export_npc))
                         }
                         IconButton(onClick = viewModel::enableEdit) {
                             Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.individual_npc_edit))
@@ -150,11 +154,21 @@ fun NpcDetailScreen(
             )
         }
 
-        // Off-screen: renders the share card and fires the share sheet, then resets. Draws nothing
+        // Off-screen: renders the export sheet and fires the share sheet, then resets. Draws nothing
         // visible, so it can live alongside the detail content in the Scaffold's content slot.
         NpcShareCardCapture(
-            request = npc?.takeIf { shareRequested },
-            onFinished = { shareRequested = false }
+            request = exportRequest,
+            onFinished = { exportRequest = null }
+        )
+    }
+
+    if (showExportDialog) {
+        ExportFormatDialog(
+            onPick = { format ->
+                showExportDialog = false
+                npc?.let { exportRequest = NpcExportRequest(it, format) }
+            },
+            onDismiss = { showExportDialog = false }
         )
     }
 
@@ -180,6 +194,35 @@ private fun DeleteDialog(npcName: String, onConfirm: () -> Unit, onDismiss: () -
         confirmButton = {
             TextButton(onClick = onConfirm) { Text(stringResource(R.string.delete)) }
         },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+        }
+    )
+}
+
+/** Lets the user pick which file format to export the NPC sheet as before the share sheet appears. */
+@Composable
+private fun ExportFormatDialog(onPick: (NpcExportFormat) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.export_npc)) },
+        text = {
+            Column {
+                TextButton(
+                    onClick = { onPick(NpcExportFormat.PNG) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.export_format_png))
+                }
+                TextButton(
+                    onClick = { onPick(NpcExportFormat.PDF) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.export_format_pdf))
+                }
+            }
+        },
+        confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }

@@ -23,26 +23,27 @@ import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.R
-import me.kerooker.rpgnpcgenerator.data.Npc
 
 private const val MAX_CAPTURE_FRAMES = 10
 
 /**
- * Off-screen renderer that turns [request] into a shareable image and fires the system share sheet,
- * then calls [onFinished]. Renders nothing visible: when [request] is null it is inert, otherwise it
- * draws the [NpcShareCard] into a [rememberGraphicsLayer] at alpha 0 (invisible but still drawn),
- * captures the layer once it has been laid out, and hands the PNG to [NpcCardSharer].
+ * Off-screen renderer that turns [request] into a shareable file — a PNG image or a PDF, per the
+ * request's format — and fires the system share sheet, then calls [onFinished]. Renders nothing
+ * visible: when [request] is null it is inert, otherwise it draws the [NpcShareCard] into a
+ * [rememberGraphicsLayer] at alpha 0 (invisible but still drawn), captures the layer once it has been
+ * laid out, and hands the result to [NpcCardSharer] (PNG) or [NpcPdfExporter] (PDF).
  *
  * GraphicsLayer capture is the platform-recommended way to snapshot a composable and works from
  * minSdk 26 upward; it needs no window token or view hierarchy, so the render can stay off-screen.
  */
 @Composable
 fun NpcShareCardCapture(
-    request: Npc?,
+    request: NpcExportRequest?,
     onFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (request == null) return
+    val npc = request.npc
 
     val context = LocalContext.current
     val graphicsLayer = rememberGraphicsLayer()
@@ -54,12 +55,25 @@ fun NpcShareCardCapture(
         profession = stringResource(R.string.share_card_profession),
         alignment = stringResource(R.string.share_card_alignment),
         motivation = stringResource(R.string.share_card_motivation),
-        personality = stringResource(R.string.share_card_personality)
+        personality = stringResource(R.string.share_card_personality),
+        languages = stringResource(R.string.individual_npc_languages_label),
+        combat = CombatSheetLabels(
+            title = stringResource(R.string.combat_stats_label),
+            strength = stringResource(R.string.combat_strength),
+            dexterity = stringResource(R.string.combat_dexterity),
+            constitution = stringResource(R.string.combat_constitution),
+            intelligence = stringResource(R.string.combat_intelligence),
+            wisdom = stringResource(R.string.combat_wisdom),
+            charisma = stringResource(R.string.combat_charisma),
+            armorClass = stringResource(R.string.combat_armor_class),
+            hitPoints = stringResource(R.string.combat_hit_points),
+            challengeRating = stringResource(R.string.combat_challenge_rating)
+        )
     )
 
     // Decode the portrait up-front so it is guaranteed present when we capture (async loading could
-    // race the snapshot). A null path is a valid "no portrait" card, so it is ready immediately.
-    val portraitPath = request.imagePath
+    // race the snapshot). A null path is a valid "no portrait" sheet, so it is ready immediately.
+    val portraitPath = npc.imagePath
     var portrait by remember(request) { mutableStateOf<ImageBitmap?>(null) }
     var ready by remember(request) { mutableStateOf(portraitPath == null) }
     LaunchedEffect(request) {
@@ -81,11 +95,11 @@ fun NpcShareCardCapture(
                 drawLayer(graphicsLayer)
             }
     ) {
-        NpcShareCard(npc = request, portrait = portrait, footer = footer, labels = labels)
+        NpcShareCard(npc = npc, portrait = portrait, footer = footer, labels = labels)
     }
 
     LaunchedEffect(request, ready) {
-        // Wait until the off-screen card has actually been laid out and recorded into the layer.
+        // Wait until the off-screen sheet has actually been laid out and recorded into the layer.
         var frames = 0
         while (graphicsLayer.size.width == 0 && frames < MAX_CAPTURE_FRAMES) {
             withFrameNanos { }
@@ -94,8 +108,11 @@ fun NpcShareCardCapture(
         withFrameNanos { } // one more frame so the recorded draw is complete before we read it
         runCatching {
             val bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap()
-            val file = NpcCardSharer.saveCardPng(context, bitmap)
-            NpcCardSharer.share(context, file, npcShareText(request, footer), chooserTitle)
+            val file = when (request.format) {
+                NpcExportFormat.PNG -> NpcCardSharer.saveCardPng(context, bitmap)
+                NpcExportFormat.PDF -> NpcPdfExporter.savePdf(context, bitmap)
+            }
+            NpcCardSharer.share(context, file, npcShareText(npc, footer), chooserTitle, request.format.mimeType)
         }.onFailure {
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
         }
