@@ -34,13 +34,14 @@ object NpcCardSharer {
     fun authority(context: Context): String = context.packageName + AUTHORITY_SUFFIX
 
     /**
-     * Fires an `ACTION_SEND` chooser for [file] with [text] as the caption/fallback body. The read
-     * grant is attached so the target app can open the shared PNG.
+     * Fires an `ACTION_SEND` chooser for [file] with [text] as the caption/fallback body. [mimeType]
+     * declares the attachment type (a PNG image by default, but the same plumbing serves the PDF
+     * export). The read grant is attached so the target app can open the shared file.
      */
-    fun share(context: Context, file: File, text: String, chooserTitle: String) {
+    fun share(context: Context, file: File, text: String, chooserTitle: String, mimeType: String = MIME_TYPE) {
         val uri: Uri = FileProvider.getUriForFile(context, authority(context), file)
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
-            type = MIME_TYPE
+            type = mimeType
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_TEXT, text)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
