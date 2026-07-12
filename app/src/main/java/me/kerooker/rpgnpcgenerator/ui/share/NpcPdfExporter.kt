@@ -20,15 +20,28 @@ object NpcPdfExporter {
     fun savePdf(context: Context, bitmap: Bitmap): File {
         val directory = File(context.cacheDir, DIRECTORY).apply { mkdirs() }
         val destination = File(directory, "npc_sheet_${UUID.randomUUID()}.pdf")
+        // PdfDocument pages draw on a software canvas, which rejects HARDWARE bitmaps — and the
+        // GraphicsLayer capture produces one. Copy to a software config before drawing.
+        val software = if (bitmap.config == Bitmap.Config.HARDWARE) {
+            bitmap.copy(Bitmap.Config.ARGB_8888, false)
+        } else {
+            bitmap
+        }
         val document = PdfDocument()
         try {
-            val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+            val pageInfo = PdfDocument.PageInfo.Builder(software.width, software.height, 1).create()
             val page = document.startPage(pageInfo)
-            page.canvas.drawBitmap(bitmap, 0f, 0f, null)
-            document.finishPage(page)
+            try {
+                page.canvas.drawBitmap(software, 0f, 0f, null)
+            } finally {
+                // Always finish the page: close() throws "Current page not finished!" on an open
+                // page, which would mask the actual drawing failure.
+                document.finishPage(page)
+            }
             destination.outputStream().use { document.writeTo(it) }
         } finally {
             document.close()
+            if (software !== bitmap) software.recycle()
         }
         return destination
     }

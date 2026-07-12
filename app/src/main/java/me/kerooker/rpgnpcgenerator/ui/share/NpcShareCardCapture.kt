@@ -1,6 +1,7 @@
 package me.kerooker.rpgnpcgenerator.ui.share
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -18,13 +19,16 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Constraints
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.R
 
 private const val MAX_CAPTURE_FRAMES = 10
+private const val TAG = "NpcShareCardCapture"
 
 /**
  * Off-screen renderer that turns [request] into a shareable file — a PNG image or a PDF, per the
@@ -87,15 +91,31 @@ fun NpcShareCardCapture(
 
     if (!ready) return
 
-    Box(
-        modifier = modifier
-            .alpha(0f)
-            .drawWithContent {
-                graphicsLayer.record { this@drawWithContent.drawContent() }
-                drawLayer(graphicsLayer)
+    // The sheet must lay out at its FULL intrinsic size even on short screens: measured with the
+    // Scaffold's bounded constraints it gets capped at the viewport, cutting the bottom (combat
+    // block) out of the capture on small phones. The outer Layout measures the sheet with no
+    // constraints and reports a coerced size (parents enforce their bounds on THIS node), while the
+    // INNER box — the node the layer records at — keeps the uncoerced full sheet size.
+    Layout(
+        content = {
+            Box(
+                modifier = Modifier
+                    .alpha(0f)
+                    .drawWithContent {
+                        graphicsLayer.record { this@drawWithContent.drawContent() }
+                        drawLayer(graphicsLayer)
+                    }
+            ) {
+                NpcShareCard(npc = npc, portrait = portrait, footer = footer, labels = labels)
             }
-    ) {
-        NpcShareCard(npc = npc, portrait = portrait, footer = footer, labels = labels)
+        },
+        modifier = modifier
+    ) { measurables, constraints ->
+        val placeable = measurables.first().measure(Constraints())
+        layout(
+            placeable.width.coerceAtMost(constraints.maxWidth),
+            placeable.height.coerceAtMost(constraints.maxHeight)
+        ) { placeable.place(0, 0) }
     }
 
     LaunchedEffect(request, ready) {
@@ -114,6 +134,7 @@ fun NpcShareCardCapture(
             }
             NpcCardSharer.share(context, file, npcShareText(npc, footer), chooserTitle, request.format.mimeType)
         }.onFailure {
+            Log.w(TAG, "NPC export (${request.format}) failed", it)
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
         }
         onFinished()
