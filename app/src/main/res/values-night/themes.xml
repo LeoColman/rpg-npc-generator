@@ -1,0 +1,7 @@
+<resources>
+    <!-- Dark counterpart of Theme.RpgNpcGenerator, used when the system is in night mode so the pre-Compose
+         window (splash/first frame) is dark instead of flashing white. -->
+    <style name="Theme.RpgNpcGenerator" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+</resources>

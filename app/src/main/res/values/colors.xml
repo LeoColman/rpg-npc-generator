@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#0374B6</color>
     <color name="colorAccent">#D81B60</color>
     <color name="titleTextColor">#ffffffff</color>
+    <!-- Pre-Compose window background. Matches LightBackground in ui/theme/Color.kt so launch is seamless. -->
+    <color name="window_background">#FFFCFCFF</color>
 </resources>
