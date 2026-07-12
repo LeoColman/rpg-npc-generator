@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="individual_npc_race_hint">Raza</string>
+    <string name="individual_npc_age_hint">Edad</string>
+    <string name="individual_npc_gender_hint">Género</string>
+    <string name="individual_npc_profession_hint">Profesión</string>
+    <string name="individual_npc_sexuality_hint">Sexualidad</string>
+    <string name="individual_npc_alignment_hint">Alineamiento</string>
+    <string name="individual_npc_motivation_hint">Motivación</string>
+    <string name="individual_npc_languages_label">Idiomas</string>
+    <string name="individual_npc_language_hint">Idioma</string>
+    <string name="individual_npc_personality_label">Rasgos de Personalidad</string>
+    <string name="individual_npc_personality_hint">Rasgo de Personalidad</string>
+    <string name="individual_npc_items_label">Objetos</string>
+    <string name="individual_npc_item_hint">Objeto</string>
+    <string name="individual_npc_add_item">Añadir Objeto</string>
+    <string name="individual_npc_tags_label">Etiquetas</string>
+    <string name="individual_npc_tag_hint">Añadir una etiqueta</string>
+    <string name="individual_npc_add_tag">Añadir etiqueta</string>
+
+
+
+    <string name="individual_npc_edit">Editar</string>
+    <string name="individual_npc_save">Guardar</string>
+    <string name="individual_npc_cancel">Cancelar</string>
+    <string name="individual_npc_notes_hint">Notas</string>
+    <string name="individual_npc_campaign_hint">Campaña</string>
+
+</resources>

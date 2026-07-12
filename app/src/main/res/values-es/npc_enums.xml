@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--AGE-->
+    <string name="age_child">Niño</string>
+    <string name="age_teenager">Adolescente</string>
+    <string name="age_young_adult">Adulto Joven</string>
+    <string name="age_adult">Adulto</string>
+    <string name="age_old">Viejo</string>
+    <string name="age_very_old">Muy Viejo</string>
+
+    <!--ALIGNMENT-->
+    <string name="alignment_lawful_good">Legal Bueno</string>
+    <string name="alignment_lawful_neutral">Legal Neutral</string>
+    <string name="alignment_lawful_evil">Legal Malvado</string>
+    <string name="alignment_neutral_good">Neutral Bueno</string>
+    <string name="alignment_neutral">Neutral</string>
+    <string name="alignment_neutral_evil">Neutral Malvado</string>
+    <string name="alignment_chaotic_good">Caótico Bueno</string>
+    <string name="alignment_chaotic_neutral">Caótico Neutral</string>
+    <string name="alignment_chaotic_evil">Caótico Malvado</string>
+
+    <!--GENDER-->
+    <string name="gender_male">Masculino</string>
+    <string name="gender_female">Femenino</string>
+
+    <!--SEXUALITY-->
+    <string name="sexuality_homosexual">Homosexual</string>
+    <string name="sexuality_bisexual">Bisexual</string>
+    <string name="sexuality_asexual">Asexual</string>
+    <string name="sexuality_heterosexual">Heterosexual</string>
+
+    <!--LANGUAGE-->
+    <string name="language_common">Común</string>
+    <string name="language_elvish">Élfico</string>
+    <string name="language_gnomish">Gnómico</string>
+    <string name="language_goblin">Trasguino</string>
+    <string name="language_halfling">Mediano</string>
+    <string name="language_orc">Orco</string>
+    <string name="language_celestial">Celestial</string>
+    <string name="language_abyssal">Abisal</string>
+    <string name="language_infernal">Infernal</string>
+    <string name="language_druidic">Druídico</string>
+    <string name="language_draconic">Dracónico</string>
+    <string name="language_dwarvish">Enano</string>
+    <string name="language_giant">Gigante</string>
+
+    <!--RACE-->
+    <string name="race_hill_dwarf">Enano de las Colinas</string>
+    <string name="race_mountain_dwarf">Enano de las Montañas</string>
+    <string name="race_high_elf">Alto Elfo</string>
+    <string name="race_wood_elf">Elfo del Bosque</string>
+    <string name="race_drow">Elfo Oscuro (Drow)</string>
+    <string name="race_stout_halfling">Mediano Fornido</string>
+    <string name="race_lightfoot_halfling">Mediano Piesligeros</string>
+    <string name="race_human">Humano</string>
+    <string name="race_dragonborn">Dracónido</string>
+    <string name="race_forest_gnome">Gnomo del Bosque</string>
+    <string name="race_rock_gnome">Gnomo de las Rocas</string>
+    <string name="race_half_elf">Semielfo</string>
+    <string name="race_half_orc">Semiorco</string>
+    <string name="race_tiefling">Tiflin</string>
+
+</resources>

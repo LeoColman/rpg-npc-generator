@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Apariencia / tema -->
+    <string name="settings_appearance_title">Apariencia</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_follow_system">Seguir el sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+
+    <string name="preferences_about_title">Acerca de</string>
+    <string name="preferences_open_source_libs_title">Bibliotecas de código abierto</string>
+    <string name="preferences_open_source_libs_summary">Lista de todas las bibliotecas de código abierto utilizadas en esta aplicación.</string>
+
+    <string name="preferences_project_repository_title">Repositorio del proyecto</string>
+    <string name="preferences_project_repository_summary">Este proyecto es 100% de código abierto y su código fuente está disponible en su totalidad. ¡Estamos abiertos a contribuciones y con muchas ganas de mejorar!</string>
+
+    <string name="preferences_bug_report_title">Reportar un error</string>
+    <string name="preferences_bug_report_summary">¿Encontraste un comportamiento extraño? ¿Algo no funciona como debería? Por favor, avísanos enviando un reporte de error.</string>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="random_npc_full_name_hint">Nombre Completo</string>
+    <string name="random_npc_nickname_hint">Apodo</string>
+    <string name="random_npc_race_hint">Raza</string>
+    <string name="random_npc_age_hint">Edad</string>
+    <string name="random_npc_gender_hint">Género</string>
+    <string name="random_npc_profession_hint">Profesión</string>
+    <string name="random_npc_sexuality_hint">Sexualidad</string>
+    <string name="random_npc_alignment_hint">Alineamiento</string>
+    <string name="random_npc_motivation_hint">Motivación</string>
+    <string name="random_npc_languages_label">Idiomas</string>
+    <string name="random_npc_language_hint">Idioma</string>
+    <string name="random_npc_personality_traits_label">Rasgos de Personalidad</string>
+    <string name="random_npc_personality_hint">Rasgo de Personalidad</string>
+    <string name="random_npc_items_label">Objetos</string>
+    <string name="random_npc_item_hint">Objeto</string>
+    <string name="random_npc_add_item">Añadir Objeto</string>
+
+    <string name="randomize_all">Aleatorizar Todo</string>
+    <string name="save">Guardar</string>
+
+</resources>

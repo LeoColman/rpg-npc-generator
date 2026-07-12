@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete">Eliminar</string>
+    <string name="my_npcs_search_hint">Buscar por nombre, apodo, profesión, raza o etiqueta</string>
+    <string name="cd_clear_search">Borrar búsqueda</string>
+    <string name="my_npcs_sort">Ordenar</string>
+    <string name="my_npcs_sort_name">Nombre (A–Z)</string>
+    <string name="my_npcs_sort_name_desc">Nombre (Z–A)</string>
+    <string name="my_npcs_sort_recent">Añadidos recientemente</string>
+    <string name="my_npcs_group_by_campaign">Agrupar por campaña</string>
+    <string name="my_npcs_campaign_all">Todas</string>
+    <string name="my_npcs_no_campaign">Sin campaña</string>
+    <string name="my_npcs_no_results">Ningún NPC coincide con tus filtros</string>
+    <string name="my_npcs_tag_filter_label">Etiqueta: %1$s</string>
+    <string name="my_npcs_tag_filter_clear">Borrar filtro de etiqueta</string>
+</resources>

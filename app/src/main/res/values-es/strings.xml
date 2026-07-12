@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">Generador de NPC para RPG</string>
+
+    <string name="nav_bar_random_npc">Aleatorio</string>
+    <string name="nav_bar_my_npcs">NPCs</string>
+    <string name="nav_bar_settings">Ajustes</string>
+
+    <string name="cd_reroll">Volver a sortear %1$s</string>
+    <string name="cd_reroll_all">Regenerar todo: %1$s</string>
+    <string name="cd_remove_item">Eliminar %1$s</string>
+    <string name="cd_lock">Bloquear %1$s para que no cambie al sortear todo</string>
+    <string name="cd_unlock">Desbloquear %1$s para que pueda cambiar al sortear todo</string>
+    <string name="group_identity">Identidad</string>
+    <string name="group_characteristics">Características</string>
+    <string name="group_background">Historia</string>
+    <string name="cd_back">Volver</string>
+    <string name="cd_npc_portrait">Retrato del NPC</string>
+    <string name="cd_change_portrait">Cambiar retrato</string>
+    <string name="individual_npc_generate_portrait">Generar retrato</string>
+    <string name="portrait_queued_toast">Retrato en cola: te avisaremos cuando esté listo</string>
+    <string name="portrait_notification_channel_name">Generación de retratos</string>
+    <string name="portrait_notification_queued">En cola…</string>
+    <string name="portrait_notification_generating">Generando tu retrato…</string>
+    <string name="portrait_notification_in_queue">En cola: %1$d por delante</string>
+    <string name="portrait_notification_ready">¡Retrato listo! Toca para abrir la app.</string>
+    <string name="portrait_notification_failed">No se pudo generar el retrato.</string>
+    <string name="random_npc_portrait_generating">Generando retrato…</string>
+    <string name="random_npc_portrait_queue">Posición en la cola: %1$d · Tiempo estimado: %2$s</string>
+    <string name="random_npc_portrait_failed">No se pudo generar el retrato: vuelve a sortear para reintentar</string>
+    <string name="my_npcs_empty_title">Aún no hay NPCs guardados</string>
+    <string name="my_npcs_empty_subtitle">Genera un personaje en la pestaña Aleatorio y toca Guardar para conservarlo aquí.</string>
+    <string name="delete_npc_confirm_title">¿Eliminar NPC?</string>
+    <string name="delete_npc_confirm_message">Esto eliminará %1$s de forma permanente.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="npc_saved">NPC guardado</string>
+    <string name="settings_version">Versión %1$s</string>
+
+    <!-- Copia de seguridad del listado: exportar / importar -->
+    <string name="settings_data_title">Datos</string>
+    <string name="settings_export_title">Exportar NPCs</string>
+    <string name="settings_export_summary">Guarda todos tus NPCs en un archivo de copia de seguridad</string>
+    <string name="settings_import_title">Importar NPCs</string>
+    <string name="settings_import_summary">Añade NPCs desde un archivo de copia de seguridad</string>
+    <string name="export_success">%1$d NPCs exportados</string>
+    <string name="export_error">No se pudieron exportar tus NPCs</string>
+    <string name="import_success">%1$d NPCs importados</string>
+    <string name="import_error">No se pudo importar ese archivo</string>
+
+    <!-- Bloque de estadísticas de combate de D&D 5e -->
+    <string name="combat_stats_label">Estadísticas de combate</string>
+    <string name="combat_strength">FUE</string>
+    <string name="combat_dexterity">DES</string>
+    <string name="combat_constitution">CON</string>
+    <string name="combat_intelligence">INT</string>
+    <string name="combat_wisdom">SAB</string>
+    <string name="combat_charisma">CAR</string>
+    <string name="combat_armor_class">CA</string>
+    <string name="combat_hit_points">PG</string>
+    <string name="combat_challenge_rating">Valor de Desafío</string>
+    <!-- Compartir tarjeta del NPC -->
+    <string name="share_npc">Compartir</string>
+    <string name="share_npc_chooser">Compartir NPC</string>
+    <string name="share_npc_error">No se pudo crear la imagen para compartir</string>
+    <string name="share_card_watermark">Creado con %1$s</string>
+    <string name="share_card_profession">Profesión</string>
+    <string name="share_card_alignment">Alineamiento</string>
+    <string name="share_card_motivation">Motivación</string>
+    <string name="share_card_personality">Personalidad</string>
+    <!-- Exportar la ficha del NPC como imagen o documento -->
+    <string name="export_npc">Exportar</string>
+    <string name="export_format_png">Imagen (PNG)</string>
+    <string name="export_format_pdf">Documento (PDF)</string>
+
+    <!-- Anuncios: acción de ver un anuncio recompensado para quitar anuncios -->
+    <string name="remove_ads_action">Quitar anuncios</string>
+    <string name="remove_ads_dialog_title">¿Quitar los anuncios por una semana?</string>
+    <string name="remove_ads_dialog_body">Mira un vídeo corto para quitar los anuncios durante 7 días.</string>
+    <string name="remove_ads_dialog_confirm">Ver vídeo</string>
+    <string name="remove_ads_dialog_dismiss">Ahora no</string>
+    <string name="remove_ads_success">Anuncios quitados durante 7 días</string>
+    <string name="remove_ads_unavailable">El anuncio aún no está listo: inténtalo de nuevo en un momento</string>
+    <string name="remove_ads_remaining">Sin anuncios durante %1$d días más</string>
+</resources>
