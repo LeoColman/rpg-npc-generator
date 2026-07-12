@@ -25,11 +25,8 @@ class RpgNpcGeneratorApplication : Application() {
                 npcGeneratorsModule,
                 imageGenModule,
                 adsModule,
-<<<<<<< HEAD
-                analyticsModule
-=======
+                analyticsModule,
                 themeModule
->>>>>>> feature/dark-mode
             )
         }
     }

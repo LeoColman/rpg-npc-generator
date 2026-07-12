@@ -64,6 +64,10 @@
     <string name="share_card_alignment">Alinhamento</string>
     <string name="share_card_motivation">Motivação</string>
     <string name="share_card_personality">Personalidade</string>
+    <!-- Exportar a ficha do NPC como imagem ou documento -->
+    <string name="export_npc">Exportar</string>
+    <string name="export_format_png">Imagem (PNG)</string>
+    <string name="export_format_pdf">Documento (PDF)</string>
 
     <!-- Anúncios: ação de assistir anúncio recompensado para remover anúncios -->
     <string name="remove_ads_action">Remover anúncios</string>

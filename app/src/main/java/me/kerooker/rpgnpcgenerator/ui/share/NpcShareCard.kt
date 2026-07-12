@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,10 +40,12 @@ private val PORTRAIT_WIDTH = 168.dp
 private const val PORTRAIT_ASPECT = 512f / 640f
 
 /**
- * A self-contained, branded card that renders an NPC's key attributes for sharing. Pulls every colour
- * from the active Material theme so it matches the app, and takes a pre-decoded [portrait] bitmap (the
- * capture host loads it synchronously) rather than loading async — a share render must be complete the
- * instant it is captured. Safe to render off-screen: it depends on nothing but its arguments.
+ * A self-contained, branded sheet that renders an NPC's full profile for export/sharing: portrait,
+ * identity, profession/alignment/motivation, personality traits, languages and — when present — the
+ * D&D 5e combat stat block. Pulls every colour from the active Material theme so it matches the app,
+ * and takes a pre-decoded [portrait] bitmap (the capture host loads it synchronously) rather than
+ * loading async — a capture must be complete the instant it is snapshotted. Safe to render off-screen:
+ * it depends on nothing but its arguments.
  */
 @Composable
 fun NpcShareCard(
@@ -64,12 +68,28 @@ fun NpcShareCard(
     }
 }
 
-/** Localized labels for the card's attribute sections, gathered by the caller via `stringResource`. */
+/** Localized labels for the sheet's sections, gathered by the caller via `stringResource`. */
 data class NpcShareCardLabels(
     val profession: String,
     val alignment: String,
     val motivation: String,
-    val personality: String
+    val personality: String,
+    val languages: String,
+    val combat: CombatSheetLabels
+)
+
+/** Localized labels for the combat stat block, kept apart so the sheet stays resource-free. */
+data class CombatSheetLabels(
+    val title: String,
+    val strength: String,
+    val dexterity: String,
+    val constitution: String,
+    val intelligence: String,
+    val wisdom: String,
+    val charisma: String,
+    val armorClass: String,
+    val hitPoints: String,
+    val challengeRating: String
 )
 
 @Composable
@@ -152,7 +172,9 @@ private fun Body(npc: Npc, labels: NpcShareCardLabels, colors: ColorScheme) {
         Attribute(labels.profession, npc.profession, colors)
         Attribute(labels.alignment, npc.alignment, colors)
         Attribute(labels.motivation, npc.motivation, colors)
-        Traits(labels.personality, npc.personalityTraits, colors)
+        ChipSection(labels.personality, npc.personalityTraits, colors)
+        ChipSection(labels.languages, npc.languages, colors)
+        CombatBlock(npc, labels.combat, colors)
     }
 }
 
@@ -160,12 +182,7 @@ private fun Body(npc: Npc, labels: NpcShareCardLabels, colors: ColorScheme) {
 private fun Attribute(label: String, value: String, colors: ColorScheme) {
     if (value.isBlank()) return
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(
-            text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.primary
-        )
+        SectionLabel(label, colors)
         Text(
             text = value,
             style = MaterialTheme.typography.bodyLarge,
@@ -174,24 +191,20 @@ private fun Attribute(label: String, value: String, colors: ColorScheme) {
     }
 }
 
+/** A titled row of rounded chips (personality traits, languages). Hidden when nothing is filled in. */
 @Composable
-private fun Traits(label: String, traits: List<String>, colors: ColorScheme) {
-    val visible = traits.filter { it.isNotBlank() }
+private fun ChipSection(label: String, items: List<String>, colors: ColorScheme) {
+    val visible = items.filter { it.isNotBlank() }
     if (visible.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.primary
-        )
+        SectionLabel(label, colors)
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            visible.forEach { trait ->
+            visible.forEach { item ->
                 Text(
-                    text = trait,
+                    text = item,
                     style = MaterialTheme.typography.labelLarge,
                     color = colors.onTertiaryContainer,
                     modifier = Modifier
@@ -202,6 +215,101 @@ private fun Traits(label: String, traits: List<String>, colors: ColorScheme) {
             }
         }
     }
+}
+
+/**
+ * The D&D 5e combat block: ability scores (each with its modifier) laid out two-per-row, then Armor
+ * Class, Hit Points and Challenge Rating as chips. Entirely skipped for NPCs that carry no stats.
+ */
+@Composable
+private fun CombatBlock(npc: Npc, labels: CombatSheetLabels, colors: ColorScheme) {
+    if (!npc.hasCombatStats()) return
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SectionLabel(labels.title, colors)
+        abilityEntries(npc, labels).chunked(2).forEach { pair ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                pair.forEach { (label, value) -> StatCell(label, value, colors) }
+                if (pair.size == 1) Spacer(Modifier.weight(1f))
+            }
+        }
+        val derived = derivedEntries(npc, labels)
+        if (derived.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                derived.forEach { (label, value) -> DerivedChip(label, value, colors) }
+            }
+        }
+    }
+}
+
+/** The filled-in ability scores as label/"score (modifier)" pairs, in stat-block order. */
+private fun abilityEntries(npc: Npc, labels: CombatSheetLabels): List<Pair<String, String>> =
+    listOf(
+        labels.strength to npc.strength,
+        labels.dexterity to npc.dexterity,
+        labels.constitution to npc.constitution,
+        labels.intelligence to npc.intelligence,
+        labels.wisdom to npc.wisdom,
+        labels.charisma to npc.charisma
+    ).mapNotNull { (label, score) -> formatAbilityScore(score)?.let { label to it } }
+
+/** The filled-in derived stats (Armor Class, Hit Points, Challenge Rating) as label/value pairs. */
+private fun derivedEntries(npc: Npc, labels: CombatSheetLabels): List<Pair<String, String>> =
+    listOfNotNull(
+        npc.armorClass?.let { labels.armorClass to it.toString() },
+        npc.hitPoints?.let { labels.hitPoints to it.toString() },
+        npc.challengeRating?.takeIf { it.isNotBlank() }?.let { labels.challengeRating to it }
+    )
+
+/** One ability score cell, e.g. "STR" over "14 (+2)", taking an equal share of its row. */
+@Composable
+private fun RowScope.StatCell(label: String, value: String, colors: ColorScheme) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
+            .clip(RoundedCornerShape(12.dp))
+            .background(colors.surfaceVariant)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.primary
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = colors.onSurface
+        )
+    }
+}
+
+/** A "label value" pill for the derived stats (Armor Class, Hit Points, Challenge Rating). */
+@Composable
+private fun DerivedChip(label: String, value: String, colors: ColorScheme) {
+    Text(
+        text = "$label $value",
+        style = MaterialTheme.typography.labelLarge,
+        color = colors.onSecondaryContainer,
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(colors.secondaryContainer)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    )
+}
+
+@Composable
+private fun SectionLabel(label: String, colors: ColorScheme) {
+    Text(
+        text = label.uppercase(),
+        style = MaterialTheme.typography.labelSmall,
+        fontWeight = FontWeight.SemiBold,
+        color = colors.primary
+    )
 }
 
 @Composable
