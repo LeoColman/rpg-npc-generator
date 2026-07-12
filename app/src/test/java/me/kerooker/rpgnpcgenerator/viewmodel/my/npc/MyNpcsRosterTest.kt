@@ -62,6 +62,44 @@ class MyNpcsRosterTest : FunSpec({
             // motivation/alignment are not part of the search surface
             npcMatchesQuery(npc(2, fullName = "Bob", campaign = "Waterdeep"), "waterdeep") shouldBe false
         }
+
+        test("matches the NPC's tags") {
+            npcMatchesQuery(target, "villain", tags = listOf("Villain", "Boss")) shouldBe true
+            npcMatchesQuery(target, "boss", tags = listOf("Villain", "Boss")) shouldBe true
+            npcMatchesQuery(target, "villain", tags = emptyList()) shouldBe false
+        }
+
+        test("is diacritic-insensitive") {
+            val jose = npc(3, fullName = "José", profession = "Ferreiro")
+            npcMatchesQuery(jose, "jose") shouldBe true
+            npcMatchesQuery(jose, "JOSÉ") shouldBe true
+            npcMatchesQuery(npc(4, fullName = "Ação"), "acao") shouldBe true
+        }
+    }
+
+    context("normalizeForSearch") {
+        test("lowercases, trims and strips diacritics") {
+            normalizeForSearch("  ÀÇÃO  ") shouldBe "acao"
+            normalizeForSearch("Ürsula") shouldBe "ursula"
+        }
+    }
+
+    context("sanitizeTags") {
+        test("trims, drops blanks and de-duplicates case-insensitively keeping first spelling") {
+            sanitizeTags(listOf(" Villain ", "villain", "", "  ", "Ally")) shouldContainExactly
+                listOf("Villain", "Ally")
+        }
+    }
+
+    context("distinctTags") {
+        test("flattens, dedupes case-insensitively and sorts") {
+            val tags = mapOf(
+                1L to listOf("Villain", "Ally"),
+                2L to listOf("villain", "  "),
+                3L to listOf("Boss")
+            )
+            distinctTags(tags) shouldContainExactly listOf("Ally", "Boss", "Villain")
+        }
     }
 
     context("distinctCampaigns") {
@@ -87,6 +125,11 @@ class MyNpcsRosterTest : FunSpec({
         test("NAME_ASC orders alphabetically, ignoring case") {
             sortNpcs(npcs, NpcSortOrder.NAME_ASC).map { it.fullName } shouldContainExactly
                 listOf("Apple", "banjo", "cactus")
+        }
+
+        test("NAME_DESC orders reverse-alphabetically, ignoring case") {
+            sortNpcs(npcs, NpcSortOrder.NAME_DESC).map { it.fullName } shouldContainExactly
+                listOf("cactus", "banjo", "Apple")
         }
 
         test("RECENTLY_ADDED orders by id descending") {
@@ -158,6 +201,20 @@ class MyNpcsRosterTest : FunSpec({
             state.hasNpcs shouldBe false
             state.hasResults shouldBe false
             state.totalCount shouldBe 0
+        }
+
+        test("tag filter keeps only NPCs carrying that tag, and available tags are reported") {
+            val tags = mapOf(1L to listOf("Villain"), 2L to listOf("Ally"), 3L to listOf("Villain"))
+            val state = buildRoster(npcs, RosterFilter(tag = "Villain"), tags)
+            state.sections.single().npcs.map { it.fullName } shouldContainExactly listOf("Aria", "Cora")
+            state.availableTags shouldContainExactly listOf("Ally", "Villain")
+            state.tagsByNpc[1L] shouldContainExactly listOf("Villain")
+        }
+
+        test("query also matches tags") {
+            val tags = mapOf(2L to listOf("Blacksmith"))
+            val state = buildRoster(npcs, RosterFilter(query = "blacksmith"), tags)
+            state.sections.single().npcs.map { it.fullName } shouldContainExactly listOf("Bran")
         }
     }
 })
