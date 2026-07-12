@@ -1,0 +1,2 @@
+New: dark mode (follow system or set manually), search/sort/tags for your saved NPCs, export NPC sheets as PNG or PDF, combat stats re-roll, anonymous usage analytics.
+Fixed: exported sheets no longer get cut off on small screens.
