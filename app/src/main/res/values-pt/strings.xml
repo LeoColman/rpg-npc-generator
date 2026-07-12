@@ -8,6 +8,8 @@
     <string name="cd_reroll">Sortear %1$s novamente</string>
     <string name="cd_reroll_all">Regerar todos: %1$s</string>
     <string name="cd_remove_item">Remover %1$s</string>
+    <string name="cd_lock">Travar %1$s para não mudar ao sortear tudo</string>
+    <string name="cd_unlock">Destravar %1$s para poder mudar ao sortear tudo</string>
     <string name="group_identity">Identidade</string>
     <string name="group_characteristics">Características</string>
     <string name="group_background">História</string>

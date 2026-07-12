@@ -53,6 +53,7 @@ import me.kerooker.rpgnpcgenerator.ui.components.FieldGroup
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.components.RerollButton
 import me.kerooker.rpgnpcgenerator.ui.components.toUi
+import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.LockableField
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.PortraitUiState
 import me.kerooker.rpgnpcgenerator.viewmodel.random.npc.RandomNpcViewModel
 
@@ -64,6 +65,7 @@ fun RandomNpcScreen(
 ) {
     val npc by viewModel.data.collectAsStateWithLifecycle()
     val portrait by viewModel.portrait.collectAsStateWithLifecycle()
+    val locks by viewModel.lockedFields.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val savedMessage = stringResource(R.string.npc_saved)
@@ -110,14 +112,18 @@ fun RandomNpcScreen(
                     value = npc.name,
                     editable = true,
                     onValueChange = viewModel::setName,
-                    onReroll = viewModel::randomizeName
+                    onReroll = viewModel::randomizeName,
+                    locked = LockableField.NAME in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.NAME) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_nickname_hint),
                     value = npc.nickname,
                     editable = true,
                     onValueChange = viewModel::setNickname,
-                    onReroll = viewModel::randomizeNickname
+                    onReroll = viewModel::randomizeNickname,
+                    locked = LockableField.NICKNAME in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.NICKNAME) }
                 )
             }
 
@@ -127,28 +133,36 @@ fun RandomNpcScreen(
                     value = npc.race,
                     editable = true,
                     onValueChange = viewModel::setRace,
-                    onReroll = viewModel::randomizeRace
+                    onReroll = viewModel::randomizeRace,
+                    locked = LockableField.RACE in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.RACE) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_age_hint),
                     value = npc.age,
                     editable = true,
                     onValueChange = viewModel::setAge,
-                    onReroll = viewModel::randomizeAge
+                    onReroll = viewModel::randomizeAge,
+                    locked = LockableField.AGE in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.AGE) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_gender_hint),
                     value = npc.gender,
                     editable = true,
                     onValueChange = viewModel::setGender,
-                    onReroll = viewModel::randomizeGender
+                    onReroll = viewModel::randomizeGender,
+                    locked = LockableField.GENDER in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.GENDER) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_sexuality_hint),
                     value = npc.sexuality,
                     editable = true,
                     onValueChange = viewModel::setSexuality,
-                    onReroll = viewModel::randomizeSexuality
+                    onReroll = viewModel::randomizeSexuality,
+                    locked = LockableField.SEXUALITY in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.SEXUALITY) }
                 )
             }
 
@@ -158,21 +172,27 @@ fun RandomNpcScreen(
                     value = npc.profession,
                     editable = true,
                     onValueChange = viewModel::setProfession,
-                    onReroll = viewModel::randomizeProfession
+                    onReroll = viewModel::randomizeProfession,
+                    locked = LockableField.PROFESSION in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.PROFESSION) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_alignment_hint),
                     value = npc.alignment,
                     editable = true,
                     onValueChange = viewModel::setAlignment,
-                    onReroll = viewModel::randomizeAlignment
+                    onReroll = viewModel::randomizeAlignment,
+                    locked = LockableField.ALIGNMENT in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.ALIGNMENT) }
                 )
                 NpcField(
                     label = stringResource(R.string.random_npc_motivation_hint),
                     value = npc.motivation,
                     editable = true,
                     onValueChange = viewModel::setMotivation,
-                    onReroll = viewModel::randomizeMotivation
+                    onReroll = viewModel::randomizeMotivation,
+                    locked = LockableField.MOTIVATION in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.MOTIVATION) }
                 )
             }
 
@@ -184,7 +204,9 @@ fun RandomNpcScreen(
                 onItemChange = viewModel::setLanguage,
                 onReroll = viewModel::randomizeLanguage,
                 onRemove = viewModel::removeLanguage,
-                onAdd = { viewModel.randomizeLanguage(npc.languages.size) }
+                onAdd = { viewModel.randomizeLanguage(npc.languages.size) },
+                locked = LockableField.LANGUAGES in locks,
+                onToggleLock = { viewModel.toggleLock(LockableField.LANGUAGES) }
             )
 
             EditableListSection(
@@ -196,7 +218,9 @@ fun RandomNpcScreen(
                 onReroll = viewModel::randomizePersonality,
                 onRemove = viewModel::removePersonality,
                 onAdd = { viewModel.randomizePersonality(npc.personalityTraits.size) },
-                onRerollAll = viewModel::randomizeAllPersonalities
+                onRerollAll = viewModel::randomizeAllPersonalities,
+                locked = LockableField.PERSONALITY in locks,
+                onToggleLock = { viewModel.toggleLock(LockableField.PERSONALITY) }
             )
 
             // Fields are read-only here (combat isn't hand-edited on this screen), but the whole
@@ -206,7 +230,9 @@ fun RandomNpcScreen(
                 CombatStatsSection(
                     stats = it.toUi(),
                     editable = false,
-                    onReroll = viewModel::randomizeCombatStats
+                    onReroll = viewModel::randomizeCombatStats,
+                    locked = LockableField.COMBAT in locks,
+                    onToggleLock = { viewModel.toggleLock(LockableField.COMBAT) }
                 )
             }
         }

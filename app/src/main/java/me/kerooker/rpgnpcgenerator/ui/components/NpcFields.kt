@@ -12,11 +12,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
@@ -66,6 +69,32 @@ fun RerollButton(
     }
 }
 
+/**
+ * A padlock toggle that shields a field (or section) from "randomize all". Filled when [locked],
+ * outlined when open; tapping flips it. The field stays editable and individually re-rollable either
+ * way — the lock only affects the top-bar "randomize all" die.
+ */
+@Composable
+fun LockButton(
+    locked: Boolean,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val contentDescription = if (locked) {
+        stringResource(R.string.cd_unlock, label)
+    } else {
+        stringResource(R.string.cd_lock, label)
+    }
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = if (locked) Icons.Filled.Lock else Icons.Outlined.Lock,
+            contentDescription = contentDescription,
+            tint = if (locked) MaterialTheme.colorScheme.primary else LocalContentColor.current
+        )
+    }
+}
+
 /** A titled group of related NPC attributes. */
 @Composable
 fun FieldGroup(
@@ -83,7 +112,10 @@ fun FieldGroup(
     }
 }
 
-/** A single labelled NPC attribute. Shows a re-roll die when [onReroll] is provided. */
+/**
+ * A single labelled NPC attribute. Shows a re-roll die when [onReroll] is provided, and a padlock
+ * toggle when [locked]/[onToggleLock] are provided (the lock sits to the left of the die).
+ */
 @Composable
 fun NpcField(
     label: String,
@@ -91,7 +123,9 @@ fun NpcField(
     editable: Boolean,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onReroll: (() -> Unit)? = null
+    onReroll: (() -> Unit)? = null,
+    locked: Boolean? = null,
+    onToggleLock: (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -99,11 +133,33 @@ fun NpcField(
         label = { Text(label) },
         readOnly = !editable,
         singleLine = true,
-        trailingIcon = onReroll?.let { reroll ->
-            { RerollButton(contentDescription = stringResource(R.string.cd_reroll, label), onClick = reroll) }
-        },
+        trailingIcon = fieldTrailingIcons(label, onReroll, locked, onToggleLock),
         modifier = modifier.fillMaxWidth()
     )
+}
+
+/**
+ * Builds the trailing content for [NpcField]: an optional padlock next to an optional re-roll die.
+ * Returns null when neither is present so the field keeps its plain trailing edge.
+ */
+private fun fieldTrailingIcons(
+    label: String,
+    onReroll: (() -> Unit)?,
+    locked: Boolean?,
+    onToggleLock: (() -> Unit)?
+): (@Composable () -> Unit)? {
+    val hasLock = locked != null && onToggleLock != null
+    if (onReroll == null && !hasLock) return null
+    return {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (locked != null && onToggleLock != null) {
+                LockButton(locked = locked, label = label, onClick = onToggleLock)
+            }
+            if (onReroll != null) {
+                RerollButton(contentDescription = stringResource(R.string.cd_reroll, label), onClick = onReroll)
+            }
+        }
+    }
 }
 
 /**
@@ -171,7 +227,9 @@ fun CampaignField(
 /**
  * A titled, editable list of short strings (languages, personality traits). Each row can be edited,
  * re-rolled (when [onReroll] is given) and removed while [editable]; an "add" affordance appends.
- * When [onRerollAll] is given, the header shows a die that regenerates every item at once.
+ * When [onRerollAll] is given, the header shows a die that regenerates every item at once. When
+ * [locked]/[onToggleLock] are given, the header shows a padlock that shields the whole section from
+ * "randomize all".
  */
 @Composable
 fun EditableListSection(
@@ -184,7 +242,9 @@ fun EditableListSection(
     onAdd: () -> Unit,
     modifier: Modifier = Modifier,
     onReroll: ((index: Int) -> Unit)? = null,
-    onRerollAll: (() -> Unit)? = null
+    onRerollAll: (() -> Unit)? = null,
+    locked: Boolean? = null,
+    onToggleLock: (() -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -194,6 +254,9 @@ fun EditableListSection(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
+            if (locked != null && onToggleLock != null) {
+                LockButton(locked = locked, label = title, onClick = onToggleLock)
+            }
             if (editable && onRerollAll != null) {
                 RerollButton(
                     contentDescription = stringResource(R.string.cd_reroll_all, title),
@@ -309,7 +372,8 @@ fun AbilityScoreField(
  * The "Combat stats" block: six ability scores (each showing its modifier), Armor Class, Hit Points
  * and a text Challenge Rating. Read-only when [editable] is false. Combat values are plain data and
  * never feed the portrait prompt, so re-rolling or editing here does not trigger a portrait
- * re-render. When [onReroll] is given, the header shows a die that regenerates the whole block.
+ * re-render. When [onReroll] is given, the header shows a die that regenerates the whole block. When
+ * [locked]/[onToggleLock] are given, the header shows a padlock that shields it from "randomize all".
  */
 @Composable
 fun CombatStatsSection(
@@ -317,7 +381,9 @@ fun CombatStatsSection(
     editable: Boolean,
     modifier: Modifier = Modifier,
     onStatsChange: (CombatStatsUi) -> Unit = {},
-    onReroll: (() -> Unit)? = null
+    onReroll: (() -> Unit)? = null,
+    locked: Boolean? = null,
+    onToggleLock: (() -> Unit)? = null
 ) {
     val title = stringResource(R.string.combat_stats_label)
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -328,6 +394,9 @@ fun CombatStatsSection(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
+            if (locked != null && onToggleLock != null) {
+                LockButton(locked = locked, label = title, onClick = onToggleLock)
+            }
             if (onReroll != null) {
                 RerollButton(contentDescription = stringResource(R.string.cd_reroll_all, title), onClick = onReroll)
             }

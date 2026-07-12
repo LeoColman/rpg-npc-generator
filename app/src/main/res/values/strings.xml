@@ -8,6 +8,8 @@
     <string name="cd_reroll">Re-roll %1$s</string>
     <string name="cd_reroll_all">Regenerate all %1$s</string>
     <string name="cd_remove_item">Remove %1$s</string>
+    <string name="cd_lock">Lock %1$s so it survives Randomize all</string>
+    <string name="cd_unlock">Unlock %1$s so Randomize all can change it</string>
     <string name="group_identity">Identity</string>
     <string name="group_characteristics">Characteristics</string>
     <string name="group_background">Background</string>
