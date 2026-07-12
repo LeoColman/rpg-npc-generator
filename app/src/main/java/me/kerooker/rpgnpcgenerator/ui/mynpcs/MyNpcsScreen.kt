@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -40,6 +42,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -107,12 +110,17 @@ fun MyNpcsScreen(
                         onSelect = viewModel::setCampaignFilter
                     )
                 }
+                ui.filter.tag?.let { activeTag ->
+                    ActiveTagFilterChip(tag = activeTag, onClear = { viewModel.setTagFilter(null) })
+                }
                 if (ui.hasResults) {
                     RosterList(
                         sections = ui.sections,
+                        tagsByNpc = ui.tagsByNpc,
                         grouped = ui.filter.groupByCampaign,
                         onNpcClick = onNpcClick,
-                        onNpcDelete = { npcPendingDeletion = it }
+                        onNpcDelete = { npcPendingDeletion = it },
+                        onTagClick = viewModel::setTagFilter
                     )
                 } else {
                     NoResultsContent(modifier = Modifier.fillMaxSize())
@@ -205,6 +213,12 @@ private fun SortMenuAction(current: NpcSortOrder, onSelect: (NpcSortOrder) -> Un
                 onSelect = { onSelect(it); expanded = false }
             )
             SortMenuItem(
+                label = stringResource(R.string.my_npcs_sort_name_desc),
+                order = NpcSortOrder.NAME_DESC,
+                current = current,
+                onSelect = { onSelect(it); expanded = false }
+            )
+            SortMenuItem(
                 label = stringResource(R.string.my_npcs_sort_recent),
                 order = NpcSortOrder.RECENTLY_ADDED,
                 current = current,
@@ -244,9 +258,11 @@ private fun GroupToggleAction(grouped: Boolean, onToggle: () -> Unit) {
 @Composable
 private fun RosterList(
     sections: List<RosterSection>,
+    tagsByNpc: Map<Long, List<String>>,
     grouped: Boolean,
     onNpcClick: (Long) -> Unit,
-    onNpcDelete: (Npc) -> Unit
+    onNpcDelete: (Npc) -> Unit,
+    onTagClick: (String) -> Unit
 ) {
     LazyColumn(
         contentPadding = PaddingValues(8.dp),
@@ -261,11 +277,36 @@ private fun RosterList(
             items(section.npcs, key = { it.id }) { npc ->
                 NpcRow(
                     npc = npc,
+                    tags = tagsByNpc[npc.id].orEmpty(),
                     onClick = { onNpcClick(npc.id) },
-                    onDeleteClick = { onNpcDelete(npc) }
+                    onDeleteClick = { onNpcDelete(npc) },
+                    onTagClick = onTagClick
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ActiveTagFilterChip(tag: String, onClear: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+    ) {
+        FilterChip(
+            selected = true,
+            onClick = onClear,
+            label = { Text(stringResource(R.string.my_npcs_tag_filter_label, tag)) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.my_npcs_tag_filter_clear),
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        )
     }
 }
 
@@ -334,11 +375,14 @@ private fun EmptyMyNpcsContent(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun NpcRow(
     npc: Npc,
+    tags: List<String>,
     onClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onTagClick: (String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -368,6 +412,19 @@ private fun NpcRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (tags.isNotEmpty()) {
+                    FlowRow(
+                        modifier = Modifier.padding(top = 6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        tags.forEach { tag ->
+                            SuggestionChip(
+                                onClick = { onTagClick(tag) },
+                                label = { Text(tag, style = MaterialTheme.typography.labelSmall) }
+                            )
+                        }
+                    }
+                }
             }
             IconButton(onClick = onDeleteClick) {
                 Icon(imageVector = Icons.Filled.Delete, contentDescription = stringResource(R.string.delete))

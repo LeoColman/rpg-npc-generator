@@ -29,6 +29,14 @@ class IndividualNpcViewModel(
     val campaignSuggestions: StateFlow<List<String>> = npcRepository.distinctCampaigns()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), emptyList())
 
+    /** This NPC's tags, mirrored from the repository. */
+    val tags: StateFlow<List<String>> = npcRepository.tagsFor(npcId)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), emptyList())
+
+    /** Tags already used anywhere in the roster, offered as suggestions while editing this NPC's tags. */
+    val tagSuggestions: StateFlow<List<String>> = npcRepository.distinctTags()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), emptyList())
+
     private val _editState = MutableStateFlow(EditState.VIEW)
     val editState: StateFlow<EditState> = _editState.asStateFlow()
 
@@ -48,7 +56,11 @@ class IndividualNpcViewModel(
         _editState.value = EditState.VIEW
     }
 
-    fun saveEdit(edited: Npc) {
+    /**
+     * Persists the edited NPC. When [tags] is non-null it also replaces this NPC's tags; a `null`
+     * [tags] leaves the stored tags untouched (used by paths that only edit the core fields).
+     */
+    fun saveEdit(edited: Npc, tags: List<String>? = null) {
         // "Changed" only if the user re-picked the portrait during an edit session; a stale draft value
         // that still matches the pre-edit image is NOT a change (a background render may have replaced it).
         val userChangedPortrait = editing && edited.imagePath != imageWhenEditingStarted
@@ -62,6 +74,7 @@ class IndividualNpcViewModel(
             val merged = edited.copy(id = npcId, imagePath = finalImage)
 
             npcRepository.update(merged)
+            if (tags != null) npcRepository.setTags(npcId, tags)
             // If the previous portrait is no longer referenced, remove the now-orphaned file.
             if (!latest.imagePath.isNullOrBlank() && latest.imagePath != finalImage) {
                 ImageStore.deletePortrait(appContext, latest.imagePath)

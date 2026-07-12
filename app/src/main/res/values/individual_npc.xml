@@ -12,6 +12,9 @@
     <string name="individual_npc_personality_label">Personality Traits</string>
     <string name="individual_npc_personality_hint">Personality</string>
     <string name="individual_npc_add_item">Add Item</string>
+    <string name="individual_npc_tags_label">Tags</string>
+    <string name="individual_npc_tag_hint">Add a tag</string>
+    <string name="individual_npc_add_tag">Add tag</string>
 
 
 
