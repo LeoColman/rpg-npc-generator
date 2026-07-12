@@ -5,11 +5,10 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,19 +42,18 @@ class PortraitNotificationsTest {
     fun `ensureChannel creates the portrait_gen channel`() {
         notifications.ensureChannel()
 
-        val channel = notificationManager.getNotificationChannel(CHANNEL_ID)
+        val channel = notificationManager.getNotificationChannel(CHANNEL_ID).shouldNotBeNull()
 
-        assertNotNull(channel)
-        assertEquals(NotificationManager.IMPORTANCE_DEFAULT, channel!!.importance)
-        assertFalse(channel.canShowBadge())
+        channel.importance shouldBe NotificationManager.IMPORTANCE_DEFAULT
+        channel.canShowBadge() shouldBe false
     }
 
     @Test
     fun `progress notification is ongoing with indeterminate progress`() {
         val notification = notifications.progress("Aria Nightsong", "Queued")
 
-        assertTrue((notification.flags and Notification.FLAG_ONGOING_EVENT) != 0)
-        assertTrue(notification.extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE))
+        (notification.flags and Notification.FLAG_ONGOING_EVENT != 0) shouldBe true
+        notification.extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE) shouldBe true
     }
 
     @Test
@@ -64,7 +62,7 @@ class PortraitNotificationsTest {
 
         notifications.notifyProgress(42L, "Aria Nightsong", "Queued")
 
-        assertNotNull(shadowOf(notificationManager).getNotification(42))
+        shadowOf(notificationManager).getNotification(42).shouldNotBeNull()
     }
 
     @Test
@@ -73,9 +71,8 @@ class PortraitNotificationsTest {
 
         notifications.notifyReady(42L, "Aria Nightsong")
 
-        val posted = shadowOf(notificationManager).getNotification(42)
-        assertNotNull(posted)
-        assertTrue((posted!!.flags and Notification.FLAG_AUTO_CANCEL) != 0)
+        val posted = shadowOf(notificationManager).getNotification(42).shouldNotBeNull()
+        (posted.flags and Notification.FLAG_AUTO_CANCEL != 0) shouldBe true
     }
 
     @Test
@@ -84,9 +81,8 @@ class PortraitNotificationsTest {
 
         notifications.notifyFailed(99L, "Aria Nightsong")
 
-        val posted = shadowOf(notificationManager).getNotification(99)
-        assertNotNull(posted)
-        assertTrue((posted!!.flags and Notification.FLAG_AUTO_CANCEL) != 0)
+        val posted = shadowOf(notificationManager).getNotification(99).shouldNotBeNull()
+        (posted.flags and Notification.FLAG_AUTO_CANCEL != 0) shouldBe true
     }
 
     @Test
@@ -96,6 +92,6 @@ class PortraitNotificationsTest {
         // throw. The point of this test is that nothing escapes notifyProgress.
         val throwingContext = mockk<Context>()
 
-        PortraitNotifications(throwingContext).notifyProgress(1L, "Name", "Text")
+        shouldNotThrowAny { PortraitNotifications(throwingContext).notifyProgress(1L, "Name", "Text") }
     }
 }

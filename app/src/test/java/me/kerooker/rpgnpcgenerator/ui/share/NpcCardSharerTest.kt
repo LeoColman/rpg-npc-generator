@@ -3,10 +3,10 @@ package me.kerooker.rpgnpcgenerator.ui.share
 import android.app.Application
 import android.graphics.Bitmap
 import androidx.test.core.app.ApplicationProvider
+import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldEndWith
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,10 +38,10 @@ class NpcCardSharerTest {
         val file = NpcCardSharer.saveCardPng(context, tinyBitmap())
 
         val sharedDir = File(context.cacheDir, "shared_images")
-        assertTrue("file should live under cacheDir/shared_images", file.parentFile == sharedDir)
+        file.parentFile shouldBe sharedDir
         file.name shouldEndWith ".png"
-        assertTrue("png file should exist on disk", file.exists())
-        assertTrue("png file should have bytes", file.length() > 0)
+        file.exists() shouldBe true
+        file.length() shouldBeGreaterThan 0
     }
 
     @Test
@@ -50,8 +50,8 @@ class NpcCardSharerTest {
         val second = NpcCardSharer.saveCardPng(context, tinyBitmap())
 
         first.absolutePath shouldNotBe second.absolutePath
-        assertTrue(first.exists())
-        assertTrue(second.exists())
+        first.exists() shouldBe true
+        second.exists() shouldBe true
     }
 
     @Test

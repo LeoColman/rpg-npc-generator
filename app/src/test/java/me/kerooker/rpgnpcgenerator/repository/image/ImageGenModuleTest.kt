@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import me.kerooker.rpgnpcgenerator.BuildConfig
 import org.junit.After
 import org.junit.Before
@@ -65,7 +66,7 @@ class ImageGenModuleTest {
     fun `RemoteImageConfig and PortraitQueueClient are shared singletons`() {
         val koin = koinApp.koin
 
-        (koin.get<RemoteImageConfig>() === koin.get<RemoteImageConfig>()) shouldBe true
-        (koin.get<PortraitQueueClient>() === koin.get<PortraitQueueClient>()) shouldBe true
+        koin.get<RemoteImageConfig>() shouldBeSameInstanceAs koin.get<RemoteImageConfig>()
+        koin.get<PortraitQueueClient>() shouldBeSameInstanceAs koin.get<PortraitQueueClient>()
     }
 }

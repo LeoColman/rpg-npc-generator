@@ -2,9 +2,7 @@ package me.kerooker.rpgnpcgenerator.repository.image
 
 import android.app.Application
 import android.util.Base64
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import io.kotest.matchers.shouldBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -29,7 +27,7 @@ class PortraitQueueClientTest {
 
         val decoded = client().decode(encoded)
 
-        assertArrayEquals(expected, decoded)
+        decoded shouldBe expected
     }
 
     @Test
@@ -40,7 +38,7 @@ class PortraitQueueClientTest {
 
         val decoded = client().decode(prefixed)
 
-        assertArrayEquals(expected, decoded)
+        decoded shouldBe expected
     }
 
     @Test
@@ -50,20 +48,20 @@ class PortraitQueueClientTest {
 
         val decoded = client().decode(encoded)
 
-        assertArrayEquals(expected, decoded)
+        decoded shouldBe expected
     }
 
     @Test
     fun `enabled is true when the injected config is enabled`() {
         val config = RemoteImageConfig(baseUrl = "https://example.test", username = "user", password = "pass")
 
-        assertTrue(client(config).enabled)
+        client(config).enabled shouldBe true
     }
 
     @Test
     fun `enabled is false when the injected config is disabled`() {
         val config = RemoteImageConfig(baseUrl = "", username = "user", password = "")
 
-        assertFalse(client(config).enabled)
+        client(config).enabled shouldBe false
     }
 }

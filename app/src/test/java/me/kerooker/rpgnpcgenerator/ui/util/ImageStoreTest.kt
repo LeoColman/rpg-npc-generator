@@ -7,7 +7,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldStartWith
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,7 +42,7 @@ class ImageStoreTest {
         val path = ImageStore.persistBitmap(context, tinyBitmap()).shouldNotBeNull()
 
         path shouldStartWith portraitsDir.absolutePath
-        assertTrue("persisted file should exist on disk", File(path).exists())
+        File(path).exists() shouldBe true
     }
 
     @Test
@@ -52,8 +51,8 @@ class ImageStoreTest {
         val second = ImageStore.persistBitmap(context, tinyBitmap()).shouldNotBeNull()
 
         first shouldNotBe second
-        assertTrue(File(first).exists())
-        assertTrue(File(second).exists())
+        File(first).exists() shouldBe true
+        File(second).exists() shouldBe true
     }
 
     @Test

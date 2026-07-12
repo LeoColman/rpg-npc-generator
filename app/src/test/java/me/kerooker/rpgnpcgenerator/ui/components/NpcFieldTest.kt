@@ -8,8 +8,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import io.kotest.matchers.shouldBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,7 +42,7 @@ class NpcFieldTest {
         composeRule.onNodeWithText("Human").assertIsDisplayed()
         composeRule.onNodeWithContentDescription("Re-roll Race").performClick()
 
-        assertTrue("Re-roll callback should have fired", rerolled)
+        rerolled shouldBe true
     }
 
     @Test
@@ -62,6 +61,6 @@ class NpcFieldTest {
 
         composeRule.onNodeWithText("Human").performTextReplacement("Elf")
 
-        assertEquals("Elf", current)
+        current shouldBe "Elf"
     }
 }

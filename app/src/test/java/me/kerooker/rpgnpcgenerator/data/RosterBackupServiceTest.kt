@@ -2,10 +2,10 @@ package me.kerooker.rpgnpcgenerator.data
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldEndWith
-import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -107,7 +107,7 @@ class RosterBackupServiceTest {
 
     @Test
     fun `importing a file that is not a backup throws`() {
-        assertThrows(Exception::class.java) {
+        shouldThrow<Exception> {
             RosterBackupService.importNpcs(context, "this is not a backup file")
         }
     }
