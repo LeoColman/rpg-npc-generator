@@ -119,4 +119,64 @@ class NpcRepositoryTest : FunSpec({
 
         repository.distinctCampaigns().first() shouldContainExactly listOf("avernus", "Baldur's Gate", "Waterdeep")
     }
+
+    test("setTags stores tags, sanitizes them and exposes them per-npc") {
+        val repository = newRepository()
+        val id = repository.insert(sampleNpc())
+
+        repository.setTags(id, listOf(" Villain ", "villain", "", "Boss"))
+
+        // Duplicates (case-insensitive) and blanks are dropped, first spelling wins; queries sort by tag.
+        repository.tagsFor(id).first() shouldContainExactly listOf("Boss", "Villain")
+        repository.allTags().first()[id] shouldContainExactly listOf("Boss", "Villain")
+    }
+
+    test("setTags replaces the previous tags") {
+        val repository = newRepository()
+        val id = repository.insert(sampleNpc())
+
+        repository.setTags(id, listOf("Old"))
+        repository.setTags(id, listOf("New"))
+
+        repository.tagsFor(id).first() shouldContainExactly listOf("New")
+    }
+
+    test("distinctTags returns each tag once, ordered case-insensitively") {
+        val repository = newRepository()
+        val a = repository.insert(sampleNpc(fullName = "A"))
+        val b = repository.insert(sampleNpc(fullName = "B"))
+        repository.setTags(a, listOf("Villain", "Ally"))
+        repository.setTags(b, listOf("Villain", "Boss"))
+
+        repository.distinctTags().first() shouldContainExactly listOf("Ally", "Boss", "Villain")
+    }
+
+    test("deleting an npc also removes its tags") {
+        val repository = newRepository()
+        val id = repository.insert(sampleNpc())
+        repository.setTags(id, listOf("Villain"))
+
+        repository.delete(id)
+
+        repository.tagsFor(id).first() shouldBe emptyList()
+        repository.allTags().first() shouldBe emptyMap()
+    }
+
+    test("migrating from schema v2 to v3 creates a usable npc_tag table") {
+        // A device on the pre-tags schema (v2) upgrades: the 2.sqm migration must add npc_tag.
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        NpcDatabase.Schema.migrate(driver, oldVersion = 2, newVersion = 3)
+        val database = NpcDatabase(
+            driver = driver,
+            npcAdapter = Npc.Adapter(
+                personalityTraitsAdapter = ListOfStringsAdapter,
+                languagesAdapter = ListOfStringsAdapter
+            )
+        )
+        val repository = NpcRepository(database, dispatcher = Dispatchers.Unconfined)
+
+        repository.setTags(1L, listOf("Villain"))
+
+        repository.allTags().first() shouldBe mapOf(1L to listOf("Villain"))
+    }
 })

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import me.kerooker.rpgnpcgenerator.viewmodel.my.npc.sanitizeTags
 
 class NpcRepository(
     private val database: NpcDatabase,
@@ -14,6 +15,7 @@ class NpcRepository(
 ) {
 
     private val queries get() = database.npcQueries
+    private val tagQueries get() = database.npcTagQueries
 
     fun all(): Flow<List<Npc>> = queries.selectAll().asFlow().mapToList(dispatcher)
 
@@ -22,6 +24,25 @@ class NpcRepository(
     /** Distinct, non-blank campaign names currently in use, ordered case-insensitively. */
     fun distinctCampaigns(): Flow<List<String>> =
         queries.selectDistinctCampaigns().asFlow().mapToList(dispatcher).map { it.filterNotNull() }
+
+    /** Every NPC's tags, keyed by NPC id — drives the roster list's tag chips and tag search. */
+    fun allTags(): Flow<Map<Long, List<String>>> =
+        tagQueries.selectAllTags().asFlow().mapToList(dispatcher)
+            .map { rows -> rows.groupBy({ it.npcId }, { it.tag }) }
+
+    /** The tags on a single NPC, ordered case-insensitively. */
+    fun tagsFor(id: Long): Flow<List<String>> =
+        tagQueries.selectTagsForNpc(id).asFlow().mapToList(dispatcher)
+
+    /** Distinct, non-blank tags currently in use, ordered case-insensitively (autocomplete source). */
+    fun distinctTags(): Flow<List<String>> =
+        tagQueries.selectDistinctTags().asFlow().mapToList(dispatcher)
+
+    /** Replaces the given NPC's tags with [tags] (cleaned via [sanitizeTags]) in one transaction. */
+    fun setTags(npcId: Long, tags: List<String>) = database.transaction {
+        tagQueries.deleteTagsForNpc(npcId)
+        sanitizeTags(tags).forEach { tagQueries.insertTag(npcId, it) }
+    }
 
     fun insert(npc: Npc): Long = database.transactionWithResult {
         queries.insert(
@@ -110,5 +131,8 @@ class NpcRepository(
         )
     }
 
-    fun delete(id: Long) = queries.deleteById(id)
+    fun delete(id: Long) = database.transaction {
+        tagQueries.deleteTagsForNpc(id)
+        queries.deleteById(id)
+    }
 }

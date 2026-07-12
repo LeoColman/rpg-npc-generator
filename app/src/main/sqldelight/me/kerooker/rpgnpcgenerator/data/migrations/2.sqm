@@ -1,0 +1,9 @@
+-- Tags: free-text labels attached to a saved NPC (many per NPC). A normalized side table lets the
+-- roster search and filter by tag. Existing rows are untouched; NPCs simply start with no tags until
+-- the user adds some on the detail screen.
+CREATE TABLE npc_tag (
+    npcId INTEGER NOT NULL,
+    tag TEXT NOT NULL
+);
+
+CREATE INDEX npc_tag_npcId ON npc_tag(npcId);
