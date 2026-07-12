@@ -1,0 +1,395 @@
+Académico
+Contable
+Actor
+Alquimista
+Adiestrador de Animales
+Boticario
+Arzobispo
+Arquero
+Arquitecto
+Aristócrata
+Armero
+Fabricante de Armaduras
+Fabricante de Puntas de Flecha
+Artesano
+Artista
+Asesino
+Astrólogo
+Fabricante de Ballestas
+Ayuda de Cámara
+Empaquetador
+Alguacil
+Panadero
+Bandido
+Banquero
+Barbero
+Bardo
+Camarero
+Cestero
+Raquero
+Apicultor
+Vendedor de Cerveza
+Cervecero
+Mendigo
+Beguina
+Fundidor de Campanas
+Fabricante de Campanas
+Campanero
+Fabricante de Escobas
+Obispo
+Herrero
+Sangrador
+Barquero
+Tornero de Madera
+Guardaespaldas
+Tallador de Hueso
+Vendedor de Libros
+Portero de Taberna
+Tirador de Arco
+Fabricante de Arcos
+Maestro Cervecero
+Albañil
+Bufón
+Constructor
+Ladrón de Casas
+Artista Callejero
+Carnicero
+Mayordomo
+Fabricante de Botones
+Ebanista
+Calígrafo
+Cocinero de Campamento
+Seguidor de Campamento
+Fabricante de Candelabros
+Capitán
+Capitán de la Guardia
+Guardia de Caravana
+Carpintero
+Cartógrafo
+Tallador
+Cadenero
+Cortador de Tiza
+Buhonero
+Carbonero
+Charlatán
+Quesero
+Vendedor de Quesos
+Matarife de Pollos
+Avicultor
+Deshollinador
+Guardia de la Ciudad
+Escribiente
+Oficinista
+Relojero
+Pañero
+Payaso
+Zapatero Remendón
+Acuñador de Monedas
+Colportor
+Compositor
+Cocinero
+Tonelero
+Calderero
+Copista
+Zapatero de Cordobán
+Cortesana
+Agricultor
+Ballestero
+Tallador de Cristal
+Sectario
+Copero
+Coadjutor
+Zurrador
+Cortabolsas
+Ganadero Lechero
+Bailarín
+Dentista
+Detective
+Diplomático
+Cavador de Zanjas
+Doctor
+Criador de Perros
+Adiestrador de Perros
+Ayuda de Vestuario
+Traficante de Drogas
+Cultivador de Drogas
+Tamborilero
+Carretero de Estiércol
+Recolector de Estiércol
+Tintorero
+Grabador
+Verdugo
+Sanador por Fe
+Halconero
+Falso Profeta
+Granjero
+Herrador
+Fabricante de Fieltro
+Perista
+Cuidador de Lebreles
+Violinista
+Bombero
+Pescador
+Pescador (agua dulce)
+Pescador (agua salada)
+Flagelante
+Flechero
+Floricultor
+Crítico Gastronómico
+Silvicultor
+Adivino
+Cazador de Aves
+Fruticultor
+Frutero
+Batanero
+Cultivador de Hongos
+Fabricante de Muebles
+Peletero
+Tahúr
+Guardabosques
+Jardinero
+Hortelano
+Tallador de Gemas
+Vendedor de Vidrio
+Soplador de Vidrio
+Pintor de Vidrio
+Fabricante de Cola
+Limpiador de Letrinas
+Chismoso
+Sepulturero
+Ladrón de Tumbas
+Enterrador
+Verdulero
+Timador
+Guardia
+Guía
+Maestro de Gremio
+Limpiador de Canaletas
+Mercero
+Manitas
+Fabricante de Sombreros
+Sombrerero
+Fabricante de Gorros
+Vendedor Ambulante
+Comerciante de Heno
+Guarda de Sembrados
+Heraldo
+Cultivador de Hierbas
+Herbolario
+Pastor de Rebaños
+Ermitaño
+Cuidador de Brezales
+Adiestrador de Caballos
+Susurrador de Caballos
+Albéitar
+Cazador
+Montero
+Cortador de Hielo
+Iluminador
+Ilustrador
+Portador de Incienso
+Posadero
+Carcelero
+Bufón de Corte
+Joyero
+Ensamblador
+Malabarista
+Matarife de Caballos
+Tallador de Sílex
+Acuchillador
+Cuchillero
+Caballero
+Farolero
+Fabricante de Lámparas
+Jinete Lancero
+Casero
+Fabricante de Faroles
+Lapidario
+Abogado
+Talabartero
+Sanguijuelero
+Bibliotecario
+Gabarrero
+Mozo de Antorcha
+Cerrajero
+Vigía
+Fabricante de Laúdes
+Laudista
+Fabricante de Cota de Malla
+Fabricante de Mapas
+Marino
+Mampostero
+Montero Mayor
+Matemático
+Carnicero de Reses
+Mercenario
+Mensajero
+Obispo Metropolitano
+Partera
+Miliciano
+Lechera
+Molinero
+Minero
+Juglar
+Fabricante de Espejos
+Prestamista
+Monje
+Limpiador de Establos
+Músico
+Clavetero
+Navegante
+Redero
+Sereno
+Noble
+Hijo de Noble
+Enfermera
+Comerciante de Aceite
+Aceitero
+Ropavejero
+Comerciante de Opio
+Huérfano
+Palafrenero
+Forajido
+Recolector de Ostras
+Pintor
+Fabricante de Papel
+Pergaminero
+Fabricante de Pergaminos
+Buldero
+Prestamista de Empeños
+Campesino
+Cortador de Turba
+Filósofo
+Médico
+Encurtidor
+Carterista
+Pastelero
+Vendedor de Pasteles
+Porquerizo
+Piquero
+Peregrino
+Proxeneta
+Pirata
+Médico de la Peste
+Fontanero
+Plumajero
+Cazador Furtivo
+Poeta
+Cartero
+Alfarero
+Sacerdote
+Alcaide
+Músico Profesional
+Profesor
+Prostituta
+Titiritero
+Fabricante de Bolsas
+Trabajador de Cantera
+Cortador de Plumas
+Cazador de Ratas
+Cordelero
+Catador Real
+Fabricante de Alfombras
+Tejedor de Alfombras
+Guarnicionero
+Velero
+Fabricante de Velámenes
+Marinero
+Salinero
+Salazonero
+Erudito
+Maestro de Escuela
+Explorador
+Escriba
+Amanuense
+Tallador de Marfil
+Pinche de Cocina
+Escultor
+Capitán de Barco
+Costurera
+Recolector de Algas
+Sirviente
+Trabajador de Alcantarillas
+Chamán
+Esquilador
+Pastor
+Colocador de Tejas
+Proveedor de Barcos
+Carpintero de Ribera
+Limpiabotas
+Zapatero
+Camaronero
+Podador de Arbustos
+Ingeniero de Asedio
+Cribador
+Platero
+Prebendado
+Cantante
+Desollador
+Esclavo
+Esclavista
+Fundidor
+Forjador
+Contrabandista
+Jabonero
+Soldado
+Procurador
+Lancero
+Comerciante de Especias
+Espía
+Escudero
+Mozo de Cuadra
+Estibador
+Administrador
+Tallador de Piedra
+Picapedrero
+Cantero
+Deshuesador de Frutas
+Cuentacuentos
+Mago Callejero
+Barrendero
+Encordador
+Emplazador (justicia)
+Cirujano
+Porquero
+Espadero
+Sastre
+Curtidor
+Tapicero
+Tabernero
+Recaudador de Impuestos
+Taxidermista
+Maestro
+Techador de Paja
+Teólogo
+Ladrón
+Matón
+Hojalatero
+Torturador
+Pregonero
+Comerciante
+Trampero
+Trovador
+Pilluelo
+Vagabundo
+Fabricante de Vainas
+Indigente
+Horticultor
+Veterinario
+Tonto del Pueblo
+Vinatero
+Carretero
+Constructor de Carretas
+Aguador
+Botero
+Vendedor de Agua
+Fabricante de Armas
+Tejedor
+Despertador a Domicilio
+Vendedor de Vino
+Vendedor de Leña
+Tallista de Madera
+Leñador
+Criador de Gusanos
+Escritor
+Fanático

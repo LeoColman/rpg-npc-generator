@@ -1,0 +1,69 @@
+Actor
+Adiestrador de Animales
+Ayudante de Armero
+Ayudante de Flechero
+Acompañante
+Empaquetador
+Ayudante de Panadero
+Ayudante de Bandido
+Ayudante de Bardo
+Ayudante de Cestero
+Mendigo
+Campanero
+Ayudante de Herrero
+Vendedor de Libros
+Ayudante de Avicultor
+Payaso
+Ayudante de Cocinero
+Agricultor
+Zurrador
+Adiestrador de Perros
+Tamborilero
+Carretero de Estiércol
+Recolector de Estiércol
+Ayudante de Granjero
+Ayudante de Pescador
+Ayudante de Pescador (agua dulce)
+Ayudante de Pescador (agua salada)
+Fruticultor
+Ayudante de Jardinero
+Pintor de Vidrio
+Ayudante de Sombrerero
+Ayudante de Cultivador de Hierbas
+Ayudante de Herbolario
+Bufón
+Malabarista
+Ayudante de Bibliotecario
+Ayudante de Lutier
+Ayudante de Carnicero
+Minero
+Ayudante de Monje
+Músico
+Ayudante de Redero
+Hijo de Noble
+Huérfano
+Carterista
+Ayudante de Pastelero
+Porquerizo
+Cazador de Ratas
+Ayudante de Cordelero
+Ayudante de Alfombrero
+Salinero
+Sirviente
+Aprendiz de Chamán
+Ayudante de Esquilador
+Ayudante de Pastor
+Limpiabotas
+Esclavo
+Mago Callejero
+Barrendero
+Ayudante de Espadero
+Ayudante de Sastre
+Ayudante de Curtidor
+Vagabundo
+Horticultor
+Tonto del Pueblo
+Aguador
+Vendedor de Agua
+Ayudante de Fabricante de Armas
+Criador de Gusanos
