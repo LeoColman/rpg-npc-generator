@@ -1,0 +1,1 @@
+New: NPCs now carry a generated inventory - coin purse, profession tools, weapons and trinkets. Edit, re-roll or lock the items, and they show up on exported PNG/PDF sheets too.
