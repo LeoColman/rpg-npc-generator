@@ -6,6 +6,7 @@ import me.kerooker.rpgnpcgenerator.data.databaseModule
 import me.kerooker.rpgnpcgenerator.repository.image.imageGenModule
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.npcGeneratorsModule
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.randomNpcModule
+import me.kerooker.rpgnpcgenerator.ui.theme.themeModule
 import me.kerooker.rpgnpcgenerator.viewmodel.viewModelsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -16,7 +17,15 @@ class RpgNpcGeneratorApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@RpgNpcGeneratorApplication)
-            modules(randomNpcModule, databaseModule, viewModelsModule, npcGeneratorsModule, imageGenModule, adsModule)
+            modules(
+                randomNpcModule,
+                databaseModule,
+                viewModelsModule,
+                npcGeneratorsModule,
+                imageGenModule,
+                adsModule,
+                themeModule
+            )
         }
     }
 }
