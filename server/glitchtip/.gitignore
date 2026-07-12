@@ -1,0 +1,6 @@
+# Secrets and runtime state — never commit.
+.env
+owner-credentials.txt
+bootstrap-output.txt
+pgdata/
+*.log

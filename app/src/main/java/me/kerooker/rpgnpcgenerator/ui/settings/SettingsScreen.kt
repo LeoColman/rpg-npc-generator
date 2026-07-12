@@ -56,6 +56,7 @@ import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.BuildConfig
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
+import me.kerooker.rpgnpcgenerator.crash.CrashReporting
 import me.kerooker.rpgnpcgenerator.ui.theme.ThemePreference
 import me.kerooker.rpgnpcgenerator.viewmodel.settings.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -150,6 +151,17 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
                 leadingContent = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null) },
                 modifier = Modifier.clickable { openUrl(context, REPOSITORY_URL) }
             )
+            // Debug-only: verifies end-to-end that an uncaught crash reaches GlitchTip. Stripped from
+            // release builds, where BuildConfig.DEBUG is a compile-time false.
+            if (BuildConfig.DEBUG) {
+                ListItem(
+                    headlineContent = { Text("Force a test crash (debug only)") },
+                    supportingContent = { Text("Crashes the app on purpose to verify crash reporting") },
+                    leadingContent = { Icon(Icons.Filled.BugReport, contentDescription = null) },
+                    modifier = Modifier.clickable { CrashReporting.forceTestCrash() }
+                )
+            }
+
             Text(
                 text = stringResource(R.string.settings_version, BuildConfig.VERSION_NAME),
                 style = MaterialTheme.typography.bodySmall,

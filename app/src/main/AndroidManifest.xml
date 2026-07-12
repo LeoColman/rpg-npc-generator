@@ -18,6 +18,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.RpgNpcGenerator">
+
+        <!-- Crash reporting is started explicitly in the Application (see CrashReporting), so the
+             SDK's own ContentProvider auto-init must stay off — otherwise it would start with only
+             the manifest DSN and ignore our debug/release gating and privacy options. -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true"

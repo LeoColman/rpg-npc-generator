@@ -36,6 +36,11 @@ val admobRealRewardedUnitId = "ca-app-pub-9745951044027822/9457069649"
 // the posthogApiKey gradle property to test ingestion locally.
 val posthogRealApiKey = "phc_vo4WK3ZPZDvYCmXDvvBgD9Ur5FTs3XDrMAaMBvixaRuU"
 
+// GlitchTip DSN (self-hosted crash reporting on ritalee — see server/glitchtip/). A DSN is a
+// write-only ingest key and is designed to ship inside the client, like the keys above. Debug builds
+// get none, so local crashes stay local; override with -PglitchtipDsn=... to test reporting.
+val glitchtipRealDsn = "https://23bf908f-9d11-4aef-871b-ad8370746b64@glitchtip.colman.com.br/1"
+
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
@@ -112,6 +117,11 @@ android {
                 "POSTHOG_API_KEY",
                 "\"${providers.gradleProperty("posthogApiKey").getOrElse(posthogRealApiKey)}\""
             )
+            buildConfigField(
+                "String",
+                "GLITCHTIP_DSN",
+                "\"${providers.gradleProperty("glitchtipDsn").getOrElse(glitchtipRealDsn)}\""
+            )
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -126,6 +136,12 @@ android {
                 "String",
                 "POSTHOG_API_KEY",
                 "\"${providers.gradleProperty("posthogApiKey").getOrElse("")}\""
+            )
+            // Blank DSN = crash reporting fully disabled (see CrashReporting).
+            buildConfigField(
+                "String",
+                "GLITCHTIP_DSN",
+                "\"${providers.gradleProperty("glitchtipDsn").getOrElse("")}\""
             )
         }
     }
@@ -226,6 +242,9 @@ dependencies {
 
     // Product analytics (PostHog)
     implementation(libs.posthog.android)
+
+    // Crash reporting (self-hosted GlitchTip, Sentry protocol)
+    implementation(libs.sentry.android)
 
     // Detekt formatting (ktlint rules)
     detektPlugins(libs.detekt.formatting)

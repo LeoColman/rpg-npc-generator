@@ -1,0 +1,74 @@
+# GlitchTip — self-hosted crash reporting (Sentry-protocol) for the Android app.
+#   glitchtip - web UI + event ingest + embedded worker (all-in-one), exposed via caddy
+#   postgres  - event/issue storage
+#   valkey    - cache + task queue
+#
+# Deployed with `bash deploy.sh`, which sources .env (secrets, never committed) and lets
+# `docker stack deploy` interpolate ${...} below. Swarm ignores depends_on, so every service
+# restarts on failure until postgres/valkey are reachable.
+services:
+  glitchtip:
+    image: glitchtip/glitchtip:${GLITCHTIP_TAG:-6.2.0}
+    # All-in-one runs the web server with the worker embedded: one container instead of three.
+    # Right-sized for a single low-volume app; split into run-granian.sh + run-worker.sh if the
+    # event rate ever outgrows it.
+    command: ["./bin/run-all-in-one.sh"]
+    environment:
+      DATABASE_URL: postgres://glitchtip:${POSTGRES_PASSWORD}@postgres:5432/glitchtip
+      VALKEY_URL: redis://valkey:6379
+      SECRET_KEY: ${SECRET_KEY}
+      PORT: "8000"
+      GLITCHTIP_DOMAIN: https://glitchtip.colman.com.br
+      DEFAULT_FROM_EMAIL: glitchtip@colman.com.br
+      # No SMTP wired up: mail goes to the container log. Set a real EMAIL_URL to get
+      # notification emails on new issues.
+      EMAIL_URL: consolemail://
+      # This instance is publicly reachable (the app must POST crashes to it), so nobody but
+      # the owner may sign up. Org creation stays on: only a logged-in user can reach it.
+      ENABLE_USER_REGISTRATION: "false"
+      ENABLE_OPEN_USER_REGISTRATION: "false"
+      ENABLE_ORGANIZATION_CREATION: "true"
+      # Crash reports age out; keeps postgres small on a shared box.
+      GLITCHTIP_MAX_EVENT_LIFE_DAYS: "90"
+      LOG_LEVEL: INFO
+    deploy:
+      replicas: 1
+      restart_policy: { condition: any, delay: 10s }
+      resources:
+        limits: { memory: 2G }
+      labels:
+        caddy: "glitchtip.colman.com.br"
+        caddy.reverse_proxy: "{{upstreams 8000}}"
+    networks: [default, caddy]
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: glitchtip
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: glitchtip
+    volumes:
+      - /root/manual-stacks/glitchtip/pgdata:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy: { condition: any, delay: 10s }
+      resources:
+        limits: { memory: 2G }
+    networks: [default]
+
+  valkey:
+    image: valkey/valkey:8
+    deploy:
+      replicas: 1
+      restart_policy: { condition: any, delay: 10s }
+      resources:
+        limits: { memory: 512M }
+    networks: [default]
+
+networks:
+  # attachable: the one-off migrate/bootstrap containers deploy.sh runs (`docker run --network
+  # glitchtip_default`) are plain containers, not Swarm tasks — a non-attachable overlay rejects them.
+  default:
+    attachable: true
+  caddy:
+    external: true

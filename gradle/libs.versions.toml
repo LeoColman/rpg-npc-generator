@@ -25,6 +25,7 @@ logback = "1.5.6"
 playServicesAds = "25.4.0"
 datastore = "1.1.7"
 posthog = "3.53.6"
+sentry = "8.48.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,9 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 
 posthog-android = { module = "com.posthog:posthog-android", version.ref = "posthog" }
+
+# Crash reporting. The Sentry SDK speaks the protocol our self-hosted GlitchTip instance implements.
+sentry-android = { module = "io.sentry:sentry-android", version.ref = "sentry" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
