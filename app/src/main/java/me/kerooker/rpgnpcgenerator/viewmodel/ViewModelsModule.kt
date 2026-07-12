@@ -12,5 +12,5 @@ val viewModelsModule = module {
     viewModel { RandomNpcViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { MyNpcsViewModel(get()) }
     viewModel { (npcId: Long) -> IndividualNpcViewModel(npcId, get(), androidContext()) }
-    viewModel { SettingsViewModel(get(), androidContext()) }
+    viewModel { SettingsViewModel(get(), androidContext(), get()) }
 }

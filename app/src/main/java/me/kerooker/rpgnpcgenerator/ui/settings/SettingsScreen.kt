@@ -5,36 +5,50 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +56,7 @@ import kotlinx.coroutines.withContext
 import me.kerooker.rpgnpcgenerator.BuildConfig
 import me.kerooker.rpgnpcgenerator.R
 import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
+import me.kerooker.rpgnpcgenerator.ui.theme.ThemePreference
 import me.kerooker.rpgnpcgenerator.viewmodel.settings.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.io.IOException
@@ -62,6 +77,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val themePreference by viewModel.themePreference.collectAsStateWithLifecycle()
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument(EXPORT_MIME_TYPE)
@@ -92,6 +109,14 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
+            SectionTitle(stringResource(R.string.settings_appearance_title))
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.settings_theme_title)) },
+                supportingContent = { Text(stringResource(themePreference.labelRes())) },
+                leadingContent = { Icon(Icons.Filled.DarkMode, contentDescription = null) },
+                modifier = Modifier.clickable { showThemeDialog = true }
+            )
+
             SectionTitle(stringResource(R.string.settings_data_title))
             ListItem(
                 headlineContent = { Text(stringResource(R.string.settings_export_title)) },
@@ -136,6 +161,65 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
             )
         }
     }
+
+    if (showThemeDialog) {
+        ThemePickerDialog(
+            current = themePreference,
+            onSelect = {
+                viewModel.setThemePreference(it)
+                showThemeDialog = false
+            },
+            onDismiss = { showThemeDialog = false }
+        )
+    }
+}
+
+/** Radio-button dialog letting the user pick Follow system / Light / Dark. */
+@Composable
+private fun ThemePickerDialog(
+    current: ThemePreference,
+    onSelect: (ThemePreference) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.settings_theme_title)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                ThemePreference.entries.forEach { option ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = option == current,
+                                role = Role.RadioButton,
+                                onClick = { onSelect(option) }
+                            )
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = option == current, onClick = null)
+                        Text(
+                            text = stringResource(option.labelRes()),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+        }
+    )
+}
+
+/** The user-facing label for each appearance option. */
+@StringRes
+private fun ThemePreference.labelRes(): Int = when (this) {
+    ThemePreference.FOLLOW_SYSTEM -> R.string.settings_theme_follow_system
+    ThemePreference.LIGHT -> R.string.settings_theme_light
+    ThemePreference.DARK -> R.string.settings_theme_dark
 }
 
 /** Writes the whole roster as a backup file to [uri], reporting the count (or a failure) via snackbar. */
