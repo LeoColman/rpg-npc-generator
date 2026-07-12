@@ -56,7 +56,8 @@ class RosterBackupServiceTest {
         armorClass = null,
         hitPoints = null,
         challengeRating = null,
-        campaign = "Waterdeep"
+        campaign = "Waterdeep",
+        items = emptyList()
     )
 
     private fun writePortraitFile(bytes: ByteArray): String {

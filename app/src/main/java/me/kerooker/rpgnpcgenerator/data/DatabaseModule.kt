@@ -14,7 +14,8 @@ val databaseModule = module {
             driver = get(),
             npcAdapter = Npc.Adapter(
                 personalityTraitsAdapter = ListOfStringsAdapter,
-                languagesAdapter = ListOfStringsAdapter
+                languagesAdapter = ListOfStringsAdapter,
+                itemsAdapter = ListOfStringsAdapter
             )
         )
     }

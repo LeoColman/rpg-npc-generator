@@ -1,0 +1,4 @@
+-- Adds the NPC's starting inventory: a small list of items they carry. Stored as a JSON array of
+-- strings via ListOfStringsAdapter, mirroring languages/personalityTraits. NOT NULL with a '[]'
+-- default so every row created before this migration simply starts with an empty item list.
+ALTER TABLE npc ADD COLUMN items TEXT NOT NULL DEFAULT '[]';

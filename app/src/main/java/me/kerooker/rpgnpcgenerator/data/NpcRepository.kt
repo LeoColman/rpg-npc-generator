@@ -68,7 +68,8 @@ class NpcRepository(
             armorClass = npc.armorClass,
             hitPoints = npc.hitPoints,
             challengeRating = npc.challengeRating,
-            campaign = npc.campaign
+            campaign = npc.campaign,
+            items = npc.items
         )
         queries.lastInsertRowId().executeAsOne()
     }
@@ -98,7 +99,8 @@ class NpcRepository(
             armorClass = npc.armorClass,
             hitPoints = npc.hitPoints,
             challengeRating = npc.challengeRating,
-            campaign = npc.campaign
+            campaign = npc.campaign,
+            items = npc.items
         )
     }
 
@@ -127,6 +129,7 @@ class NpcRepository(
             hitPoints = npc.hitPoints,
             challengeRating = npc.challengeRating,
             campaign = npc.campaign,
+            items = npc.items,
             id = npc.id
         )
     }

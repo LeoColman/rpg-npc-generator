@@ -32,7 +32,8 @@ private fun sampleNpc(
     armorClass = 15,
     hitPoints = 22,
     challengeRating = "1/2",
-    campaign = "Waterdeep"
+    campaign = "Waterdeep",
+    items = listOf("Coin pouch (7 copper)", "A set of smith's tools")
 )
 
 class RosterBackupTest : FunSpec({
@@ -47,6 +48,7 @@ class RosterBackupTest : FunSpec({
         backup.nickname shouldBe npc.nickname
         backup.personalityTraits shouldContainExactly npc.personalityTraits
         backup.languages shouldContainExactly npc.languages
+        backup.items shouldContainExactly npc.items
         backup.strength shouldBe npc.strength
         backup.challengeRating shouldBe npc.challengeRating
         backup.campaign shouldBe npc.campaign

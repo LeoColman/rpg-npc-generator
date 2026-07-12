@@ -12,7 +12,8 @@ private fun sampleNpc(
     fullName: String = "Aria Nightsong",
     languages: List<String> = listOf("Common", "Elvish"),
     traits: List<String> = listOf("Brave", "Curious"),
-    campaign: String? = null
+    campaign: String? = null,
+    items: List<String> = emptyList()
 ) = Npc(
     id = id,
     fullName = fullName,
@@ -37,7 +38,8 @@ private fun sampleNpc(
     armorClass = null,
     hitPoints = null,
     challengeRating = null,
-    campaign = campaign
+    campaign = campaign,
+    items = items
 )
 
 class NpcRepositoryTest : FunSpec({
@@ -49,7 +51,8 @@ class NpcRepositoryTest : FunSpec({
             driver = driver,
             npcAdapter = Npc.Adapter(
                 personalityTraitsAdapter = ListOfStringsAdapter,
-                languagesAdapter = ListOfStringsAdapter
+                languagesAdapter = ListOfStringsAdapter,
+                itemsAdapter = ListOfStringsAdapter
             )
         )
         return NpcRepository(database, dispatcher = Dispatchers.Unconfined)
@@ -96,6 +99,16 @@ class NpcRepositoryTest : FunSpec({
         repository.delete(id)
 
         repository.all().first() shouldBe emptyList()
+    }
+
+    test("items round-trip through insert and update via the JSON adapter") {
+        val repository = newRepository()
+        val id = repository.insert(sampleNpc(items = listOf("Coin pouch (5 copper)", "A worn dagger")))
+
+        repository.get(id).first()!!.items shouldContainExactly listOf("Coin pouch (5 copper)", "A worn dagger")
+
+        repository.update(repository.get(id).first()!!.copy(items = listOf("A holy symbol on a cord")))
+        repository.get(id).first()!!.items shouldContainExactly listOf("A holy symbol on a cord")
     }
 
     test("campaign round-trips through insert and update") {
@@ -170,7 +183,8 @@ class NpcRepositoryTest : FunSpec({
             driver = driver,
             npcAdapter = Npc.Adapter(
                 personalityTraitsAdapter = ListOfStringsAdapter,
-                languagesAdapter = ListOfStringsAdapter
+                languagesAdapter = ListOfStringsAdapter,
+                itemsAdapter = ListOfStringsAdapter
             )
         )
         val repository = NpcRepository(database, dispatcher = Dispatchers.Unconfined)
@@ -179,4 +193,69 @@ class NpcRepositoryTest : FunSpec({
 
         repository.allTags().first() shouldBe mapOf(1L to listOf("Villain"))
     }
+
+    test("migrating from schema v3 to v4 adds items, defaulting pre-existing rows to an empty list") {
+        // Stand up the v3 npc table (no items column) with one legacy row, then apply 3.sqm.
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        driver.execute(null, V3_NPC_TABLE, 0)
+        driver.execute(null, INSERT_LEGACY_NPC, 0)
+
+        NpcDatabase.Schema.migrate(driver, oldVersion = 3, newVersion = 4)
+
+        val database = NpcDatabase(
+            driver = driver,
+            npcAdapter = Npc.Adapter(
+                personalityTraitsAdapter = ListOfStringsAdapter,
+                languagesAdapter = ListOfStringsAdapter,
+                itemsAdapter = ListOfStringsAdapter
+            )
+        )
+        val repository = NpcRepository(database, dispatcher = Dispatchers.Unconfined)
+
+        // The pre-existing row survives the upgrade and simply starts with no items.
+        val migrated = repository.all().first().single()
+        migrated.fullName shouldBe "Old One"
+        migrated.items shouldBe emptyList()
+
+        // The migrated column is fully usable afterwards.
+        repository.update(migrated.copy(items = listOf("A worn dagger")))
+        repository.get(migrated.id).first()!!.items shouldContainExactly listOf("A worn dagger")
+    }
 })
+
+// The npc table exactly as it stood at schema v3 (before the items column). Used by the v3->v4
+// migration test to reproduce a real pre-upgrade database.
+private val V3_NPC_TABLE = """
+    CREATE TABLE npc (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        fullName TEXT NOT NULL,
+        nickname TEXT NOT NULL,
+        gender TEXT NOT NULL,
+        sexuality TEXT NOT NULL,
+        race TEXT NOT NULL,
+        age TEXT NOT NULL,
+        profession TEXT NOT NULL,
+        motivation TEXT NOT NULL,
+        alignment TEXT NOT NULL,
+        personalityTraits TEXT NOT NULL,
+        languages TEXT NOT NULL,
+        imagePath TEXT,
+        notes TEXT NOT NULL DEFAULT '',
+        strength INTEGER,
+        dexterity INTEGER,
+        constitution INTEGER,
+        intelligence INTEGER,
+        wisdom INTEGER,
+        charisma INTEGER,
+        armorClass INTEGER,
+        hitPoints INTEGER,
+        challengeRating TEXT,
+        campaign TEXT
+    );
+""".trimIndent()
+
+private val INSERT_LEGACY_NPC = """
+    INSERT INTO npc(fullName, nickname, gender, sexuality, race, age, profession, motivation,
+        alignment, personalityTraits, languages, notes)
+    VALUES ('Old One', '', '', '', '', '', '', '', '', '["Brave"]', '["Common"]', '');
+""".trimIndent()

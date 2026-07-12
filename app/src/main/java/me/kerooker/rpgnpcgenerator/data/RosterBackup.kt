@@ -45,6 +45,8 @@ data class NpcBackup(
     val hitPoints: Long? = null,
     val challengeRating: String? = null,
     val campaign: String? = null,
+    /** The NPC's starting inventory. Defaulted so backups written before items existed still load. */
+    val items: List<String> = emptyList(),
     /** The NPC's portrait as a base64-encoded JPEG, or null when it has none. */
     val portraitJpegBase64: String? = null
 )
@@ -73,6 +75,7 @@ fun Npc.toBackup(portraitJpegBase64: String?): NpcBackup = NpcBackup(
     hitPoints = hitPoints,
     challengeRating = challengeRating,
     campaign = campaign,
+    items = items,
     portraitJpegBase64 = portraitJpegBase64
 )
 
@@ -104,5 +107,6 @@ fun NpcBackup.toNpc(imagePath: String?): Npc = Npc(
     armorClass = armorClass,
     hitPoints = hitPoints,
     challengeRating = challengeRating,
-    campaign = campaign
+    campaign = campaign,
+    items = items
 )
