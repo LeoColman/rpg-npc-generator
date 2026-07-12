@@ -53,11 +53,18 @@ class NpcDataGenerator(
 
 class CompleteNpcGenerator(
     private val npcDataGenerator: NpcDataGenerator,
-    private val combatStatsGenerator: CombatStatsGenerator
+    private val combatStatsGenerator: CombatStatsGenerator,
+    private val itemsGenerator: ItemsGenerator
 ) {
 
     /** Rolls a standalone combat stats block, e.g. to re-roll just that section of an existing NPC. */
     fun generateCombatStats(): CombatStats = combatStatsGenerator.generate()
+
+    /** Rolls a fresh inventory for [profession], e.g. to re-roll just the Items section of an NPC. */
+    fun generateItems(profession: String): List<String> = itemsGenerator.generate(profession)
+
+    /** Rolls a single trinket, e.g. when the user adds or re-rolls one row in the Items section. */
+    fun generateSingleItem(): String = itemsGenerator.randomTrinket()
 
     fun generate(): GeneratedNpc {
         val name = generateFullName()
@@ -72,6 +79,7 @@ class CompleteNpcGenerator(
         val personalityTraits = generatePersonalityTraits()
         val languages = generateLanguages(race.racialLanguage)
         val combat = combatStatsGenerator.generate()
+        val items = itemsGenerator.generate(profession)
 
         return GeneratedNpc(
             name,
@@ -85,7 +93,8 @@ class CompleteNpcGenerator(
             alignment,
             personalityTraits,
             languages,
-            combat
+            combat,
+            items
         )
     }
 

@@ -5,6 +5,7 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeInRange
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.shouldBeInstanceOf
 import java.io.File
 
@@ -23,7 +24,7 @@ private fun completeGenerator(): CompleteNpcGenerator {
         MotivationGenerator(rawLines("npc_motivations.txt")),
         PersonalityTraitGenerator(rawLines("npc_personality_trait.txt"))
     )
-    return CompleteNpcGenerator(dataGenerator, CombatStatsGenerator())
+    return CompleteNpcGenerator(dataGenerator, CombatStatsGenerator(), ItemsGenerator(portuguese = false))
 }
 
 class CompleteNpcGeneratorTest : FunSpec() {
@@ -75,6 +76,13 @@ class CompleteNpcGeneratorTest : FunSpec() {
         test("Should generate a normal profession if npc is not a child") {
             generateMany().filterNot { it.age == Age.Child }.forEach {
                 normalProfessions shouldContain it.profession
+            }
+        }
+
+        test("Should generate between 2 and 5 items, always starting with a coin pouch") {
+            generateMany().map { it.items }.forEach {
+                it.size shouldBeInRange (ItemsGenerator.MIN_ITEMS..ItemsGenerator.MAX_ITEMS)
+                it.first() shouldStartWith ItemsGenerator.COIN_PURSE_PREFIX_EN
             }
         }
 

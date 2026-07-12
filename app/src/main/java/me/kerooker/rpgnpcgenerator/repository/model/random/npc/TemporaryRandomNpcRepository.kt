@@ -61,6 +61,18 @@ class TemporaryRandomNpcRepository {
 
     fun setPersonalities(personalities: List<String>) = update { it.copy(personalityTraits = personalities) }
 
+    fun setItem(index: Int, item: String) = update { data ->
+        val items = data.items.toMutableList()
+        if (index in items.indices) items[index] = item else items.add(item)
+        data.copy(items = items)
+    }
+
+    fun removeItem(index: Int) = update { data ->
+        data.copy(items = data.items.toMutableList().apply { removeAt(index) })
+    }
+
+    fun setItems(items: List<String>) = update { it.copy(items = items) }
+
     fun setCombat(combat: CombatStats) = update { it.copy(combat = combat) }
 
     private inline fun update(block: (GeneratedNpcData) -> GeneratedNpcData) {
