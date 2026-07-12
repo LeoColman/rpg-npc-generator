@@ -1,0 +1,1 @@
+Improved: crash reporting so bugs get fixed faster. Reports are anonymous, contain no personal data or NPC content, and are sent to our own self-hosted server - not to a third party.
