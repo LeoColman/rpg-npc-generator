@@ -8,12 +8,9 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
+import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import java.util.concurrent.TimeUnit
 
 /**
@@ -25,14 +22,12 @@ import java.util.concurrent.TimeUnit
  * [GeneratePortraitWorker.doWork] is not exercised here: driving the CoroutineWorker end to end needs
  * work-testing's TestListenableWorkerBuilder plus a started Koin graph, out of scope for this test.
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34], application = Application::class)
-class GeneratePortraitWorkerTest {
+@RobolectricTest(sdk = [34], application = Application::class)
+class GeneratePortraitWorkerTest : StringSpec({
 
-    private lateinit var context: Context
+    lateinit var context: Context
 
-    @Before
-    fun setUp() {
+    beforeTest {
         context = ApplicationProvider.getApplicationContext()
         val config = Configuration.Builder()
             .setExecutor(SynchronousExecutor())
@@ -41,8 +36,7 @@ class GeneratePortraitWorkerTest {
         WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
     }
 
-    @Test
-    fun `enqueue schedules a unique work request for the npc`() {
+    "enqueue schedules a unique work request for the npc" {
         GeneratePortraitWorker.enqueue(context, 42L)
 
         // Exactly one work item under this npc's unique name. (We don't assert the run state: the
@@ -55,8 +49,7 @@ class GeneratePortraitWorkerTest {
         infos.size shouldBe 1
     }
 
-    @Test
-    fun `enqueue twice for the same npc keeps a single unique work item`() {
+    "enqueue twice for the same npc keeps a single unique work item" {
         GeneratePortraitWorker.enqueue(context, 7L)
         GeneratePortraitWorker.enqueue(context, 7L)
 
@@ -67,8 +60,7 @@ class GeneratePortraitWorkerTest {
         infos.size shouldBe 1
     }
 
-    @Test
-    fun `enqueue for different npc ids schedules independent work items`() {
+    "enqueue for different npc ids schedules independent work items" {
         GeneratePortraitWorker.enqueue(context, 1L)
         GeneratePortraitWorker.enqueue(context, 2L)
 
@@ -76,4 +68,4 @@ class GeneratePortraitWorkerTest {
         workManager.getWorkInfosForUniqueWork("portrait_1").get(10, TimeUnit.SECONDS).size shouldBe 1
         workManager.getWorkInfosForUniqueWork("portrait_2").get(10, TimeUnit.SECONDS).size shouldBe 1
     }
-}
+})
