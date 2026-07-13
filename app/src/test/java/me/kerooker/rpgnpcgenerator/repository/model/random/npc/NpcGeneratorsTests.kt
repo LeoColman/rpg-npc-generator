@@ -1,9 +1,8 @@
 package me.kerooker.rpgnpcgenerator.repository.model.random.npc
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.inspectors.forAll
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.ints.shouldBeInRange
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -30,8 +29,8 @@ private fun completeGenerator(): CompleteNpcGenerator {
 class CompleteNpcGeneratorTest : FunSpec() {
 
     private val target = completeGenerator()
-    private val childrenProfessions = rawLines("npc_child_professions.txt")
-    private val normalProfessions = rawLines("npc_professions.txt")
+    private val childrenProfessions = rawLines("npc_child_professions.txt").toSet()
+    private val normalProfessions = rawLines("npc_professions.txt").toSet()
 
     private fun generate(amount: Int) = List(amount) { target.generate() }
     private fun generateMany() = generate(100_000)
@@ -67,16 +66,18 @@ class CompleteNpcGeneratorTest : FunSpec() {
             } shouldBeInRange (4_700..5_300)
         }
 
+        // A single set-difference assertion rather than shouldContain per generated npc:
+        // shouldContain always copies its receiver via toList() and scans it fully to build a
+        // possible-failure message, even on success, so calling it per item (up to 100,000 times)
+        // against a ~400-line profession list made this test take minutes instead of seconds.
         test("Should generate a child profession if npc is child") {
-            generateMany().filter { it.age == Age.Child }.forAll {
-                childrenProfessions shouldContain it.profession
-            }
+            val generatedProfessions = generateMany().filter { it.age == Age.Child }.map { it.profession }.toSet()
+            generatedProfessions subtract childrenProfessions shouldBe emptySet()
         }
 
         test("Should generate a normal profession if npc is not a child") {
-            generateMany().filterNot { it.age == Age.Child }.forEach {
-                normalProfessions shouldContain it.profession
-            }
+            val generatedProfessions = generateMany().filterNot { it.age == Age.Child }.map { it.profession }.toSet()
+            generatedProfessions subtract normalProfessions shouldBe emptySet()
         }
 
         test("Should generate between 2 and 5 items, always starting with a coin pouch") {
