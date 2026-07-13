@@ -5,16 +5,13 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.Config
 
 private const val CHANNEL_ID = "portrait_gen"
 
@@ -23,23 +20,20 @@ private const val CHANNEL_ID = "portrait_gen"
  * `NotificationManager`, so it's driven here via Robolectric (matching [PortraitQueueClient]'s test
  * in this same package).
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34], application = Application::class)
-class PortraitNotificationsTest {
+@RobolectricTest(sdk = [34], application = Application::class)
+class PortraitNotificationsTest : StringSpec({
 
-    private lateinit var context: Application
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var notifications: PortraitNotifications
+    lateinit var context: Application
+    lateinit var notificationManager: NotificationManager
+    lateinit var notifications: PortraitNotifications
 
-    @Before
-    fun setUp() {
+    beforeTest {
         context = ApplicationProvider.getApplicationContext()
         notificationManager = context.getSystemService(NotificationManager::class.java)
         notifications = PortraitNotifications(context)
     }
 
-    @Test
-    fun `ensureChannel creates the portrait_gen channel`() {
+    "ensureChannel creates the portrait_gen channel" {
         notifications.ensureChannel()
 
         val channel = notificationManager.getNotificationChannel(CHANNEL_ID).shouldNotBeNull()
@@ -48,16 +42,14 @@ class PortraitNotificationsTest {
         channel.canShowBadge() shouldBe false
     }
 
-    @Test
-    fun `progress notification is ongoing with indeterminate progress`() {
+    "progress notification is ongoing with indeterminate progress" {
         val notification = notifications.progress("Aria Nightsong", "Queued")
 
         (notification.flags and Notification.FLAG_ONGOING_EVENT != 0) shouldBe true
         notification.extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE) shouldBe true
     }
 
-    @Test
-    fun `notifyProgress posts a notification under the npc id`() {
+    "notifyProgress posts a notification under the npc id" {
         notifications.ensureChannel()
 
         notifications.notifyProgress(42L, "Aria Nightsong", "Queued")
@@ -65,8 +57,7 @@ class PortraitNotificationsTest {
         shadowOf(notificationManager).getNotification(42).shouldNotBeNull()
     }
 
-    @Test
-    fun `notifyReady posts an auto-cancel notification under the npc id`() {
+    "notifyReady posts an auto-cancel notification under the npc id" {
         notifications.ensureChannel()
 
         notifications.notifyReady(42L, "Aria Nightsong")
@@ -75,8 +66,7 @@ class PortraitNotificationsTest {
         (posted.flags and Notification.FLAG_AUTO_CANCEL != 0) shouldBe true
     }
 
-    @Test
-    fun `notifyFailed posts an auto-cancel notification under the npc id`() {
+    "notifyFailed posts an auto-cancel notification under the npc id" {
         notifications.ensureChannel()
 
         notifications.notifyFailed(99L, "Aria Nightsong")
@@ -85,8 +75,7 @@ class PortraitNotificationsTest {
         (posted.flags and Notification.FLAG_AUTO_CANCEL != 0) shouldBe true
     }
 
-    @Test
-    fun `safeNotify swallows failures instead of throwing`() {
+    "safeNotify swallows failures instead of throwing" {
         // A fully unstubbed Context makes every call inside safeNotify's runCatching block
         // (NotificationManagerCompat.from(context), building the notification, notify itself)
         // throw. The point of this test is that nothing escapes notifyProgress.
@@ -94,4 +83,4 @@ class PortraitNotificationsTest {
 
         shouldNotThrowAny { PortraitNotifications(throwingContext).notifyProgress(1L, "Name", "Text") }
     }
-}
+})

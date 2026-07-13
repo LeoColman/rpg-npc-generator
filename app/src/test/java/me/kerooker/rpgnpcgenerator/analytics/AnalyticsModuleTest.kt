@@ -2,32 +2,29 @@ package me.kerooker.rpgnpcgenerator.analytics
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 /**
  * Verifies [analyticsModule] wiring in an isolated Koin container (mirrors AdsModuleTest). Unit
  * tests run the debug variant, whose BuildConfig key is blank, so resolving never touches PostHog.
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34], application = Application::class)
-class AnalyticsModuleTest {
+@RobolectricTest(sdk = [34], application = Application::class)
+class AnalyticsModuleTest : StringSpec({
 
-    private val context: Application = ApplicationProvider.getApplicationContext()
+    lateinit var context: Application
 
-    @Test
-    fun `a blank api key disables analytics via the no-op implementation`() {
+    beforeTest { context = ApplicationProvider.getApplicationContext() }
+
+    "a blank api key disables analytics via the no-op implementation" {
         createAnalytics(context, "") shouldBeSameInstanceAs NoOpAnalytics
         createAnalytics(context, "   ") shouldBeSameInstanceAs NoOpAnalytics
     }
 
-    @Test
-    fun `analyticsModule resolves Analytics as a shared singleton`() {
+    "analyticsModule resolves Analytics as a shared singleton" {
         val koin = koinApplication {
             androidContext(context)
             modules(analyticsModule)
@@ -38,4 +35,4 @@ class AnalyticsModuleTest {
             koin.close()
         }
     }
-}
+})

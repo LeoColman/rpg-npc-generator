@@ -13,8 +13,9 @@ kotlinxCoroutines = "1.10.1"
 coil = "3.2.0"
 aboutlibraries = "12.2.4"
 detekt = "1.23.8"
-kotest = "5.9.1"
-robolectric = "4.15.1"
+kotest = "6.2.2"
+kotestAndroid = "0.1.12"
+robolectric = "4.16.1"
 mockk = "1.14.2"
 turbine = "1.2.1"
 splashscreen = "1.2.0-rc01"
@@ -91,7 +92,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version = "5.11.4" }
+kotest-extensions-android = { module = "br.com.colman:kotest-extensions-android", version.ref = "kotestAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

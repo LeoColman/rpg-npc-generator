@@ -2,19 +2,15 @@ package me.kerooker.rpgnpcgenerator.repository.image
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import me.kerooker.rpgnpcgenerator.BuildConfig
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.dsl.koinApplication
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 /**
  * koin-test isn't on this module's test classpath (no `org.koin.test.verify.verify()` available),
@@ -24,14 +20,12 @@ import org.robolectric.annotation.Config
  * Robolectric supplies the real Context that `androidContext(...)` and `PortraitNotifications`
  * both need.
  */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34], application = Application::class)
-class ImageGenModuleTest {
+@RobolectricTest(sdk = [34], application = Application::class)
+class ImageGenModuleTest : StringSpec({
 
-    private lateinit var koinApp: KoinApplication
+    lateinit var koinApp: KoinApplication
 
-    @Before
-    fun setUp() {
+    beforeTest {
         val context: Application = ApplicationProvider.getApplicationContext()
         koinApp = koinApplication {
             androidContext(context)
@@ -39,13 +33,9 @@ class ImageGenModuleTest {
         }
     }
 
-    @After
-    fun tearDown() {
-        koinApp.close()
-    }
+    afterTest { koinApp.close() }
 
-    @Test
-    fun `every definition declared by the module resolves`() {
+    "every definition declared by the module resolves" {
         val koin = koinApp.koin
 
         koin.get<RemoteImageConfig>().shouldBeInstanceOf<RemoteImageConfig>()
@@ -53,8 +43,7 @@ class ImageGenModuleTest {
         koin.get<PortraitNotifications>().shouldBeInstanceOf<PortraitNotifications>()
     }
 
-    @Test
-    fun `RemoteImageConfig is wired from BuildConfig fields`() {
+    "RemoteImageConfig is wired from BuildConfig fields" {
         val config = koinApp.koin.get<RemoteImageConfig>()
 
         config.baseUrl shouldBe BuildConfig.NPC_IMAGE_BASE_URL
@@ -62,11 +51,10 @@ class ImageGenModuleTest {
         config.password shouldBe BuildConfig.NPC_IMAGE_PASSWORD
     }
 
-    @Test
-    fun `RemoteImageConfig and PortraitQueueClient are shared singletons`() {
+    "RemoteImageConfig and PortraitQueueClient are shared singletons" {
         val koin = koinApp.koin
 
         koin.get<RemoteImageConfig>() shouldBeSameInstanceAs koin.get<RemoteImageConfig>()
         koin.get<PortraitQueueClient>() shouldBeSameInstanceAs koin.get<PortraitQueueClient>()
     }
-}
+})

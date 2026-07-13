@@ -1,188 +1,188 @@
 package me.kerooker.rpgnpcgenerator.ui.share
 
 import android.app.Application
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.runAndroidComposeUiTest
+import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
+import io.kotest.core.spec.style.StringSpec
 import me.kerooker.rpgnpcgenerator.data.Npc
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-import org.robolectric.annotation.GraphicsMode
 
-@RunWith(RobolectricTestRunner::class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34], application = Application::class)
-class NpcShareCardTest {
-
-    @get:Rule
-    val composeRule = createComposeRule()
-
-    private val labels = NpcShareCardLabels(
-        profession = "Profession",
-        alignment = "Alignment",
-        motivation = "Motivation",
-        personality = "Personality",
-        languages = "Languages",
-        items = "Items",
-        combat = CombatSheetLabels(
-            title = "Combat stats",
-            strength = "STR",
-            dexterity = "DEX",
-            constitution = "CON",
-            intelligence = "INT",
-            wisdom = "WIS",
-            charisma = "CHA",
-            armorClass = "AC",
-            hitPoints = "HP",
-            challengeRating = "Challenge Rating"
-        )
+private val labels = NpcShareCardLabels(
+    profession = "Profession",
+    alignment = "Alignment",
+    motivation = "Motivation",
+    personality = "Personality",
+    languages = "Languages",
+    items = "Items",
+    combat = CombatSheetLabels(
+        title = "Combat stats",
+        strength = "STR",
+        dexterity = "DEX",
+        constitution = "CON",
+        intelligence = "INT",
+        wisdom = "WIS",
+        charisma = "CHA",
+        armorClass = "AC",
+        hitPoints = "HP",
+        challengeRating = "Challenge Rating"
     )
+)
 
-    private fun sampleNpc(
-        nickname: String = "The Swift",
-        personalityTraits: List<String> = listOf("Brave", "Curious"),
-        items: List<String> = emptyList()
-    ) = Npc(
-        id = 0,
-        fullName = "Aria Nightsong",
-        nickname = nickname,
-        gender = "Female",
-        sexuality = "Heterosexual",
-        race = "Human",
-        age = "Adult",
-        profession = "Blacksmith",
-        motivation = "Protect the forest",
-        alignment = "Neutral Good",
-        personalityTraits = personalityTraits,
-        languages = listOf("Common"),
-        imagePath = null,
-        notes = "",
-        strength = null,
-        dexterity = null,
-        constitution = null,
-        intelligence = null,
-        wisdom = null,
-        charisma = null,
-        armorClass = null,
-        hitPoints = null,
-        challengeRating = null,
-        campaign = null,
-        items = items
-    )
+private fun sampleNpc(
+    nickname: String = "The Swift",
+    personalityTraits: List<String> = listOf("Brave", "Curious"),
+    items: List<String> = emptyList()
+) = Npc(
+    id = 0,
+    fullName = "Aria Nightsong",
+    nickname = nickname,
+    gender = "Female",
+    sexuality = "Heterosexual",
+    race = "Human",
+    age = "Adult",
+    profession = "Blacksmith",
+    motivation = "Protect the forest",
+    alignment = "Neutral Good",
+    personalityTraits = personalityTraits,
+    languages = listOf("Common"),
+    imagePath = null,
+    notes = "",
+    strength = null,
+    dexterity = null,
+    constitution = null,
+    intelligence = null,
+    wisdom = null,
+    charisma = null,
+    armorClass = null,
+    hitPoints = null,
+    challengeRating = null,
+    campaign = null,
+    items = items
+)
 
-    @Test
-    fun `renders the npc key attributes and watermark`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc(),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+@OptIn(ExperimentalTestApi::class)
+@RobolectricTest(sdk = [34], application = Application::class)
+class NpcShareCardTest : StringSpec({
+
+    "renders the npc key attributes and watermark" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc(),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        // The full card can be taller than the test viewport, so assert the attributes are composed
-        // into the card (exist in the semantics tree) rather than requiring them to be on-screen.
-        composeRule.onNodeWithText("Aria Nightsong").assertExists()
-        composeRule.onNodeWithText("The Swift", substring = true).assertExists()
-        composeRule.onNodeWithText("Human · Adult · Female").assertExists()
-        composeRule.onNodeWithText("Blacksmith").assertExists()
-        composeRule.onNodeWithText("Neutral Good").assertExists()
-        composeRule.onNodeWithText("Protect the forest").assertExists()
-        composeRule.onNodeWithText("Brave").assertExists()
-        composeRule.onNodeWithText("Curious").assertExists()
-        composeRule.onNodeWithText("Common").assertExists()
-        composeRule.onNodeWithText("Created with RPG NPC Generator").assertExists()
+            // The full card can be taller than the test viewport, so assert the attributes are composed
+            // into the card (exist in the semantics tree) rather than requiring them to be on-screen.
+            onNodeWithText("Aria Nightsong").assertExists()
+            onNodeWithText("The Swift", substring = true).assertExists()
+            onNodeWithText("Human · Adult · Female").assertExists()
+            onNodeWithText("Blacksmith").assertExists()
+            onNodeWithText("Neutral Good").assertExists()
+            onNodeWithText("Protect the forest").assertExists()
+            onNodeWithText("Brave").assertExists()
+            onNodeWithText("Curious").assertExists()
+            onNodeWithText("Common").assertExists()
+            onNodeWithText("Created with RPG NPC Generator").assertExists()
+        }
     }
 
-    @Test
-    fun `renders the combat stat block with ability modifiers when the npc has stats`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc().copy(strength = 14, armorClass = 15, challengeRating = "1/4"),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+    "renders the combat stat block with ability modifiers when the npc has stats" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc().copy(strength = 14, armorClass = 15, challengeRating = "1/4"),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        composeRule.onNodeWithText("14 (+2)").assertExists()
-        composeRule.onNodeWithText("AC", substring = true).assertExists()
-        composeRule.onNodeWithText("1/4", substring = true).assertExists()
+            onNodeWithText("14 (+2)").assertExists()
+            onNodeWithText("AC", substring = true).assertExists()
+            onNodeWithText("1/4", substring = true).assertExists()
+        }
     }
 
-    @Test
-    fun `omits the combat stat block for a statless npc`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc(),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+    "omits the combat stat block for a statless npc" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc(),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        // Section titles render uppercased, so the block's presence would show as "COMBAT STATS".
-        composeRule.onNodeWithText("COMBAT STATS").assertDoesNotExist()
+            // Section titles render uppercased, so the block's presence would show as "COMBAT STATS".
+            onNodeWithText("COMBAT STATS").assertDoesNotExist()
+        }
     }
 
-    @Test
-    fun `renders the items section as chips when the npc has items`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc(items = listOf("A set of smith's tools", "A worn dagger")),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+    "renders the items section as chips when the npc has items" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc(items = listOf("A set of smith's tools", "A worn dagger")),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        composeRule.onNodeWithText("ITEMS").assertExists()
-        composeRule.onNodeWithText("A set of smith's tools").assertExists()
-        composeRule.onNodeWithText("A worn dagger").assertExists()
+            onNodeWithText("ITEMS").assertExists()
+            onNodeWithText("A set of smith's tools").assertExists()
+            onNodeWithText("A worn dagger").assertExists()
+        }
     }
 
-    @Test
-    fun `omits the items section when the npc has no items`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc(items = emptyList()),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+    "omits the items section when the npc has no items" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc(items = emptyList()),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        composeRule.onNodeWithText("ITEMS").assertDoesNotExist()
+            onNodeWithText("ITEMS").assertDoesNotExist()
+        }
     }
 
-    @Test
-    fun `omits the nickname line when the npc has no nickname`() {
-        composeRule.setContent {
-            MaterialTheme {
-                NpcShareCard(
-                    npc = sampleNpc(nickname = ""),
-                    portrait = null,
-                    footer = "Created with RPG NPC Generator",
-                    labels = labels
-                )
+    "omits the nickname line when the npc has no nickname" {
+        runAndroidComposeUiTest<ComponentActivity> {
+            setContent {
+                MaterialTheme {
+                    NpcShareCard(
+                        npc = sampleNpc(nickname = ""),
+                        portrait = null,
+                        footer = "Created with RPG NPC Generator",
+                        labels = labels
+                    )
+                }
             }
-        }
 
-        composeRule.onNodeWithText("Aria Nightsong").assertExists()
-        composeRule.onNodeWithText("“", substring = true).assertDoesNotExist()
+            onNodeWithText("Aria Nightsong").assertExists()
+            onNodeWithText("“", substring = true).assertDoesNotExist()
+        }
     }
-}
+})
