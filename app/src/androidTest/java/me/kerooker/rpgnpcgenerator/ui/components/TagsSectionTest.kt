@@ -11,9 +11,12 @@ import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runAndroidComposeUiTest
 import br.com.colman.kotest.FunSpec
+import br.com.colman.kotest.KotestRunnerAndroid
 import io.kotest.matchers.shouldBe
+import org.junit.runner.RunWith
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(KotestRunnerAndroid::class)
 class TagsSectionTest : FunSpec({
 
     test("tapping the add-tag icon after typing appends the trimmed tag") {

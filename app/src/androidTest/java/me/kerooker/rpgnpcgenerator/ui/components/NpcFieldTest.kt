@@ -10,9 +10,12 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runAndroidComposeUiTest
 import br.com.colman.kotest.FunSpec
+import br.com.colman.kotest.KotestRunnerAndroid
 import io.kotest.matchers.shouldBe
+import org.junit.runner.RunWith
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(KotestRunnerAndroid::class)
 class NpcFieldTest : FunSpec({
 
     test("displays the value and reroll invokes the callback") {
