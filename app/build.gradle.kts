@@ -266,4 +266,12 @@ dependencies {
     // https://github.com/LeoColman/kotest-android
     testImplementation(libs.kotest.extensions.android)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Compose UI tests on a real device/emulator (androidTest), mirroring the Robolectric ones above
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.kotest.assertions.core)
+    // Kotest spec support for real instrumentation, see https://github.com/LeoColman/kotest-android
+    androidTestImplementation(libs.kotest.runner.android)
 }
