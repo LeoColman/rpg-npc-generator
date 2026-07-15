@@ -93,7 +93,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 kotest-extensions-android = { module = "br.com.colman:kotest-extensions-android", version.ref = "kotestAndroid" }
-kotest-runner-android = { module = "br.com.colman:kotest-runner-android", version = "1.2.2" }
+kotest-runner-android = { module = "br.com.colman:kotest-runner-android", version = "1.2.3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
