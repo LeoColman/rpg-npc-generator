@@ -16,7 +16,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.runner.RunWith
 
 @OptIn(ExperimentalTestApi::class)
-@RunWith(KotestRunnerAndroid::class)
 class TagsSectionTest : FunSpec({
 
     test("tapping the add-tag icon after typing appends the trimmed tag") {

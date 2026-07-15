@@ -15,7 +15,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.runner.RunWith
 
 @OptIn(ExperimentalTestApi::class)
-@RunWith(KotestRunnerAndroid::class)
 class NpcFieldTest : FunSpec({
 
     test("displays the value and reroll invokes the callback") {
