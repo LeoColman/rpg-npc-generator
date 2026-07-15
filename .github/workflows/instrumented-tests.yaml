@@ -1,0 +1,62 @@
+# This file was generated using Kotlin DSL (.github/workflows/instrumented-tests.main.kts).
+# If you want to modify the workflow, please change the Kotlin file and regenerate this YAML file.
+# Generated with https://github.com/typesafegithub/github-workflows-kt
+
+name: 'Instrumented Tests'
+on:
+  push: {}
+  pull_request: {}
+jobs:
+  check_yaml_consistency:
+    name: 'Check YAML consistency'
+    runs-on: 'ubuntu-latest'
+    steps:
+    - id: 'step-0'
+      name: 'Check out'
+      uses: 'actions/checkout@v4'
+    - id: 'step-1'
+      name: 'Execute script'
+      run: 'rm ''.github/workflows/instrumented-tests.yaml'' && ''.github/workflows/instrumented-tests.main.kts'''
+    - id: 'step-2'
+      name: 'Consistency check'
+      run: 'git diff --exit-code ''.github/workflows/instrumented-tests.yaml'''
+  instrumented-test:
+    runs-on: 'ubuntu-latest'
+    needs:
+    - 'check_yaml_consistency'
+    steps:
+    - id: 'step-0'
+      name: 'Checkout'
+      uses: 'actions/checkout@v4'
+    - id: 'step-1'
+      name: 'Set up JDK 21'
+      uses: 'actions/setup-java@v4'
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    - id: 'step-2'
+      name: 'Set up Gradle'
+      uses: 'gradle/actions/setup-gradle@v4'
+    - id: 'step-3'
+      name: 'Enable KVM group perms'
+      run: |-
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+    - id: 'step-4'
+      name: 'Run instrumented tests'
+      uses: 'reactivecircus/android-emulator-runner@v2'
+      with:
+        api-level: '34'
+        target: 'google_apis'
+        arch: 'x86_64'
+        script: './gradlew connectedDebugAndroidTest'
+    - id: 'step-5'
+      name: 'Upload reports on failure'
+      uses: 'actions/upload-artifact@v4'
+      with:
+        name: 'instrumented-test-reports'
+        path: |-
+          app/build/reports/androidTests
+          app/build/outputs/androidTest-results
+      if: 'failure()'
