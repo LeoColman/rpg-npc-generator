@@ -27,3 +27,8 @@ fastlane/google-play.json
 .gitsecret/keys/random_seed
 !*.secret
 .claude/
+
+# Mixkit track used by docs/ads/generate.py — license forbids redistributing
+# the raw file; the script downloads it on demand
+docs/ads/music.mp3
+__pycache__/
