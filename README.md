@@ -19,7 +19,7 @@ matters and enrich their players' experience.
 
 ## Download
 
-The same app ships from three channels — pick the one that matches how much you want it to phone home:
+The app is distributed through three channels (F-Droid coming soon) — pick the one that matches how much usage data it sends back:
 
 | Distribution | Contains | Get it |
 | --- | --- | --- |
