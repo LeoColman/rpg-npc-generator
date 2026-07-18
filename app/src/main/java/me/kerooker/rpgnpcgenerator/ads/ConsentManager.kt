@@ -12,7 +12,11 @@ interface ConsentManager {
     fun ensureConsentAndInit(activity: Activity, onAdsReady: () -> Unit = {})
 }
 
-/** Ad-free flavors (fdroid/github): there is no consent to gather and no SDK to initialize. */
+/**
+ * Ad-free flavors (fdroid/github): there is no consent to gather and no SDK to initialize, so this
+ * proceeds immediately. It still invokes [onAdsReady] so the init-callback contract is honored
+ * uniformly across flavors (the callback drives post-consent setup, e.g. rewarded-ad preload).
+ */
 object NoOpConsentManager : ConsentManager {
-    override fun ensureConsentAndInit(activity: Activity, onAdsReady: () -> Unit) = Unit
+    override fun ensureConsentAndInit(activity: Activity, onAdsReady: () -> Unit) = onAdsReady()
 }

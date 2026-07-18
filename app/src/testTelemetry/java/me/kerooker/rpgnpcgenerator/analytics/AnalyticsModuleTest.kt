@@ -36,4 +36,19 @@ class AnalyticsModuleTest : StringSpec({
             koin.close()
         }
     }
+
+    // Mirrors the TelemetryApplication runtime path: start the base graph, then loadModules the
+    // telemetry override. Guards against a DefinitionOverrideException on the signed-flavor startup.
+    "loadModules rebinds Analytics over the base no-op without throwing" {
+        val koin = koinApplication {
+            androidContext(context)
+            modules(analyticsModule)
+        }.koin
+        try {
+            koin.loadModules(listOf(telemetryModule), allowOverride = true, createEagerInstances = true)
+            koin.get<Analytics>() shouldBeSameInstanceAs koin.get<Analytics>()
+        } finally {
+            koin.close()
+        }
+    }
 })

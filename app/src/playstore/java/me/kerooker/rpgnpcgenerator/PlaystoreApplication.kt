@@ -13,6 +13,11 @@ class PlaystoreApplication : TelemetryApplication() {
 
     override fun onCreate() {
         super.onCreate() // crash init + telemetryModule
-        GlobalContext.get().loadModules(listOf(adsRealModule), createEagerInstances = true)
+        // allowOverride = true so adsRealModule's GMS bindings replace the base no-op ad seams.
+        GlobalContext.get().loadModules(
+            listOf(adsRealModule),
+            allowOverride = true,
+            createEagerInstances = true,
+        )
     }
 }

@@ -17,6 +17,11 @@ open class TelemetryApplication : RpgNpcGeneratorApplication() {
         // Before Koin: a crash during graph wiring is exactly the kind we want captured.
         GlitchTipCrashReporter.init(this)
         super.onCreate()
-        GlobalContext.get().loadModules(listOf(telemetryModule), createEagerInstances = true)
+        // allowOverride = true so telemetryModule's Analytics binding replaces the base NoOpAnalytics.
+        GlobalContext.get().loadModules(
+            listOf(telemetryModule),
+            allowOverride = true,
+            createEagerInstances = true,
+        )
     }
 }

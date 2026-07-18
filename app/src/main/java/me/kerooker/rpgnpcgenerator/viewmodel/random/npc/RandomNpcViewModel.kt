@@ -280,11 +280,12 @@ class RandomNpcViewModel(
     @OptIn(FlowPreview::class)
     private fun observePortrait() {
         viewModelScope.launch {
-            if (!queueClient.enabled()) return@launch
             data.map { PortraitPrompt.forNpc(it.toNpc()) }
                 .debounce(PORTRAIT_DEBOUNCE_MS)
                 .distinctUntilChanged()
-                .collectLatest { generatePortrait(it) }
+                // Checked per render (not once at startup) so enabling the server at runtime in
+                // Settings takes effect without recreating the ViewModel.
+                .collectLatest { if (queueClient.enabled()) generatePortrait(it) }
         }
     }
 
