@@ -9,7 +9,8 @@ Trigger **Actions → Release → Run workflow**, choose a bump type (`major` / 
 and type the changelog. The workflow then:
 
 1. Reveals the signing/Play secrets with git-secret.
-2. Runs `app/bump_version.sh`, which bumps `app/version.properties`, writes the Play changelog to
+2. Runs `app/bump_version.sh`, which bumps the literal `versionCode`/`versionName` in `app/build.gradle.kts`
+   (kept literal so F-Droid can parse them for tag-based auto-updates), writes the Play changelog to
    `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`, then commits, tags and pushes.
 3. Builds the signed release APK and creates a GitHub Release (APK + R8 mapping).
 4. Builds the signed release AAB and uploads it (plus the store listing) to Google Play with
