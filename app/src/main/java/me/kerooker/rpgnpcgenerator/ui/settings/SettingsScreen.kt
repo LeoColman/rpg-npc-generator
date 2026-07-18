@@ -132,6 +132,9 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
                 modifier = Modifier.clickable { importLauncher.launch(IMPORT_MIME_TYPES) }
             )
 
+            SectionTitle(stringResource(R.string.settings_portrait_server_section))
+            PortraitServerSettingsItem()
+
             SectionTitle(stringResource(R.string.preferences_about_title))
             ListItem(
                 headlineContent = { Text(stringResource(R.string.preferences_project_repository_title)) },

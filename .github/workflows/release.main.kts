@@ -78,7 +78,8 @@ workflow(
       command = "./app/bump_version.sh \"$versionTypeExpr\" \"$changelogExpr\""
     )
 
-    run(name = "Build release APK", command = "./gradlew assembleRelease")
+    // GitHub direct-download build is the ad-free `github` flavor (keeps analytics + crash).
+    run(name = "Build GitHub release APK", command = "./gradlew assembleGithubRelease")
 
     uses(
       name = "Create GitHub release",
@@ -87,13 +88,14 @@ workflow(
         tagName = expr { bumpStep.outputs["version"] },
         draft = false,
         files = listOf(
-          "app/build/outputs/apk/release/app-release.apk",
-          "app/build/outputs/mapping/release/mapping.txt"
+          "app/build/outputs/apk/github/release/app-github-release.apk",
+          "app/build/outputs/mapping/githubRelease/mapping.txt"
         )
       )
     )
 
-    run(name = "Build Play Store bundle", command = "./gradlew bundleRelease")
+    // Google Play gets the full ad-supported `playstore` bundle.
+    run(name = "Build Play Store bundle", command = "./gradlew bundlePlaystoreRelease")
 
     uses(
       name = "Set up Ruby",

@@ -41,6 +41,13 @@ val posthogRealApiKey = "phc_vo4WK3ZPZDvYCmXDvvBgD9Ur5FTs3XDrMAaMBvixaRuU"
 // get none, so local crashes stay local; override with -PglitchtipDsn=... to test reporting.
 val glitchtipRealDsn = "https://23bf908f-9d11-4aef-871b-ad8370746b64@glitchtip.colman.com.br/1"
 
+// Portrait-renderer basic-auth password. Unlike a real secret this credential ships in every released
+// APK and is extractable (see RemoteImageConfig) — it only deters casual/bot abuse. It is committed here
+// (like the AdMob/PostHog/GlitchTip keys above) so the F-Droid buildserver, which has no gradle secrets,
+// still bakes a working default and portraits work out of the box on every flavor. Overridable with
+// -PnpcImagePassword=... ; users can also point the app at their own self-hosted renderer in Settings.
+val npcImageRealPassword = "Sm7fAu15qChx67lQkkkWjCwX"
+
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
     compileSdk = 36
@@ -61,21 +68,21 @@ android {
             "\"${providers.gradleProperty("npcImageBaseUrl").getOrElse("https://npc-fast.colman.com.br")}\""
         )
         buildConfigField("String", "NPC_IMAGE_USER", "\"${providers.gradleProperty("npcImageUser").getOrElse("npc")}\"")
+        // Baked default for every flavor (incl. the F-Droid buildserver, which has no gradle props), so
+        // portraits work out of the box; users can override the whole server in-app (Settings).
         buildConfigField(
             "String",
             "NPC_IMAGE_PASSWORD",
-            "\"${providers.gradleProperty("npcImagePassword").getOrElse("")}\""
+            "\"${providers.gradleProperty("npcImagePassword").getOrElse(npcImageRealPassword)}\""
         )
-
-        // Fallback AdMob app id so manifest placeholder resolution never fails; overridden per build type.
-        manifestPlaceholders["admobAppId"] = admobTestAppId
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     // Release signing. The keystore and its passwords are kept out of the repo and revealed in CI
     // via git-secret (see app/keystore.secret / app/keystore.properties.secret). When the secrets
-    // are not present (fresh clone, PR builds) the release variant simply stays unsigned.
+    // are not present (fresh clone, PR builds) the release variant simply stays unsigned. Declared
+    // before productFlavors so github/playstore can reference signingConfigs.findByName("release").
     signingConfigs {
         val keystorePropertiesFile = file("keystore.properties")
         if (keystorePropertiesFile.exists()) {
@@ -91,15 +98,35 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    // Release channels. `fdroid` is the FOSS build: no proprietary deps, no ads/analytics/crash, and no
+    // signingConfig (F-Droid's buildserver signs it). `github` is an ad-free self-signed direct download
+    // that keeps analytics + crash. `playstore` is the full Google Play build. Ads live only in
+    // `playstore`; analytics + crash are shared by `github` + `playstore` via the src/telemetry source set.
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("fdroid") {
+            dimension = "distribution"
+            // Compiles src/main only (interfaces + no-ops). Portraits use the baked default password
+            // above and stay runtime-editable via the in-app store.
+        }
+        create("github") {
+            dimension = "distribution"
+            signingConfig = signingConfigs.findByName("release")
+            buildConfigField(
+                "String",
+                "POSTHOG_API_KEY",
+                "\"${providers.gradleProperty("posthogApiKey").getOrElse(posthogRealApiKey)}\""
+            )
+            buildConfigField(
+                "String",
+                "GLITCHTIP_DSN",
+                "\"${providers.gradleProperty("glitchtipDsn").getOrElse(glitchtipRealDsn)}\""
+            )
+        }
+        create("playstore") {
+            dimension = "distribution"
             signingConfig = signingConfigs.findByName("release")
 
-            // Real AdMob IDs come from gradle properties (never committed); fall back to Google's test
-            // IDs so a release without them still builds and can't rack up invalid-traffic strikes.
             manifestPlaceholders["admobAppId"] =
                 providers.gradleProperty("admobAppId").getOrElse(admobRealAppId)
             buildConfigField(
@@ -122,6 +149,25 @@ android {
                 "GLITCHTIP_DSN",
                 "\"${providers.gradleProperty("glitchtipDsn").getOrElse(glitchtipRealDsn)}\""
             )
+        }
+    }
+
+    // Analytics + crash reporting are shared by the two signed channels only (never fdroid). The
+    // matching unit tests for that shared code live in src/testTelemetry, added to both test variants.
+    sourceSets {
+        named("github") { java.srcDirs("src/telemetry/java") }
+        named("playstore") { java.srcDirs("src/telemetry/java") }
+        named("testGithub") { java.srcDirs("src/testTelemetry/java") }
+        named("testPlaystore") { java.srcDirs("src/testTelemetry/java") }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // signingConfig + the AdMob/PostHog/GlitchTip fields moved to the product flavors: signing +
+            // analytics/crash belong to the signed channels (github/playstore), never the FOSS fdroid build.
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -235,16 +281,19 @@ dependencies {
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines.extensions)
 
-    // Ads (AdMob) — bundles the UMP consent SDK (com.google.android.ump) — and DataStore for the
-    // ad-free entitlement.
-    implementation(libs.play.services.ads)
+    // Ads (AdMob) — bundles the UMP consent SDK (com.google.android.ump). playstore flavor only, so the
+    // proprietary SDK never enters the fdroid/github classpaths. DataStore (ad-free entitlement + portrait
+    // server config) is shared, so it stays a plain implementation.
+    "playstoreImplementation"(libs.play.services.ads)
     implementation(libs.androidx.datastore.preferences)
 
-    // Product analytics (PostHog)
-    implementation(libs.posthog.android)
+    // Product analytics (PostHog) — the two signed channels only, never the FOSS fdroid build.
+    "githubImplementation"(libs.posthog.android)
+    "playstoreImplementation"(libs.posthog.android)
 
-    // Crash reporting (self-hosted GlitchTip, Sentry protocol)
-    implementation(libs.sentry.android)
+    // Crash reporting (self-hosted GlitchTip, Sentry protocol) — signed channels only.
+    "githubImplementation"(libs.sentry.android)
+    "playstoreImplementation"(libs.sentry.android)
 
     // Detekt formatting (ktlint rules)
     detektPlugins(libs.detekt.formatting)

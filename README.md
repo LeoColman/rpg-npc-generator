@@ -79,14 +79,35 @@ The app targets Android (minSdk 26, targetSdk 36) and builds with JDK 17+
 (CI uses JDK 21).
 
 ```bash
-./gradlew :app:assembleDebug    # build the debug APK
-./gradlew :app:installDebug     # install on a connected device/emulator
+./gradlew :app:assembleDebug    # build every flavor's debug APK
+./gradlew :app:installFdroidDebug   # install the FOSS build on a device/emulator
 ./gradlew test                  # run the Kotest + Robolectric tests
 ```
 
-Portrait generation talks to a private render server; pass its basic-auth
-password with `-PnpcImagePassword=<password>` to exercise that feature in a local
-build. Without it the app still runs and portrait requests simply fail cleanly.
+### Distribution flavors
+
+The app ships in three flavors on a single `distribution` dimension:
+
+| Flavor      | Channel              | Ads | Analytics / crash | Signing        |
+|-------------|----------------------|-----|-------------------|----------------|
+| `fdroid`    | F-Droid              | ❌  | ❌                | F-Droid signs  |
+| `github`    | GitHub direct APK    | ❌  | ✅                | release key    |
+| `playstore` | Google Play          | ✅  | ✅                | release key    |
+
+`fdroid` is fully FOSS: it compiles only `src/main` (no AdMob / PostHog / GlitchTip
+on its classpath) and carries no signing config so F-Droid's buildserver signs it.
+Analytics + crash live in `src/telemetry` (github + playstore); ads live in
+`src/playstore`. Build a specific flavor with the usual per-flavor tasks, e.g.
+`./gradlew assembleFdroidRelease`, `assembleGithubRelease`, `bundlePlaystoreRelease`
+(release builds first need `git secret reveal` for the keystore).
+
+Portrait generation talks to a server-side renderer
+([`server/portrait-renderer`](server/portrait-renderer/README.md), open source and
+self-hostable). Every flavor ships a baked default server, and the server (URL,
+username, password) is editable in-app under **Settings → Portrait server**, so you
+can point any build — including the F-Droid one — at your own instance. The baked
+default password is set via `-PnpcImagePassword=<password>` (or the committed
+`npcImageRealPassword` fallback); clearing it disables portraits.
 
 ## Contributing
 

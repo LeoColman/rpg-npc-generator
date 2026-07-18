@@ -60,7 +60,7 @@ class GeneratePortraitWorker(
         notifications.ensureChannel()
         notifications.notifyProgress(npcId, npc.fullName, str(R.string.portrait_notification_queued))
 
-        val path = if (!queueClient.enabled) {
+        val path = if (!queueClient.enabled()) {
             null
         } else {
             analytics.capture(

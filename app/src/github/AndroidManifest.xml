@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- github flavor: ad-free self-signed direct download that keeps analytics + crash reporting. Swaps in
+     the telemetry Application and disables the Sentry SDK's ContentProvider auto-init (we start it
+     ourselves in TelemetryApplication). No ads, so no AdMob metadata or advertising-id permission. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".TelemetryApplication"
+        tools:replace="android:name">
+
+        <!-- Crash reporting is started explicitly in the Application, so the SDK's own ContentProvider
+             auto-init must stay off — otherwise it would start with only the manifest DSN and ignore
+             our debug/release gating and privacy options. -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+    </application>
+</manifest>

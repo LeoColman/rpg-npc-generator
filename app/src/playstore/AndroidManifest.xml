@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- playstore flavor: the full Google Play build with ads + analytics + crash. Adds the AdMob
+     Advertising-ID permission and application id, swaps in the Play Application, and disables the
+     Sentry SDK's ContentProvider auto-init (we start it ourselves in TelemetryApplication). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- AdMob reads the Advertising ID for ad personalization/measurement (Android 13+). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <application
+        android:name=".PlaystoreApplication"
+        tools:replace="android:name">
+
+        <!-- Crash reporting is started explicitly in the Application, so the SDK's own ContentProvider
+             auto-init must stay off — otherwise it would start with only the manifest DSN and ignore
+             our debug/release gating and privacy options. -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
+        <!-- AdMob application id (per build type / flavor via the ${admobAppId} manifest placeholder). -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+        <!-- We call MobileAds.initialize() ourselves after UMP consent, not at content-provider time. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
+    </application>
+</manifest>

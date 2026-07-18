@@ -29,11 +29,14 @@ import org.koin.compose.koinInject
  */
 @Composable
 fun RemoveAdsAction(snackbarHostState: SnackbarHostState) {
+    // Ad-free flavors (fdroid/github) bind a no-op controller with available == false: nothing to remove.
+    val rewardedAdController = koinInject<RewardedAdController>()
+    if (!rewardedAdController.available) return
+
     val adFreeStore = koinInject<AdFreeStore>()
     val adsEnabled by adFreeStore.adsEnabled.collectAsStateWithLifecycle(initialValue = false)
     if (!adsEnabled) return
 
-    val rewardedAdController = koinInject<RewardedAdController>()
     val analytics = koinInject<Analytics>()
     val activity = LocalActivity.current ?: return
     val scope = rememberCoroutineScope()

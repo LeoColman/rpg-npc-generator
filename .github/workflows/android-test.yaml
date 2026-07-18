@@ -39,7 +39,7 @@ jobs:
       uses: 'gradle/actions/setup-gradle@v4'
     - id: 'step-3'
       name: 'Lint'
-      run: './gradlew lintDebug'
+      run: './gradlew lintFdroidDebug lintGithubDebug lintPlaystoreDebug'
     - id: 'step-4'
       name: 'Assemble debug'
       run: './gradlew assembleDebug'

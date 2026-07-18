@@ -30,7 +30,7 @@ workflow(
       action = SetupJava(javaVersion = "21", distribution = SetupJava.Distribution.Temurin)
     )
     uses(name = "Set up Gradle", action = ActionsSetupGradle())
-    run(name = "Lint", command = "./gradlew lintDebug")
+    run(name = "Lint", command = "./gradlew lintFdroidDebug lintGithubDebug lintPlaystoreDebug")
     run(name = "Assemble debug", command = "./gradlew assembleDebug")
     uses(
       name = "Upload reports on failure",

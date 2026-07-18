@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Server-side portrait rendering (FastSD on ritalee); the app is otherwise offline. -->
+    <!-- Portrait rendering talks to a user-configurable, self-hostable server (see server/portrait-renderer);
+         the app is otherwise offline. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- "Portrait ready" notification for the fire-and-forget generation flow (Android 13+). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- AdMob reads the Advertising ID for ad personalization/measurement (Android 13+). -->
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:name=".RpgNpcGeneratorApplication"
@@ -19,10 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RpgNpcGenerator">
 
-        <!-- Crash reporting is started explicitly in the Application (see CrashReporting), so the
-             SDK's own ContentProvider auto-init must stay off — otherwise it would start with only
-             the manifest DSN and ignore our debug/release gating and privacy options. -->
-        <meta-data android:name="io.sentry.auto-init" android:value="false" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true"
@@ -32,15 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- AdMob application id (per build type via the ${admobAppId} manifest placeholder). -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="${admobAppId}" />
-        <!-- We call MobileAds.initialize() ourselves after UMP consent, not at content-provider time. -->
-        <meta-data
-            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
-            android:value="true" />
 
         <!-- Shares the generated NPC "share card" PNG (see NpcCardSharer) via the system share sheet.
              Authority is derived from the applicationId so the debug variant (.debug suffix) and the

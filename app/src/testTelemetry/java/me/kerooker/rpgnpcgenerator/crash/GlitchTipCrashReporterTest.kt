@@ -8,11 +8,12 @@ import io.kotest.matchers.shouldBe
 import io.sentry.Sentry
 
 /**
- * The blank-DSN gate is the whole privacy contract of [CrashReporting]: every debug build ships a
- * blank DSN, and a blank DSN must leave the SDK unstarted so nothing is ever sent from a dev device.
+ * The blank-DSN gate is the whole privacy contract of [GlitchTipCrashReporter]: every debug build
+ * ships a blank DSN, and a blank DSN must leave the SDK unstarted so nothing is ever sent from a dev
+ * device. telemetry test only — the FOSS fdroid build has no Sentry SDK.
  */
 @RobolectricTest(sdk = [34], application = Application::class)
-class CrashReportingTest : StringSpec({
+class GlitchTipCrashReporterTest : StringSpec({
 
     lateinit var context: Application
 
@@ -20,15 +21,15 @@ class CrashReportingTest : StringSpec({
     afterTest { Sentry.close() }
 
     "a blank dsn leaves crash reporting disabled" {
-        CrashReporting.init(context, dsn = "")
+        GlitchTipCrashReporter.init(context, dsn = "")
         Sentry.isEnabled() shouldBe false
 
-        CrashReporting.init(context, dsn = "   ")
+        GlitchTipCrashReporter.init(context, dsn = "   ")
         Sentry.isEnabled() shouldBe false
     }
 
     "a real dsn enables crash reporting" {
-        CrashReporting.init(context, dsn = "https://public@glitchtip.example.com/1")
+        GlitchTipCrashReporter.init(context, dsn = "https://public@glitchtip.example.com/1")
         Sentry.isEnabled() shouldBe true
     }
 })

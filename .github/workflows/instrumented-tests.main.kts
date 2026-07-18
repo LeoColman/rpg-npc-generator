@@ -48,7 +48,7 @@ workflow(
         apiLevel = "34",
         target = AndroidEmulatorRunner.Target.GoogleApis,
         arch = AndroidEmulatorRunner.Arch.X8664,
-        script = "./gradlew connectedDebugAndroidTest"
+        script = "./gradlew connectedFdroidDebugAndroidTest"
       )
     )
 

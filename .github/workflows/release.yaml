@@ -65,8 +65,8 @@ jobs:
       name: 'Bump version and push tag'
       run: './app/bump_version.sh "${{ github.event.inputs.version_type }}" "${{ github.event.inputs.changelog }}"'
     - id: 'step-6'
-      name: 'Build release APK'
-      run: './gradlew assembleRelease'
+      name: 'Build GitHub release APK'
+      run: './gradlew assembleGithubRelease'
     - id: 'step-7'
       name: 'Create GitHub release'
       uses: 'softprops/action-gh-release@v2'
@@ -75,11 +75,11 @@ jobs:
         tag_name: '${{ steps.step-5.outputs.version }}'
         draft: 'false'
         files: |-
-          app/build/outputs/apk/release/app-release.apk
-          app/build/outputs/mapping/release/mapping.txt
+          app/build/outputs/apk/github/release/app-github-release.apk
+          app/build/outputs/mapping/githubRelease/mapping.txt
     - id: 'step-8'
       name: 'Build Play Store bundle'
-      run: './gradlew bundleRelease'
+      run: './gradlew bundlePlaystoreRelease'
     - id: 'step-9'
       name: 'Set up Ruby'
       uses: 'ruby/setup-ruby@v1'

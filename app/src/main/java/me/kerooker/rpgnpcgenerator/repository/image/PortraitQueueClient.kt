@@ -20,14 +20,19 @@ data class JobStatus(val state: String, val ahead: Int, val image: String?, val 
  * Talks to the server-side FIFO queue in front of FastSD: `POST /submit` returns a job id + queue
  * position, `GET /status/{id}` reports progress and, when done, the base64 PNG. Lets the app submit,
  * walk away, and poll for position + result. Commercial-safe SD 1.5 + LCM-LoRA render config.
+ *
+ * The server config is resolved fresh per request via [configProvider] (backed by [PortraitServerStore]),
+ * so a user editing the server in Settings takes effect without an app restart.
  */
-class PortraitQueueClient(private val config: RemoteImageConfig) {
+class PortraitQueueClient(private val configProvider: suspend () -> RemoteImageConfig) {
 
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
-    val enabled: Boolean get() = config.enabled
+    /** Whether a usable server is currently configured (non-blank base URL + password). */
+    suspend fun enabled(): Boolean = configProvider().enabled
 
     suspend fun submit(request: PortraitRequest): Submitted = withContext(Dispatchers.IO) {
+        val config = configProvider()
         val body = json.encodeToString(
             SubmitBody.serializer(),
             SubmitBody(
@@ -37,13 +42,14 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
                 imageHeight = request.height
             )
         )
-        val payload = post("/submit", body)
+        val payload = post(config, "/submit", body)
         val res = json.decodeFromString(SubmitResponse.serializer(), payload)
         Submitted(jobId = res.jobId, ahead = res.ahead)
     }
 
     suspend fun status(jobId: String): JobStatus = withContext(Dispatchers.IO) {
-        val payload = get("/status/$jobId")
+        val config = configProvider()
+        val payload = get(config, "/status/$jobId")
         val res = json.decodeFromString(StatusResponse.serializer(), payload)
         JobStatus(state = res.state, ahead = res.ahead, image = res.image, error = res.error)
     }
@@ -55,7 +61,7 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
 
     /** Best-effort: drops a still-queued job server-side so it won't render after we've moved on. */
     suspend fun cancel(jobId: String): Unit = withContext(Dispatchers.IO) {
-        val c = open("/jobs/$jobId").apply { requestMethod = "DELETE" }
+        val c = open(configProvider(), "/jobs/$jobId").apply { requestMethod = "DELETE" }
         try {
             c.responseCode // fire the DELETE; a 404 (already gone) is fine, so we ignore the code
         } finally {
@@ -63,15 +69,15 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         }
     }
 
-    private fun open(path: String): HttpURLConnection =
+    private fun open(config: RemoteImageConfig, path: String): HttpURLConnection =
         (URL("${config.baseUrl.trimEnd('/')}$path").openConnection() as HttpURLConnection).apply {
             connectTimeout = CONNECT_TIMEOUT_MS
             readTimeout = READ_TIMEOUT_MS
-            setRequestProperty("Authorization", basicAuth())
+            setRequestProperty("Authorization", basicAuth(config))
         }
 
-    private fun post(path: String, body: String): String {
-        val c = open(path).apply {
+    private fun post(config: RemoteImageConfig, path: String, body: String): String {
+        val c = open(config, path).apply {
             requestMethod = "POST"
             doOutput = true
             setRequestProperty("Content-Type", "application/json")
@@ -87,8 +93,8 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
         }
     }
 
-    private fun get(path: String): String {
-        val c = open(path)
+    private fun get(config: RemoteImageConfig, path: String): String {
+        val c = open(config, path)
         try {
             if (c.responseCode != HttpURLConnection.HTTP_OK) {
                 throw IOException("$path HTTP ${c.responseCode} ${c.errorText()}".trim())
@@ -103,7 +109,7 @@ class PortraitQueueClient(private val config: RemoteImageConfig) {
     private fun HttpURLConnection.errorText(): String =
         runCatching { errorStream?.use { it.readBytes().decodeToString() } }.getOrNull().orEmpty()
 
-    private fun basicAuth(): String {
+    private fun basicAuth(config: RemoteImageConfig): String {
         val token = Base64.encodeToString("${config.username}:${config.password}".toByteArray(), Base64.NO_WRAP)
         return "Basic $token"
     }

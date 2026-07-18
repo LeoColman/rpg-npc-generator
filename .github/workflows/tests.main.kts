@@ -30,7 +30,10 @@ workflow(
       action = SetupJava(javaVersion = "21", distribution = SetupJava.Distribution.Temurin)
     )
     uses(name = "Set up Gradle", action = ActionsSetupGradle())
-    run(name = "Run unit tests", command = "./gradlew testDebugUnitTest")
+    run(
+      name = "Run unit tests",
+      command = "./gradlew testFdroidDebugUnitTest testGithubDebugUnitTest testPlaystoreDebugUnitTest"
+    )
     uses(
       name = "Upload test reports on failure",
       `if` = "failure()",

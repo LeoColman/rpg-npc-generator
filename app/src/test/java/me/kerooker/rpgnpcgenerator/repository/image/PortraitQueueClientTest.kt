@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
 private fun client(config: RemoteImageConfig = RemoteImageConfig("https://example.test", "user", "pass")) =
-    PortraitQueueClient(config)
+    PortraitQueueClient { config }
 
 /**
  * [PortraitQueueClient.decode] goes through `android.util.Base64`, so it needs Robolectric to run
@@ -45,15 +45,15 @@ class PortraitQueueClientTest : StringSpec({
         decoded shouldBe expected
     }
 
-    "enabled is true when the injected config is enabled" {
+    "enabled is true when the resolved config is enabled" {
         val config = RemoteImageConfig(baseUrl = "https://example.test", username = "user", password = "pass")
 
-        client(config).enabled shouldBe true
+        client(config).enabled() shouldBe true
     }
 
-    "enabled is false when the injected config is disabled" {
+    "enabled is false when the resolved config is disabled" {
         val config = RemoteImageConfig(baseUrl = "", username = "user", password = "")
 
-        client(config).enabled shouldBe false
+        client(config).enabled() shouldBe false
     }
 })
