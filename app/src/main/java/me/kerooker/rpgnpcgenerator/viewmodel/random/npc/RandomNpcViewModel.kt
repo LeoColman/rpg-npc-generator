@@ -279,8 +279,8 @@ class RandomNpcViewModel(
      */
     @OptIn(FlowPreview::class)
     private fun observePortrait() {
-        if (!queueClient.enabled) return
         viewModelScope.launch {
+            if (!queueClient.enabled()) return@launch
             data.map { PortraitPrompt.forNpc(it.toNpc()) }
                 .debounce(PORTRAIT_DEBOUNCE_MS)
                 .distinctUntilChanged()

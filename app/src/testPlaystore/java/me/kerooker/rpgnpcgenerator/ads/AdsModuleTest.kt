@@ -7,28 +7,31 @@ import androidx.test.core.app.ApplicationProvider
 import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import me.kerooker.rpgnpcgenerator.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
 
 /**
- * Verifies [adsModule] wiring in an isolated Koin container (mirrors ImageGenModuleTest). One test
- * method builds the graph once so only a single DataStore instance is created for the file.
+ * Verifies the playstore ads wiring: the base [adsModule] no-ops overridden by [adsRealModule] with
+ * the real GMS implementations, AdIds fed from BuildConfig. playstore-flavor test only — the FOSS
+ * fdroid/github builds never compile the real ads code.
  */
 @RobolectricTest(sdk = [34], application = Application::class)
 class AdsModuleTest : StringSpec({
 
-    "adsModule resolves every dependency, feeds AdIds from BuildConfig, and shares singletons" {
+    "adsModule + adsRealModule resolve every dependency, feed AdIds from BuildConfig, and share singletons" {
         val context: Application = ApplicationProvider.getApplicationContext()
         val koin = koinApplication {
             androidContext(context)
-            modules(adsModule)
+            modules(adsModule, adsRealModule)
         }.koin
         try {
             koin.get<DataStore<Preferences>>()
-            koin.get<ConsentManager>()
-            koin.get<RewardedAdController>()
+            koin.get<ConsentManager>().shouldBeInstanceOf<GmsConsentManager>()
+            koin.get<RewardedAdController>().available shouldBe true
+            koin.get<BannerAdRenderer>() shouldBeSameInstanceAs GmsBannerAdRenderer
 
             val adIds = koin.get<AdIds>()
             adIds.bannerUnitId shouldBe BuildConfig.ADMOB_BANNER_UNIT_ID

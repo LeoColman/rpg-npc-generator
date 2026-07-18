@@ -4,7 +4,8 @@ import com.posthog.PostHog
 
 /**
  * Forwards events to the PostHog singleton. [com.posthog.android.PostHogAndroid.setup] must have
- * run first — [analyticsModule] guarantees that by only binding this implementation after setup.
+ * run first — [createAnalytics] guarantees that by only returning this implementation after setup.
+ * telemetry source set (github/playstore) only.
  */
 class PostHogAnalytics : Analytics {
 

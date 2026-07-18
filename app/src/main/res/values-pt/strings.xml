@@ -46,6 +46,17 @@
     <string name="import_success">%1$d NPCs importados</string>
     <string name="import_error">Não foi possível importar esse arquivo</string>
 
+    <!-- Servidor de geração de retratos (configurável; renderizador FOSS auto-hospedável) -->
+    <string name="settings_portrait_server_section">Geração de retratos</string>
+    <string name="settings_portrait_server_title">Servidor de retratos</string>
+    <string name="settings_portrait_server_summary">Escolha qual servidor gera os retratos de NPC</string>
+    <string name="portrait_server_dialog_body">Os retratos de NPC são gerados por um servidor. O renderizador é de código aberto e você pode hospedá-lo: aponte o app para a sua própria instância se preferir. Deixe a senha em branco para desativar os retratos.</string>
+    <string name="portrait_server_url_label">URL do servidor</string>
+    <string name="portrait_server_username_label">Usuário</string>
+    <string name="portrait_server_password_label">Senha</string>
+    <string name="portrait_server_save">Salvar</string>
+    <string name="portrait_server_reset">Restaurar padrão</string>
+
     <!-- Bloco de estatísticas de combate de D&D 5e -->
     <string name="combat_stats_label">Estatísticas de combate</string>
     <string name="combat_strength">FOR</string>

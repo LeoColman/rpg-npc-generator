@@ -1,64 +1,29 @@
 package me.kerooker.rpgnpcgenerator.ads
 
 import android.app.Activity
-import android.content.Context
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 /**
- * Loads and shows rewarded ads. Loading uses the application context; showing needs the (single)
- * Activity. Preload at app start and after every show/failure so a tap usually has an ad ready.
+ * Loads and shows rewarded ads (used by the remove-ads-for-a-week reward). Only the `playstore`
+ * flavor supplies a real GMS-backed implementation; ad-free flavors bind [NoOpRewardedAdController]
+ * whose [available] is `false`, which also hides the remove-ads UI (see [RemoveAdsAction]).
  */
-class RewardedAdController(
-    private val appContext: Context,
-    private val adIds: AdIds,
-) {
+interface RewardedAdController {
+    /** Whether rewarded ads exist in this build. Ad-free flavors report `false`. */
+    val available: Boolean
 
-    private var rewardedAd: RewardedAd? = null
-    private var loading = false
-
-    /** Loads an ad if none is ready and none is in flight. Idempotent. */
-    fun preload() {
-        if (rewardedAd != null || loading) return
-        loading = true
-        RewardedAd.load(
-            appContext,
-            adIds.rewardedUnitId,
-            AdRequest.Builder().build(),
-            object : RewardedAdLoadCallback() {
-                override fun onAdLoaded(ad: RewardedAd) {
-                    rewardedAd = ad
-                    loading = false
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    rewardedAd = null
-                    loading = false
-                }
-            },
-        )
-    }
+    /** Loads an ad if none is ready. Idempotent. No-op when unavailable. */
+    fun preload()
 
     /**
-     * Shows a preloaded ad. [onReward] fires when the user earns the reward; [onUnavailable] fires (and
-     * a fresh load starts) when nothing is loaded yet.
+     * Shows a preloaded ad. [onReward] fires when the user earns the reward; [onUnavailable] fires
+     * when nothing is loaded yet.
      */
-    fun show(activity: Activity, onReward: () -> Unit, onUnavailable: () -> Unit) {
-        val ad = rewardedAd
-        if (ad == null) {
-            onUnavailable()
-            preload()
-            return
-        }
-        ad.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() = preload()
-            override fun onAdFailedToShowFullScreenContent(adError: AdError) = preload()
-        }
-        rewardedAd = null // consumed
-        ad.show(activity) { onReward() }
-    }
+    fun show(activity: Activity, onReward: () -> Unit, onUnavailable: () -> Unit)
+}
+
+/** Ad-free flavors (fdroid/github): no rewarded ads exist, so everything is inert. */
+object NoOpRewardedAdController : RewardedAdController {
+    override val available = false
+    override fun preload() = Unit
+    override fun show(activity: Activity, onReward: () -> Unit, onUnavailable: () -> Unit) = Unit
 }

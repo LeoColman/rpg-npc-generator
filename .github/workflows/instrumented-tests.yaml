@@ -50,7 +50,7 @@ jobs:
         api-level: '34'
         target: 'google_apis'
         arch: 'x86_64'
-        script: './gradlew connectedDebugAndroidTest'
+        script: './gradlew connectedFdroidDebugAndroidTest'
     - id: 'step-5'
       name: 'Upload reports on failure'
       uses: 'actions/upload-artifact@v4'

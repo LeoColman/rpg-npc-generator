@@ -1,8 +1,8 @@
 default_platform(:android)
 
-# The AAB is built by the release workflow (./gradlew bundleRelease) before these lanes run,
+# The AAB is built by the release workflow (./gradlew bundlePlaystoreRelease) before these lanes run,
 # so the lanes only upload it (together with the store listing under fastlane/metadata).
-AAB_PATH = "app/build/outputs/bundle/release/app-release.aab"
+AAB_PATH = "app/build/outputs/bundle/playstoreRelease/app-playstore-release.aab"
 
 platform :android do
   desc "Upload the release bundle to the Google Play Store production track"
