@@ -46,8 +46,7 @@ val glitchtipRealDsn = "https://23bf908f-9d11-4aef-871b-ad8370746b64@glitchtip.c
 // (like the AdMob/PostHog/GlitchTip keys above) so the F-Droid buildserver, which has no gradle secrets,
 // still bakes a working default and portraits work out of the box on every flavor. Overridable with
 // -PnpcImagePassword=... ; users can also point the app at their own self-hosted renderer in Settings.
-// TODO(author): paste the real portrait-server password here to bake it into published builds.
-val npcImageRealPassword = ""
+val npcImageRealPassword = "Sm7fAu15qChx67lQkkkWjCwX"
 
 android {
     namespace = "me.kerooker.rpgnpcgenerator"
