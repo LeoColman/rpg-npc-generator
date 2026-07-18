@@ -17,6 +17,18 @@ matters and enrich their players' experience.
 
 <a href='https://play.google.com/store/apps/details?id=me.kerooker.rpgcharactergenerator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
+## Download
+
+The app is distributed through three channels (F-Droid coming soon) — pick the one that matches how much usage data it sends back:
+
+| Distribution | Contains | Get it |
+| --- | --- | --- |
+| **Google Play** | Ads + telemetry | [Play Store](https://play.google.com/store/apps/details?id=me.kerooker.rpgcharactergenerator) |
+| **GitHub Releases** | Telemetry (no ads) | [Latest release](https://github.com/LeoColman/rpg-npc-generator/releases/latest) |
+| **F-Droid** | None — fully FOSS | _coming soon_ |
+
+_"Telemetry" is optional product analytics (PostHog) and crash reporting (self-hosted GlitchTip); see [Releasing & signing](#releasing--signing) for how each flavor is built._
+
 ## Screenshots
 
 <table>
