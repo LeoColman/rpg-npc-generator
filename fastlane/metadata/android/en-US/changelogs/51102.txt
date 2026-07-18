@@ -1,0 +1,2 @@
+• You can now point NPC portrait generation at your own server (Settings → Portrait server).
+• Build and stability improvements.
