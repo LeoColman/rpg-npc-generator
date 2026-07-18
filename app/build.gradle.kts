@@ -50,8 +50,8 @@ android {
         targetSdk = 36
         // Kept as literals (not computed) so F-Droid can parse them for tag-based auto-updates;
         // app/bump_version.sh rewrites these two lines. versionCode = major*10000 + minor*100 + patch.
-        versionCode = 51102
-        versionName = "5.11.2"
+        versionCode = 51103
+        versionName = "5.11.3"
 
         // Server-side portrait renderer (ritalee). Password comes from a gradle property (e.g. in
         // ~/.gradle/gradle.properties or -PnpcImagePassword=...), never committed; empty disables
