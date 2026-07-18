@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 # Bumps the app version, writes a Play changelog and (unless DRY_RUN=1) commits, tags and pushes.
 # Usage: app/bump_version.sh <major|minor|patch> "<changelog>"
+#
+# The version lives as literal versionCode/versionName in app/build.gradle.kts (so F-Droid can parse
+# them for tag-based auto-updates); this script rewrites those two lines in place.
 set -euo pipefail
 
 BUMP_TYPE="${1:?bump type (major|minor|patch) required}"
 CHANGELOG="${2:?changelog content required}"
 
-PROPS="app/version.properties"
-[[ -f "$PROPS" ]] || { echo "Missing $PROPS" >&2; exit 1; }
+GRADLE="app/build.gradle.kts"
+[[ -f "$GRADLE" ]] || { echo "Missing $GRADLE" >&2; exit 1; }
 
-read_prop() { grep -E "^$1=" "$PROPS" | head -1 | cut -d= -f2- | tr -d '\r'; }
-
-major="$(read_prop version.major)"
-minor="$(read_prop version.minor)"
-patch="$(read_prop version.patch)"
+# Current versionName ("major.minor.patch") from the literal in defaultConfig.
+current="$(grep -oE 'versionName = "[0-9]+\.[0-9]+\.[0-9]+"' "$GRADLE" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+[[ -n "$current" ]] || { echo "Couldn't read versionName from $GRADLE" >&2; exit 1; }
+IFS='.' read -r major minor patch <<< "$current"
 
 case "$BUMP_TYPE" in
   major) major=$((major + 1)); minor=0; patch=0 ;;
@@ -28,11 +30,9 @@ version_code=$((major * 10000 + minor * 100 + patch))
 echo "New version: ${semver} (${version_code})"
 
 sed -i \
-  -e "s/^version.major=.*/version.major=${major}/" \
-  -e "s/^version.minor=.*/version.minor=${minor}/" \
-  -e "s/^version.patch=.*/version.patch=${patch}/" \
-  -e "s/^version.semver=.*/version.semver=${semver}/" \
-  "$PROPS"
+  -e "s/versionCode = [0-9]\+/versionCode = ${version_code}/" \
+  -e "s/versionName = \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/versionName = \"${semver}\"/" \
+  "$GRADLE"
 
 changelog_file="fastlane/metadata/android/en-US/changelogs/${version_code}.txt"
 mkdir -p "$(dirname "$changelog_file")"
@@ -42,7 +42,7 @@ echo "Wrote changelog: ${changelog_file}"
 if [[ "${DRY_RUN:-}" == "1" ]]; then
   echo "DRY_RUN=1: skipping git commit/tag/push"
 else
-  git add "$PROPS" "$changelog_file"
+  git add "$GRADLE" "$changelog_file"
   git commit -m "🔖 Prepare release ${semver} (${version_code})" -m "[skip ci]"
   git tag -a "$semver" -m "Release ${semver}"
   git push origin HEAD --tags

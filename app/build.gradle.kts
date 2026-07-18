@@ -9,14 +9,6 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-val versionProps = Properties().apply {
-    file("version.properties").inputStream().use { load(it) }
-}
-val appVersionName: String = versionProps.getProperty("version.semver")
-val appVersionCode: Int = versionProps.getProperty("version.major").toInt() * 10_000 +
-    versionProps.getProperty("version.minor").toInt() * 100 +
-    versionProps.getProperty("version.patch").toInt()
-
 // AdMob test unit IDs (Google's public samples). Always used by debug builds, and the safe fallback
 // for release builds that don't inject the real IDs via gradle properties (admobAppId /
 // admobBannerUnitId / admobRewardedUnitId, e.g. in ~/.gradle/gradle.properties). Never knowingly
@@ -56,8 +48,10 @@ android {
         applicationId = "me.kerooker.rpgcharactergenerator"
         minSdk = 26
         targetSdk = 36
-        versionCode = appVersionCode
-        versionName = appVersionName
+        // Kept as literals (not computed) so F-Droid can parse them for tag-based auto-updates;
+        // app/bump_version.sh rewrites these two lines. versionCode = major*10000 + minor*100 + patch.
+        versionCode = 51102
+        versionName = "5.11.2"
 
         // Server-side portrait renderer (ritalee). Password comes from a gradle property (e.g. in
         // ~/.gradle/gradle.properties or -PnpcImagePassword=...), never committed; empty disables
