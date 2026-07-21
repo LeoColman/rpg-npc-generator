@@ -4,7 +4,7 @@
 # BUILD CONTEXT IS THE REPO ROOT (not this directory), because the build needs the root gradlew and
 # gradle/ (wrapper + version catalog). deploy.sh builds it as:
 #   docker build -t rpg-npc-queue:latest -f server/portrait-renderer/queue/Dockerfile <repo-root>
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:21.0.11_10-jdk AS build
 WORKDIR /repo
 
 # Gradle wrapper + shared version catalog first (better layer caching).
@@ -17,7 +17,7 @@ COPY server/portrait-renderer/queue/settings-docker.gradle.kts settings.gradle.k
 COPY server/portrait-renderer/queue/build-root-docker.gradle.kts build.gradle.kts
 RUN chmod +x gradlew && ./gradlew --no-daemon :portrait-queue:buildFatJar
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21.0.11_10-jre
 WORKDIR /app
 COPY --from=build /repo/server/portrait-renderer/queue/build/libs/queue-all.jar app.jar
 EXPOSE 9000
