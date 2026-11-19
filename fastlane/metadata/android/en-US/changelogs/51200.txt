@@ -1,0 +1,3 @@
+• Lock the portrait: tap the padlock under it to keep the current picture while you re-roll the NPC.
+• Tap the die under the portrait to generate a new one whenever you want.
+• New setting to turn off automatic portraits (Settings → Portrait generation), so they only render when you ask.
