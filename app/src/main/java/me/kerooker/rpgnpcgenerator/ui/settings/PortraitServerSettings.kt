@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,14 +26,47 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import me.kerooker.rpgnpcgenerator.R
+import me.kerooker.rpgnpcgenerator.analytics.Analytics
+import me.kerooker.rpgnpcgenerator.analytics.AnalyticsEvents
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitServerStore
 import me.kerooker.rpgnpcgenerator.repository.image.RemoteImageConfig
 import org.koin.compose.koinInject
+
+/**
+ * Settings switch for automatic portraits on the Randomize screen. When off, NPC changes no longer
+ * render a portrait; the user taps the die under the portrait instead. Saves time and server load
+ * for people who mostly roll NPCs without needing a picture each time. Backed by [PortraitServerStore].
+ */
+@Composable
+fun PortraitAutoGenerateSettingsItem() {
+    val store = koinInject<PortraitServerStore>()
+    val analytics = koinInject<Analytics>()
+    val scope = rememberCoroutineScope()
+    val autoGenerate by store.autoGenerate.collectAsStateWithLifecycle(initialValue = null)
+    val checked = autoGenerate ?: return // wait for DataStore so the switch never flips on load
+
+    fun set(enabled: Boolean) {
+        analytics.capture(
+            AnalyticsEvents.PORTRAIT_AUTO_GENERATE_CHANGED,
+            mapOf(AnalyticsEvents.PROP_ENABLED to enabled)
+        )
+        scope.launch { store.setAutoGenerate(enabled) }
+    }
+
+    ListItem(
+        headlineContent = { Text(stringResource(R.string.settings_portrait_auto_title)) },
+        supportingContent = { Text(stringResource(R.string.settings_portrait_auto_summary)) },
+        leadingContent = { Icon(Icons.Filled.AutoAwesome, contentDescription = null) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
+        modifier = Modifier.toggleable(value = checked, role = Role.Switch, onValueChange = ::set)
+    )
+}
 
 /**
  * Settings entry for the portrait-generation server. The renderer is open source and self-hostable,

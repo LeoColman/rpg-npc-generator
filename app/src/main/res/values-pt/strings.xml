@@ -26,7 +26,9 @@
     <string name="portrait_notification_failed">Não foi possível gerar o retrato.</string>
     <string name="random_npc_portrait_generating">Gerando retrato…</string>
     <string name="random_npc_portrait_queue">Posição na fila: %1$d · Estimativa: %2$s</string>
-    <string name="random_npc_portrait_failed">Não foi possível gerar o retrato — sorteie de novo</string>
+    <string name="random_npc_portrait_failed">Não foi possível gerar o retrato. Toque no dado para tentar de novo</string>
+    <string name="random_npc_portrait_auto_off">Retratos automáticos desativados. Toque no dado para gerar um</string>
+    <string name="cd_generate_portrait">Gerar um novo retrato</string>
     <string name="my_npcs_empty_title">Nenhum NPC salvo ainda</string>
     <string name="my_npcs_empty_subtitle">Gere um personagem na aba Aleatório e toque em Salvar para guardá-lo aqui.</string>
     <string name="delete_npc_confirm_title">Excluir NPC?</string>
@@ -48,6 +50,8 @@
 
     <!-- Servidor de geração de retratos (configurável; renderizador FOSS auto-hospedável) -->
     <string name="settings_portrait_server_section">Geração de retratos</string>
+    <string name="settings_portrait_auto_title">Gerar retratos automaticamente</string>
+    <string name="settings_portrait_auto_summary">Gera um novo retrato sempre que o NPC muda na tela Aleatório. Desativado, toque no dado abaixo do retrato para gerar um.</string>
     <string name="settings_portrait_server_title">Servidor de retratos</string>
     <string name="settings_portrait_server_summary">Escolha qual servidor gera os retratos de NPC</string>
     <string name="portrait_server_dialog_body">Os retratos de NPC são gerados por um servidor. O renderizador é de código aberto e você pode hospedá-lo: aponte o app para a sua própria instância se preferir. Deixe a senha em branco para desativar os retratos.</string>

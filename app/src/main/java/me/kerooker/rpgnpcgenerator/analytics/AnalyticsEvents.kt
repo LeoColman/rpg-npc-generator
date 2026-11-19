@@ -25,16 +25,24 @@ object AnalyticsEvents {
     /** A portrait render failed (not cancelled). Properties: [PROP_SOURCE], [PROP_REASON]. */
     const val PORTRAIT_FAILED = "portrait_failed"
 
+    /** The user flipped the "generate portraits automatically" setting. Properties: [PROP_ENABLED]. */
+    const val PORTRAIT_AUTO_GENERATE_CHANGED = "portrait_auto_generate_changed"
+
     /** The user watched a rewarded ad and earned the 7-day ad-free entitlement. */
     const val AD_FREE_WEEK_GRANTED = "ad_free_week_granted"
 
-    /** Where a portrait render came from: the live Randomize screen or a saved NPC's worker. */
+    /**
+     * Where a portrait render came from: the live Randomize screen (automatic on NPC change, or the
+     * portrait die) or a saved NPC's worker.
+     */
     const val PROP_SOURCE = "source"
     const val SOURCE_RANDOMIZE = "randomize"
+    const val SOURCE_RANDOMIZE_MANUAL = "randomize_manual"
     const val SOURCE_SAVED_NPC = "saved_npc"
 
     const val PROP_HAS_PORTRAIT = "has_portrait"
     const val PROP_QUEUE_AHEAD = "queue_ahead"
     const val PROP_WAIT_SECONDS = "wait_seconds"
     const val PROP_REASON = "reason"
+    const val PROP_ENABLED = "enabled"
 }

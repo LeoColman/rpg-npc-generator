@@ -2,6 +2,7 @@ package me.kerooker.rpgnpcgenerator.repository.image
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,10 @@ import kotlinx.coroutines.flow.map
  * Follows the same DataStore pattern as [me.kerooker.rpgnpcgenerator.ui.theme.ThemePreferenceStore].
  * A stored key wins even when blank (so a user can clear the password to switch portraits off);
  * [reset] removes the override entirely, reverting to the baked defaults.
+ *
+ * Also holds the [autoGenerate] preference (whether the Randomize screen renders a portrait on every
+ * roll). It lives in the same "portrait generation" store but is independent of the server override:
+ * [reset] leaves it alone.
  */
 class PortraitServerStore(
     private val dataStore: DataStore<Preferences>,
@@ -29,6 +34,16 @@ class PortraitServerStore(
 
     /** A one-shot snapshot of [config]; used by [PortraitQueueClient] per request. */
     suspend fun current(): RemoteImageConfig = config.first()
+
+    /**
+     * Whether the Randomize screen renders a fresh portrait automatically whenever the NPC changes.
+     * Defaults to on; when off, portraits are only rendered on demand.
+     */
+    val autoGenerate: Flow<Boolean> = dataStore.data.map { it[AUTO_GENERATE] ?: true }
+
+    suspend fun setAutoGenerate(enabled: Boolean) {
+        dataStore.edit { prefs -> prefs[AUTO_GENERATE] = enabled }
+    }
 
     /** Persists a server override. A blank password stored here disables portraits (see RemoteImageConfig). */
     suspend fun save(baseUrl: String, username: String, password: String) {
@@ -58,5 +73,6 @@ class PortraitServerStore(
         val BASE_URL = stringPreferencesKey("portrait_server_base_url")
         val USERNAME = stringPreferencesKey("portrait_server_username")
         val PASSWORD = stringPreferencesKey("portrait_server_password")
+        val AUTO_GENERATE = booleanPreferencesKey("portrait_auto_generate")
     }
 }

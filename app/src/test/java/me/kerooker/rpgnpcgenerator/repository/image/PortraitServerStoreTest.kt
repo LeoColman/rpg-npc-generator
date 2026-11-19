@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import br.com.colman.kotest.android.extensions.robolectric.RobolectricTest
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.first
 import java.io.File
 import java.nio.file.Files
 
@@ -59,5 +60,23 @@ class PortraitServerStoreTest : StringSpec({
         store.reset()
 
         store.current() shouldBe DEFAULTS
+    }
+
+    "auto-generate defaults to on and persists when turned off" {
+        val store = newStore()
+        store.autoGenerate.first() shouldBe true
+
+        store.setAutoGenerate(false)
+
+        store.autoGenerate.first() shouldBe false
+    }
+
+    "reset keeps the auto-generate setting" {
+        val store = newStore()
+        store.setAutoGenerate(false)
+
+        store.reset()
+
+        store.autoGenerate.first() shouldBe false
     }
 })

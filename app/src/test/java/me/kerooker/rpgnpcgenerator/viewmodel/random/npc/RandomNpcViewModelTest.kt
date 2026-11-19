@@ -1,15 +1,23 @@
 package me.kerooker.rpgnpcgenerator.viewmodel.random.npc
 
 import android.content.Context
+import android.os.SystemClock
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -18,6 +26,9 @@ import me.kerooker.rpgnpcgenerator.data.Npc
 import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitPrompt
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitQueueClient
+import me.kerooker.rpgnpcgenerator.repository.image.PortraitRequest
+import me.kerooker.rpgnpcgenerator.repository.image.PortraitServerStore
+import me.kerooker.rpgnpcgenerator.repository.image.RemoteImageConfig
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Age
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Alignment
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CombatStats
@@ -156,27 +167,59 @@ private fun GeneratedNpcData.toPortraitNpc() = Npc(
     items = items
 )
 
+private val SERVER_ON = RemoteImageConfig(baseUrl = "https://portraits.example", username = "u", password = "p")
+private val SERVER_OFF = RemoteImageConfig(baseUrl = "", username = "", password = "")
+
+/** A store stub: [autoGenerate] is a live flow the test can flip; the server is on or off. */
+private fun portraitStore(
+    autoGenerate: MutableStateFlow<Boolean> = MutableStateFlow(true),
+    serverOn: Boolean = false
+) = mockk<PortraitServerStore> {
+    every { this@mockk.autoGenerate } returns autoGenerate
+    every { config } returns flowOf(if (serverOn) SERVER_ON else SERVER_OFF)
+}
+
+/**
+ * A queue client whose submit never returns, so a render stays "in flight" until it is cancelled.
+ * Tests count [PortraitQueueClient.submit] calls to see what the portrait pipeline rendered.
+ */
+private fun hangingQueueClient() = mockk<PortraitQueueClient>(relaxed = true) {
+    coEvery { submit(any()) } coAnswers { awaitCancellation() }
+}
+
 class RandomNpcViewModelTest : FunSpec({
+
+    val main = UnconfinedTestDispatcher()
 
     beforeSpec {
         // viewModelScope requires Dispatchers.Main to be initialized on the JVM.
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+        Dispatchers.setMain(main)
+        // generatePortrait reads the clock for the wait_seconds analytics property.
+        mockkStatic(SystemClock::class)
+        every { SystemClock.elapsedRealtime() } returns 0L
     }
 
     afterSpec {
+        unmockkStatic(SystemClock::class)
         Dispatchers.resetMain()
+    }
+
+    /** Lets the portrait debounce elapse (virtual time) so the pipeline acts on the current NPC. */
+    fun settle() {
+        main.scheduler.advanceTimeBy(1_000)
+        main.scheduler.runCurrent()
     }
 
     fun buildViewModel(
         repository: TemporaryRandomNpcRepository,
         completeNpcGenerator: CompleteNpcGenerator,
         npcDataGenerator: NpcDataGenerator = mockk(),
-        context: Context = mockk(relaxed = true)
+        context: Context = mockk(relaxed = true),
+        // No server by default, so observePortrait never engages the (unmocked) network calls.
+        store: PortraitServerStore = portraitStore(),
+        queueClient: PortraitQueueClient = mockk(relaxed = true)
     ): RandomNpcViewModel {
         val npcRepository = mockk<NpcRepository>(relaxed = true)
-        // enabled defaults to false on a relaxed mock, so observePortrait's collector never engages
-        // the (unmocked) network calls in submit/status/decode.
-        val queueClient = mockk<PortraitQueueClient>(relaxed = true)
         return RandomNpcViewModel(
             context = context,
             completeNpcGenerator = completeNpcGenerator,
@@ -184,8 +227,164 @@ class RandomNpcViewModelTest : FunSpec({
             temporaryRandomNpcRepository = repository,
             npcRepository = npcRepository,
             queueClient = queueClient,
+            portraitStore = store,
             analytics = NoOpAnalytics
         )
+    }
+
+    /** A view model on [CURRENT_DATA] with a reachable (but never-finishing) portrait server. */
+    fun portraitViewModel(
+        queueClient: PortraitQueueClient,
+        autoGenerate: MutableStateFlow<Boolean> = MutableStateFlow(true),
+        serverOn: Boolean = true
+    ): RandomNpcViewModel {
+        val repository = TemporaryRandomNpcRepository()
+        repository.setNpc(CURRENT_DATA)
+        val completeNpcGenerator = mockk<CompleteNpcGenerator> { every { generate() } returns FRESH_NPC }
+        val context = mockk<Context>(relaxed = true) { every { getString(any()) } returns "generated" }
+        return buildViewModel(
+            repository,
+            completeNpcGenerator,
+            context = context,
+            store = portraitStore(autoGenerate, serverOn),
+            queueClient = queueClient
+        )
+    }
+
+    fun RandomNpcViewModel.currentRequest(): PortraitRequest = PortraitPrompt.forNpc(data.value.toPortraitNpc())
+
+    context("portrait pipeline") {
+
+        test("auto on: renders the NPC on screen once the debounce settles") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient)
+
+            settle()
+
+            coVerify(exactly = 1) { queueClient.submit(viewModel.currentRequest()) }
+            viewModel.portrait.value.isGenerating shouldBe true
+        }
+
+        test("a locked portrait survives randomizeAll without a new render") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient)
+            settle()
+
+            viewModel.togglePortraitLock()
+            viewModel.randomizeAll()
+            settle()
+
+            viewModel.portraitLocked.value shouldBe true
+            coVerify(exactly = 1) { queueClient.submit(any()) }
+        }
+
+        test("unlocking without a change does not render the same NPC again") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient)
+            settle()
+
+            viewModel.togglePortraitLock()
+            settle()
+            viewModel.togglePortraitLock()
+            settle()
+
+            coVerify(exactly = 1) { queueClient.submit(any()) }
+        }
+
+        test("unlocking after a change renders the NPC now on screen") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient)
+            settle()
+            val before = viewModel.currentRequest()
+
+            viewModel.togglePortraitLock()
+            viewModel.randomizeAll()
+            settle()
+            viewModel.togglePortraitLock()
+            settle()
+
+            val after = viewModel.currentRequest()
+            after shouldNotBe before
+            coVerify(exactly = 1) { queueClient.submit(before) }
+            coVerify(exactly = 1) { queueClient.submit(after) }
+        }
+
+        test("auto off: NPC changes never render") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient, autoGenerate = MutableStateFlow(false))
+            settle()
+
+            viewModel.randomizeAll()
+            settle()
+
+            viewModel.autoGeneratePortraits.value shouldBe false
+            coVerify(exactly = 0) { queueClient.submit(any()) }
+        }
+
+        test("turning auto on renders the NPC on screen") {
+            val queueClient = hangingQueueClient()
+            val autoGenerate = MutableStateFlow(false)
+            val viewModel = portraitViewModel(queueClient, autoGenerate = autoGenerate)
+            settle()
+
+            autoGenerate.value = true
+            settle()
+
+            coVerify(exactly = 1) { queueClient.submit(viewModel.currentRequest()) }
+        }
+
+        test("turning auto off mid-render lets the render finish") {
+            val queueClient = hangingQueueClient()
+            val autoGenerate = MutableStateFlow(true)
+            val viewModel = portraitViewModel(queueClient, autoGenerate = autoGenerate)
+            settle()
+
+            autoGenerate.value = false
+            settle()
+
+            viewModel.portrait.value.isGenerating shouldBe true
+            coVerify(exactly = 1) { queueClient.submit(any()) }
+        }
+
+        test("auto off: an NPC change drops the now-stale render") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient, autoGenerate = MutableStateFlow(false))
+            settle()
+            viewModel.generatePortraitNow()
+            viewModel.portrait.value.isGenerating shouldBe true
+
+            viewModel.randomizeAll()
+            settle()
+
+            viewModel.portrait.value shouldBe PortraitUiState()
+            coVerify(exactly = 1) { queueClient.submit(any()) }
+        }
+
+        test("the die renders even when locked or with auto off, and re-renders the same NPC") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient, autoGenerate = MutableStateFlow(false))
+            settle()
+
+            viewModel.generatePortraitNow()
+            viewModel.generatePortraitNow()
+            viewModel.togglePortraitLock()
+            viewModel.generatePortraitNow()
+
+            coVerify(exactly = 3) { queueClient.submit(viewModel.currentRequest()) }
+        }
+
+        test("without a server nothing renders and the die does nothing") {
+            val queueClient = hangingQueueClient()
+            val viewModel = portraitViewModel(queueClient, serverOn = false)
+            settle()
+
+            viewModel.generatePortraitNow()
+            viewModel.randomizeAll()
+            settle()
+
+            viewModel.portraitAvailable.value shouldBe false
+            coVerify(exactly = 0) { queueClient.submit(any()) }
+        }
     }
 
     test("randomizeCombatStats replaces the combat stats block held by the repository") {

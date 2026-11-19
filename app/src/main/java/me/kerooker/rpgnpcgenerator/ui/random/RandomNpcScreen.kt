@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import me.kerooker.rpgnpcgenerator.ads.RemoveAdsAction
 import me.kerooker.rpgnpcgenerator.ui.components.CombatStatsSection
 import me.kerooker.rpgnpcgenerator.ui.components.EditableListSection
 import me.kerooker.rpgnpcgenerator.ui.components.FieldGroup
+import me.kerooker.rpgnpcgenerator.ui.components.LockButton
 import me.kerooker.rpgnpcgenerator.ui.components.NpcField
 import me.kerooker.rpgnpcgenerator.ui.components.RerollButton
 import me.kerooker.rpgnpcgenerator.ui.components.toUi
@@ -66,6 +68,9 @@ fun RandomNpcScreen(
     val npc by viewModel.data.collectAsStateWithLifecycle()
     val portrait by viewModel.portrait.collectAsStateWithLifecycle()
     val locks by viewModel.lockedFields.collectAsStateWithLifecycle()
+    val portraitLocked by viewModel.portraitLocked.collectAsStateWithLifecycle()
+    val autoGeneratePortraits by viewModel.autoGeneratePortraits.collectAsStateWithLifecycle()
+    val portraitAvailable by viewModel.portraitAvailable.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val savedMessage = stringResource(R.string.npc_saved)
@@ -104,7 +109,16 @@ fun RandomNpcScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            RandomizePortrait(portrait)
+            RandomizePortrait(
+                state = portrait,
+                controls = PortraitControls(
+                    available = portraitAvailable,
+                    locked = portraitLocked,
+                    autoGenerate = autoGeneratePortraits,
+                    onToggleLock = viewModel::togglePortraitLock,
+                    onGenerate = viewModel::generatePortraitNow
+                )
+            )
 
             FieldGroup(title = stringResource(R.string.group_identity)) {
                 NpcField(
@@ -256,9 +270,22 @@ fun RandomNpcScreen(
     }
 }
 
-/** Portrait for the NPC being rolled: the render (or a placeholder), a spinner, and queue/ETA text. */
+/** What the portrait row needs beyond the render state: the padlock, the die, and the auto setting. */
+private class PortraitControls(
+    val available: Boolean,
+    val locked: Boolean,
+    val autoGenerate: Boolean,
+    val onToggleLock: () -> Unit,
+    val onGenerate: () -> Unit
+)
+
+/**
+ * Portrait for the NPC being rolled: the render (or a placeholder), a spinner, queue/ETA text, and,
+ * when a server is configured, a padlock (keep this portrait through re-rolls) and a die (render a
+ * new one now).
+ */
 @Composable
-private fun RandomizePortrait(state: PortraitUiState) {
+private fun RandomizePortrait(state: PortraitUiState, controls: PortraitControls) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -299,13 +326,26 @@ private fun RandomizePortrait(state: PortraitUiState) {
                 }
             }
         }
-        PortraitCaption(state)
+        if (controls.available) {
+            val label = stringResource(R.string.cd_npc_portrait)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LockButton(locked = controls.locked, label = label, onClick = controls.onToggleLock)
+                RerollButton(
+                    contentDescription = stringResource(R.string.cd_generate_portrait),
+                    onClick = controls.onGenerate
+                )
+            }
+        }
+        PortraitCaption(state, showAutoOffHint = controls.available && !controls.autoGenerate)
     }
 }
 
-/** The "Queue number: X · ETA: Y" line (or generating/failed text) shown under the portrait. */
+/**
+ * The "Queue number: X · ETA: Y" line (or generating/failed text) shown under the portrait. With
+ * automatic portraits off and nothing rendered yet, it points the user at the die instead.
+ */
 @Composable
-private fun PortraitCaption(state: PortraitUiState) {
+private fun PortraitCaption(state: PortraitUiState, showAutoOffHint: Boolean) {
     when {
         state.failed -> Text(
             text = stringResource(R.string.random_npc_portrait_failed),
@@ -317,6 +357,11 @@ private fun PortraitCaption(state: PortraitUiState) {
         state.isGenerating -> Text(
             text = stringResource(R.string.random_npc_portrait_generating),
             style = MaterialTheme.typography.bodySmall
+        )
+        showAutoOffHint && state.bitmap == null -> Text(
+            text = stringResource(R.string.random_npc_portrait_auto_off),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
