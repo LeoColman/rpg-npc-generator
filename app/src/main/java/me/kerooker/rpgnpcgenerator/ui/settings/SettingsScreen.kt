@@ -133,6 +133,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
             )
 
             SectionTitle(stringResource(R.string.settings_portrait_server_section))
+            PortraitAutoGenerateSettingsItem()
             PortraitServerSettingsItem()
 
             SectionTitle(stringResource(R.string.preferences_about_title))

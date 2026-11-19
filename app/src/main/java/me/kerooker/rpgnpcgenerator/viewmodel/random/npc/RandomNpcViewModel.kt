@@ -11,15 +11,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,6 +36,7 @@ import me.kerooker.rpgnpcgenerator.data.NpcRepository
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitPrompt
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitQueueClient
 import me.kerooker.rpgnpcgenerator.repository.image.PortraitRequest
+import me.kerooker.rpgnpcgenerator.repository.image.PortraitServerStore
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.Age
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.CompleteNpcGenerator
 import me.kerooker.rpgnpcgenerator.repository.model.random.npc.GeneratedNpc
@@ -42,7 +48,7 @@ import me.kerooker.rpgnpcgenerator.ui.util.ImageStore
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList") // Koin-injected collaborators, one per concern
 class RandomNpcViewModel(
     private val context: Context,
     private val completeNpcGenerator: CompleteNpcGenerator,
@@ -50,6 +56,7 @@ class RandomNpcViewModel(
     private val temporaryRandomNpcRepository: TemporaryRandomNpcRepository,
     private val npcRepository: NpcRepository,
     private val queueClient: PortraitQueueClient,
+    private val portraitStore: PortraitServerStore,
     private val analytics: Analytics
 ) : ViewModel() {
 
@@ -69,6 +76,40 @@ class RandomNpcViewModel(
     /** Flips the padlock on a field. A locked field is shielded from [randomizeAll] only. */
     fun toggleLock(field: LockableField) = _lockedFields.update { locks ->
         if (field in locks) locks - field else locks + field
+    }
+
+    // Portrait controls. Declared before the init blocks below: observePortrait() starts collecting
+    // on Main.immediate during construction, so everything it reads must already be initialized.
+
+    private val _portraitLocked = MutableStateFlow(false)
+
+    /**
+     * The padlock on the portrait. While locked, no NPC change (full or single-field re-roll, or an
+     * edit) triggers a re-render, so the current picture is kept. The die still renders on demand.
+     * In-memory only, like the field locks.
+     */
+    val portraitLocked: StateFlow<Boolean> = _portraitLocked.asStateFlow()
+
+    fun togglePortraitLock() = _portraitLocked.update { !it }
+
+    /** Whether portraits render on every NPC change (the Settings toggle). Off means die-only. */
+    val autoGeneratePortraits: StateFlow<Boolean> =
+        portraitStore.autoGenerate.stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    /** Whether a portrait server is configured at all; the portrait controls are hidden when not. */
+    val portraitAvailable: StateFlow<Boolean> =
+        portraitStore.config.map { it.enabled }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    private val manualPortraitRequests = MutableSharedFlow<PortraitCommand>(extraBufferCapacity = 1)
+
+    // The request most recently sent to the renderer (in flight, shown, or failed). Lets a lock or
+    // setting toggle that re-emits the same NPC skip it instead of rendering the same picture again.
+    private var lastRequested: PortraitRequest? = null
+
+    /** The portrait die: renders a fresh portrait for the NPC on screen, even when locked or auto is off. */
+    fun generatePortraitNow() {
+        if (!portraitAvailable.value) return
+        manualPortraitRequests.tryEmit(PortraitCommand.Render(PortraitPrompt.forNpc(data.value.toNpc()), manual = true))
     }
 
     init {
@@ -271,29 +312,63 @@ class RandomNpcViewModel(
     }
 
     /**
-     * Re-renders the portrait whenever the on-screen NPC changes. Every re-roll (full or single
-     * field) and every edit flows through [data]; [collectLatest] cancels the in-flight request and
-     * starts a fresh one for the new options. [distinctUntilChanged] on the built [PortraitRequest]
-     * skips re-rolls that don't change the prompt (name, nickname, motivation, languages), and
-     * [debounce] collapses a burst of re-rolls into a single render.
+     * Drives the portrait from the on-screen NPC. Every re-roll (full or single field) and every edit
+     * flows through [data]; [debounce] collapses a burst of re-rolls into one request, and
+     * [distinctUntilChanged] on the built [PortraitRequest] skips changes that don't touch the prompt
+     * (name, nickname, motivation, languages, combat, items).
+     *
+     * Each request then becomes a command, depending on the portrait padlock, the auto-generate
+     * setting and whether a server is configured:
+     * - locked, or no server: nothing happens, the current picture stays (an in-flight render finishes);
+     * - auto on: render it;
+     * - auto off: discard the picture, which no longer matches the NPC, and wait for the die.
+     *
+     * The die ([generatePortraitNow]) feeds manual renders into the same stream. [collectLatest] runs
+     * one command at a time, cancelling the in-flight render (and its server job) when a newer
+     * command arrives. Reading the setting and server config as flows means changing them in
+     * Settings takes effect without recreating the ViewModel.
      */
     @OptIn(FlowPreview::class)
     private fun observePortrait() {
+        val requests = data.map { PortraitPrompt.forNpc(it.toNpc()) }
+            .debounce(PORTRAIT_DEBOUNCE_MS)
+            .distinctUntilChanged()
+        val automatic = combine(
+            requests,
+            _portraitLocked,
+            portraitStore.autoGenerate.distinctUntilChanged(),
+            portraitStore.config.map { it.enabled }.distinctUntilChanged()
+        ) { request, locked, autoGenerate, available ->
+            when {
+                locked || !available -> null
+                autoGenerate -> PortraitCommand.Render(request)
+                else -> PortraitCommand.Discard(request)
+            }
+        }.filterNotNull()
+
         viewModelScope.launch {
-            data.map { PortraitPrompt.forNpc(it.toNpc()) }
-                .debounce(PORTRAIT_DEBOUNCE_MS)
-                .distinctUntilChanged()
-                // Checked per render (not once at startup) so enabling the server at runtime in
-                // Settings takes effect without recreating the ViewModel.
-                .collectLatest { if (queueClient.enabled()) generatePortrait(it) }
+            merge(automatic, manualPortraitRequests)
+                // Only the die re-renders the request already sent; toggling the lock or the setting
+                // re-emits the same NPC, and that must not cost another render.
+                .filter { (it is PortraitCommand.Render && it.manual) || it.request != lastRequested }
+                .onEach { if (it is PortraitCommand.Render) lastRequested = it.request }
+                .collectLatest { command ->
+                    when (command) {
+                        is PortraitCommand.Render -> generatePortrait(command.request, command.source())
+                        is PortraitCommand.Discard -> _portrait.value = PortraitUiState()
+                    }
+                }
         }
     }
 
-    private suspend fun generatePortrait(request: PortraitRequest) {
+    private fun PortraitCommand.Render.source() =
+        if (manual) AnalyticsEvents.SOURCE_RANDOMIZE_MANUAL else AnalyticsEvents.SOURCE_RANDOMIZE
+
+    private suspend fun generatePortrait(request: PortraitRequest, source: String) {
         _portrait.update { it.copy(isGenerating = true, failed = false, queueNumber = null, etaSeconds = null) }
         analytics.capture(
             AnalyticsEvents.PORTRAIT_REQUESTED,
-            mapOf(AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE)
+            mapOf(AnalyticsEvents.PROP_SOURCE to source)
         )
         val startedAtMs = SystemClock.elapsedRealtime()
         // Catch narrowly (not CancellationException): a re-roll cancels this via collectLatest, and
@@ -308,7 +383,7 @@ class RandomNpcViewModel(
             analytics.capture(
                 AnalyticsEvents.PORTRAIT_GENERATED,
                 mapOf(
-                    AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE,
+                    AnalyticsEvents.PROP_SOURCE to source,
                     AnalyticsEvents.PROP_QUEUE_AHEAD to submitted.ahead,
                     AnalyticsEvents.PROP_WAIT_SECONDS to (SystemClock.elapsedRealtime() - startedAtMs) / MS_PER_SECOND
                 )
@@ -322,21 +397,21 @@ class RandomNpcViewModel(
             // collectLatest, and that has to propagate, not surface as a false "failed" portrait.
             throw e
         } catch (e: IOException) {
-            failPortrait(e) // server unreachable or HTTP error
+            failPortrait(e, source) // server unreachable or HTTP error
         } catch (e: IllegalStateException) {
-            failPortrait(e) // server reported an error, sent no image, or the render timed out
+            failPortrait(e, source) // server reported an error, sent no image, or the render timed out
         } finally {
             // On a re-roll (cancellation) or a failure, free the still-queued job so it never renders.
             jobId?.let { cancelJob(it) }
         }
     }
 
-    private fun failPortrait(cause: Exception) {
+    private fun failPortrait(cause: Exception, source: String) {
         Log.w(TAG, "Portrait generation failed", cause)
         analytics.capture(
             AnalyticsEvents.PORTRAIT_FAILED,
             mapOf(
-                AnalyticsEvents.PROP_SOURCE to AnalyticsEvents.SOURCE_RANDOMIZE,
+                AnalyticsEvents.PROP_SOURCE to source,
                 AnalyticsEvents.PROP_REASON to (cause::class.simpleName ?: "unknown")
             )
         )
@@ -432,6 +507,17 @@ class RandomNpcViewModel(
         campaign = null,
         items = items
     )
+
+    /** What the portrait pipeline should do for a given [request]; see [observePortrait]. */
+    private sealed interface PortraitCommand {
+        val request: PortraitRequest
+
+        /** Render [request]. A [manual] render (the die) runs even if [request] was already sent. */
+        data class Render(override val request: PortraitRequest, val manual: Boolean = false) : PortraitCommand
+
+        /** Auto-generate is off and the NPC changed: drop the picture that no longer matches it. */
+        data class Discard(override val request: PortraitRequest) : PortraitCommand
+    }
 
     private companion object {
         private const val TAG = "RandomNpcViewModel"
